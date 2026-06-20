@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Read Rate — find your real reading speed in 60 seconds</title>
+  <meta name="description" content="A free, honest reading-speed test. Read one passage, answer 3 questions, and get your words-per-minute with a comprehension-gated percentile. Skimming doesn't count.">
+  <link rel="canonical" href="https://shivamvashisth.com/t/read-rate/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Read Rate — find your real reading speed in 60 seconds">
+  <meta property="og:description" content="Read one passage, answer 3 questions, get your true reading speed. Comprehension-gated so skimming can't fake it.">
+  <meta property="og:url" content="https://shivamvashisth.com/t/read-rate/">
+  <meta property="og:image" content="https://shivamvashisth.com/assets/og-read-rate.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/brand.css">
+  <style>
+    .rr-shell { max-width: 720px; margin: 40px auto 64px; }
+    .rr-head { text-align: center; margin-bottom: 28px; }
+    .rr-head .eyebrow { justify-content: center; }
+    .rr-timer {
+      font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+      font-size: 1.05rem; color: var(--acc-sky); font-weight: 500;
+    }
+    .rr-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+    .rr-passage {
+      font-family: var(--font-display); font-size: clamp(1.1rem, 2.6vw, 1.32rem);
+      line-height: 1.7; color: var(--ink); white-space: pre-wrap;
+    }
+    .rr-passage p { color: var(--ink); margin: 0 0 1rem; }
+    .rr-q { margin-bottom: 1.4rem; }
+    .rr-q legend { font-weight: 500; font-size: 1.02rem; margin-bottom: .6rem; color: var(--ink); padding: 0; }
+    .rr-opt {
+      display: flex; align-items: flex-start; gap: .65rem; padding: .7rem .85rem;
+      border: 1px solid var(--line-strong); border-radius: var(--r-sm); margin-bottom: .5rem;
+      cursor: pointer; background: #fff; transition: border-color .15s, background .15s;
+    }
+    .rr-opt:hover { border-color: var(--acc-sky); background: rgba(220,234,245,.35); }
+    .rr-opt input { width: auto; margin: .25rem 0 0; flex: 0 0 auto; accent-color: var(--acc-sky); }
+    .rr-opt span { font-size: .98rem; color: var(--ink-soft); }
+    fieldset { border: 0; padding: 0; margin: 0; }
+    .rr-num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+    .rr-result-num {
+      font-family: var(--font-display); font-weight: 600; line-height: 1;
+      font-size: clamp(4rem, 16vw, 6.5rem); color: var(--ink); letter-spacing: -.02em;
+    }
+    .rr-result-unit { font-family: var(--font-mono); font-size: 1.1rem; color: var(--ink-faint); letter-spacing: .1em; text-transform: uppercase; }
+    .rr-band {
+      display: inline-block; font-family: var(--font-display); font-weight: 500;
+      font-size: 1.5rem; margin: .3rem 0 .2rem;
+    }
+    .rr-pct { font-size: 1.15rem; color: var(--ink-soft); }
+    .rr-pct strong { color: var(--ink); }
+    .rr-stats { display: flex; gap: 1.2rem; flex-wrap: wrap; justify-content: center; margin: 1.4rem 0; }
+    .rr-stat { text-align: center; min-width: 120px; }
+    .rr-stat .k { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+    .rr-stat .v { font-family: var(--font-display); font-size: 1.7rem; font-weight: 500; color: var(--ink); }
+    .rr-warn {
+      background: #fff6e9; border: 1px solid #f3d9ab; color: var(--acc-peach);
+      border-radius: var(--r-md); padding: 1rem 1.1rem; margin: 1rem 0; font-size: .96rem;
+    }
+    .rr-warn strong { color: var(--acc-peach); }
+    .rr-actions { display: flex; gap: .7rem; flex-wrap: wrap; justify-content: center; margin-top: 1.4rem; }
+    .rr-actions .btn { min-height: 44px; }
+    .rr-hidden { display: none; }
+    .rr-meta { font-size: .85rem; color: var(--ink-faint); margin-top: .8rem; }
+    @media (max-width: 420px) {
+      .rr-bar { flex-direction: column; align-items: stretch; }
+      .rr-actions .btn { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <h1 class="sr-only">Read Rate: a 60-second test that measures your real reading speed, gated by a comprehension quiz so skimming doesn't count.</h1>
+  <div id="nav"></div>
+  <main class="wrap">
+    <div class="rr-shell">
+      <div class="rr-head">
+        <p class="eyebrow">Read Rate</p>
+        <h2 class="serif">Find your real reading speed</h2>
+        <p class="lead" style="margin:.4rem auto 0;">One passage, three questions, sixty seconds. We only show your percentile if you actually understood what you read — no skim-scoring here.</p>
+      </div>
+
+      <!-- START -->
+      <section class="card pad" id="screen-start">
+        <h3 class="serif">How it works</h3>
+        <ol style="color:var(--ink-soft); padding-left:1.2rem; margin:.4rem 0 1.2rem;">
+          <li>Hit start and a passage appears — the timer begins instantly.</li>
+          <li>Read at your natural pace. Tap <em>I'm done reading</em> the moment you finish.</li>
+          <li>Answer three quick questions. Get 2 of 3 right and we'll show your percentile.</li>
+        </ol>
+        <div class="rr-actions" style="justify-content:flex-start;">
+          <button class="btn" id="btn-start" type="button">Start the test</button>
+        </div>
+        <p class="rr-meta">No sign-up. Nothing leaves your browser. Percentiles are estimated from adult reading-speed research.</p>
+      </section>
+
+      <!-- READING -->
+      <section class="card pad rr-hidden" id="screen-read" aria-live="polite">
+        <div class="rr-bar">
+          <span class="pill live" id="read-status">Reading…</span>
+          <span class="rr-timer" id="read-timer" aria-label="elapsed time">0.0s</span>
+        </div>
+        <div class="rr-passage" id="passage-body"></div>
+        <div class="rr-actions" style="justify-content:flex-start; margin-top:1.6rem;">
+          <button class="btn" id="btn-done" type="button">I'm done reading</button>
+        </div>
+      </section>
+
+      <!-- QUIZ -->
+      <section class="card pad rr-hidden" id="screen-quiz">
+        <h3 class="serif">Three quick questions</h3>
+        <p class="muted" style="margin-top:-.4rem;">Answer from memory — the passage is hidden now.</p>
+        <form id="quiz-form">
+          <div id="quiz-questions"></div>
+          <div class="rr-actions" style="justify-content:flex-start;">
+            <button class="btn" id="btn-submit" type="submit">See my result</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- RESULT -->
+      <section class="card pad rr-hidden" id="screen-result" aria-live="polite">
+        <div id="result-body" class="center"></div>
+        <div class="rr-actions">
+          <button class="btn" id="btn-share" type="button">Share my result</button>
+          <button class="btn ghost" id="btn-copy" type="button">Copy link</button>
+          <button class="btn ghost" id="btn-again" type="button">Try again</button>
+        </div>
+        <p class="rr-meta center">Percentile is an estimate based on a normal model of adult silent-reading speed (mean ≈ 238 wpm). It is not a clinical measurement.</p>
+      </section>
+    </div>
+  </main>
+  <div id="foot"></div>
+
+  <script src="/assets/shared.js"></script>
+  <script>
+    document.getElementById('nav').innerHTML = TS.toolnav();
+    document.getElementById('foot').innerHTML = TS.footer();
+
+    /* ---------- passages (each ~250-300 words) ---------- */
+    const PASSAGES = [
+      {
+        title: "The lighthouse keeper",
+        text: `For forty-one years, Aldous Finch kept the light burning on Mara Point, a granite spit so far north that the sun barely cleared the horizon in winter. He had taken the post as a young man fleeing a failed marriage and a city that no longer felt like home, expecting to stay a season or two. The sea decided otherwise. He learned to read the moods of the water the way other men read newspapers: the flat oily calm that meant a storm was hoarding its strength, the sudden chop that warned of a turning tide.
+
+His only regular company was a supply boat that came every third Tuesday, weather permitting, and a logbook he filled with weather notes and the names of passing ships. He counted forty-seven wrecks avoided on his watch, though he never claimed credit for any of them. "The light does the work," he would say. "I only keep it clean."
+
+When the lighthouse was finally automated, the maritime board sent a young engineer to install the new system and a letter thanking Finch for his service. He read the letter twice, folded it into his coat, and walked the spiral stairs one last time. At the top he polished the great lens until it threw rainbows across the room, then switched on the automatic mechanism himself.
+
+He moved to a cottage three miles inland, close enough to see the beam sweep the night sky but far enough that he could no longer hear the surf. Neighbours said he kept a lamp lit in his window every night until he died, turning it off only at dawn. Old habits, they decided, do not retire when the job does.`,
+        questions: [
+          {
+            q: "How long did Aldous Finch keep the lighthouse?",
+            options: ["About ten years", "Forty-one years", "A single season", "Until he was a young man"],
+            answer: 1
+          },
+          {
+            q: "How often did the supply boat come?",
+            options: ["Every day", "Once a year", "Every third Tuesday, weather permitting", "Only during storms"],
+            answer: 2
+          },
+          {
+            q: "What did neighbours say he did at his inland cottage?",
+            options: ["Kept a lamp lit in his window every night", "Refused to look at the sea", "Returned to the city", "Built a second lighthouse"],
+            answer: 0
+          }
+        ]
+      },
+      {
+        title: "The seed vault",
+        text: `Deep inside a frozen mountain on a remote Arctic island sits a vault built to outlast almost anything humanity might throw at it. The Global Seed Vault was designed as a backup for the world's crop diversity — a safety copy of the seeds that feed us, tucked away in case war, disaster, or simple neglect destroys the working seed banks scattered across the planet.
+
+The idea is deceptively simple. Around the world, thousands of seed banks store samples of food crops, from common wheat and rice to obscure regional beans that only a handful of farmers still grow. But seed banks can fail. They lose funding, suffer power cuts, get caught in conflict, or are wiped out by floods. The vault offers each of those banks a free place to deposit a duplicate set of their most precious seeds.
+
+Crucially, the depositors keep ownership. The vault never opens a box without the permission of the bank that sent it; it simply stores the boxes in the cold and the dark, where low temperatures slow the seeds' aging to a crawl. Some seeds, properly frozen, may remain viable for centuries.
+
+The vault has already proved its worth. When a seed bank near a war-torn city had to abandon its collection, researchers withdrew duplicates from the Arctic vault, multiplied the seeds in safer locations, and eventually returned fresh samples to the vault. It was the first withdrawal in the facility's history, and exactly the scenario it had been built for. The mountain, quietly and without fanfare, had done its job: keeping a promise to a future that none of its builders will ever see.`,
+        questions: [
+          {
+            q: "What is the main purpose of the Global Seed Vault?",
+            options: ["To grow new crops for sale", "To act as a backup copy of the world's crop seeds", "To study Arctic weather", "To replace local farmers"],
+            answer: 1
+          },
+          {
+            q: "Who keeps ownership of the seeds stored there?",
+            options: ["The vault's government", "Nobody — they become public", "The banks that deposited them", "International researchers"],
+            answer: 2
+          },
+          {
+            q: "What happened during the vault's first withdrawal?",
+            options: ["The seeds had all died", "Duplicates were withdrawn to restore a bank near a war-torn city", "Tourists were allowed inside", "The vault was permanently emptied"],
+            answer: 1
+          }
+        ]
+      },
+      {
+        title: "The slow mail experiment",
+        text: `In an age of instant messages, a small bookshop in a coastal town tried something deliberately old-fashioned. The owner, frustrated that customers drifted in, photographed a few covers, and bought the books cheaper online, set up a wooden desk near the window with a stack of blank postcards and a sign: "Write to your future self. We'll mail it back in one year, free."
+
+The rules were minimal. You could write anything — a worry, a goal, a question, a secret. You addressed the card to yourself, dropped it in a locked box, and the shop promised to post it exactly twelve months later. No tracking, no app, no account. Just paper, a stamp, and a year of patience.
+
+The owner expected a handful of takers. Instead, the desk became the busiest corner of the store. People lingered, chewing pens, deciding what to tell themselves. Some wrote resolutions; others wrote apologies they were not yet ready to send to anyone else. One regular wrote the same question every visit: "Are you happier now?"
+
+A year on, the returned cards produced unexpected scenes. Customers came back specifically to receive them, and several read their own handwriting and wept quietly by the window. A few never returned, and their cards waited in a small drawer the owner could not bring himself to throw away. The experiment sold no extra books directly, but the shop's foot traffic grew as word spread. People came for the ritual, and stayed for the shelves. Slowness, the owner concluded, was not the opposite of business — sometimes it was the whole point of it.`,
+        questions: [
+          {
+            q: "What did the bookshop owner invite customers to do?",
+            options: ["Write a postcard to their future self, mailed back in a year", "Review books online", "Join a monthly book club", "Trade old books for new ones"],
+            answer: 0
+          },
+          {
+            q: "What did one regular customer write on every visit?",
+            options: ["A grocery list", "The question 'Are you happier now?'", "A book recommendation", "Their home address only"],
+            answer: 1
+          },
+          {
+            q: "What conclusion did the owner reach about slowness?",
+            options: ["It drove customers away", "It was bad for business", "It was sometimes the whole point of the business", "It only worked for selling stamps"],
+            answer: 2
+          }
+        ]
+      }
+    ];
+
+    /* ---------- normal CDF via erf approximation (Abramowitz & Stegun 7.1.26) ---------- */
+    function erf(x) {
+      const sign = x < 0 ? -1 : 1;
+      x = Math.abs(x);
+      const t = 1 / (1 + 0.3275911 * x);
+      const y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x);
+      return sign * y;
+    }
+    function normalCdf(x, mean, sd) {
+      return 0.5 * (1 + erf((x - mean) / (sd * Math.SQRT2)));
+    }
+    const MEAN = 238, SD = 70;
+
+    function bandFor(wpm) {
+      if (wpm < 180) return "Slow & steady";
+      if (wpm < 240) return "Average";
+      if (wpm < 320) return "Fast";
+      if (wpm < 450) return "Very fast";
+      return "Top tier";
+    }
+
+    function countWords(text) {
+      return text.trim().split(/\s+/).filter(Boolean).length;
+    }
+
+    /* ---------- state ---------- */
+    let current = null, startTs = 0, elapsedMs = 0, timerId = null;
+
+    const $ = (id) => document.getElementById(id);
+    const screens = {
+      start: $('screen-start'), read: $('screen-read'),
+      quiz: $('screen-quiz'), result: $('screen-result')
+    };
+    function show(name) {
+      Object.entries(screens).forEach(([k, el]) => el.classList.toggle('rr-hidden', k !== name));
+    }
+
+    function fmtTime(ms) { return (ms / 1000).toFixed(1) + 's'; }
+
+    function startTest() {
+      current = PASSAGES[Math.floor(Math.random() * PASSAGES.length)];
+      // render passage as paragraphs
+      const body = $('passage-body');
+      body.innerHTML = '';
+      current.text.split(/\n\n+/).forEach(para => {
+        const p = document.createElement('p');
+        p.textContent = para.trim();
+        body.appendChild(p);
+      });
+      show('read');
+      $('read-status').textContent = 'Reading…';
+      startTs = performance.now();
+      elapsedMs = 0;
+      clearInterval(timerId);
+      timerId = setInterval(() => {
+        $('read-timer').textContent = fmtTime(performance.now() - startTs);
+      }, 100);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      $('btn-done').focus();
+    }
+
+    function finishReading() {
+      elapsedMs = performance.now() - startTs;
+      clearInterval(timerId);
+      buildQuiz();
+      show('quiz');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function buildQuiz() {
+      const wrap = $('quiz-questions');
+      wrap.innerHTML = '';
+      current.questions.forEach((item, qi) => {
+        const fs = document.createElement('fieldset');
+        fs.className = 'rr-q';
+        const lg = document.createElement('legend');
+        lg.textContent = (qi + 1) + '. ' + item.q;
+        fs.appendChild(lg);
+        item.options.forEach((opt, oi) => {
+          const id = `q${qi}_o${oi}`;
+          const label = document.createElement('label');
+          label.className = 'rr-opt';
+          label.setAttribute('for', id);
+          const input = document.createElement('input');
+          input.type = 'radio';
+          input.name = 'q' + qi;
+          input.id = id;
+          input.value = String(oi);
+          const span = document.createElement('span');
+          span.textContent = opt;
+          label.appendChild(input);
+          label.appendChild(span);
+          fs.appendChild(label);
+        });
+        wrap.appendChild(fs);
+      });
+    }
+
+    function gradeQuiz() {
+      let correct = 0, answered = 0;
+      current.questions.forEach((item, qi) => {
+        const sel = document.querySelector(`input[name="q${qi}"]:checked`);
+        if (sel) {
+          answered++;
+          if (Number(sel.value) === item.answer) correct++;
+        }
+      });
+      return { correct, answered };
+    }
+
+    let lastResult = null;
+
+    function showResult() {
+      const { correct, answered } = gradeQuiz();
+      if (answered < current.questions.length) {
+        TS.toast('Answer all three questions first');
+        return;
+      }
+      const words = countWords(current.text);
+      const minutes = elapsedMs / 60000;
+      const wpm = Math.max(1, Math.round(words / minutes));
+      const passed = correct >= 2;
+      const pctFaster = Math.round(normalCdf(wpm, MEAN, SD) * 100);
+      const clampedPct = Math.min(99, Math.max(1, pctFaster));
+      const band = bandFor(wpm);
+
+      lastResult = { wpm, correct, total: current.questions.length, pct: clampedPct, band, passed };
+
+      const body = $('result-body');
+      let html = '';
+      html += `<div class="rr-result-num">${wpm.toLocaleString()}</div>`;
+      html += `<div class="rr-result-unit">words / minute</div>`;
+
+      if (passed) {
+        html += `<div class="rr-band">${band}</div>`;
+        html += `<p class="rr-pct">Faster than <strong>${clampedPct}%</strong> of readers <span class="muted">(estimated)</span></p>`;
+      } else {
+        html += `<div class="rr-band" style="color:var(--acc-peach)">Unvalidated</div>`;
+      }
+
+      html += `<div class="rr-stats">
+        <div class="rr-stat"><div class="v rr-num">${wpm.toLocaleString()}</div><div class="k">wpm</div></div>
+        <div class="rr-stat"><div class="v rr-num">${correct}/${current.questions.length}</div><div class="k">comprehension</div></div>
+        <div class="rr-stat"><div class="v rr-num">${fmtTime(elapsedMs)}</div><div class="k">time</div></div>
+      </div>`;
+
+      if (!passed) {
+        html += `<div class="rr-warn"><strong>Looks like skimming.</strong> You got ${correct} of ${current.questions.length} questions right, so we can't validate this speed — fast reading only counts if you understood it. Your raw rate is shown above, but it's unverified. Try again with a fresh passage and read for real.</div>`;
+      }
+
+      body.innerHTML = html;
+      show('result');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      $('btn-share').focus();
+    }
+
+    /* ---------- share card ---------- */
+    function buildCard() {
+      const r = lastResult;
+      return TS.makeCard({
+        width: 1080, height: 1920, wash: true,
+        draw(ctx, w, h) {
+          const cx = w / 2;
+
+          // eyebrow
+          ctx.textAlign = 'center';
+          ctx.fillStyle = TS.colors.inkFaint;
+          ctx.font = `500 34px ${TS.MONO}`;
+          ctx.fillText('R E A D   R A T E', cx, 230);
+
+          // headline
+          ctx.fillStyle = TS.colors.ink;
+          ctx.font = `500 64px ${TS.SERIF}`;
+          ctx.fillText('My reading speed', cx, 340);
+
+          // big number
+          ctx.fillStyle = TS.colors.ink;
+          ctx.font = `600 360px ${TS.SERIF}`;
+          ctx.fillText(String(r.wpm), cx, 760);
+
+          ctx.fillStyle = TS.colors.inkFaint;
+          ctx.font = `500 46px ${TS.MONO}`;
+          ctx.fillText('WORDS PER MINUTE', cx, 840);
+
+          // band pill
+          const bandTxt = r.passed ? r.band : 'Unvalidated';
+          ctx.font = `500 56px ${TS.SERIF}`;
+          const bw = ctx.measureText(bandTxt).width + 90;
+          const bx = cx - bw / 2, by = 920;
+          ctx.fillStyle = r.passed ? TS.colors.lavender : TS.colors.peach;
+          TS.roundRect(ctx, bx, by, bw, 96, 48);
+          ctx.fill();
+          ctx.fillStyle = r.passed ? TS.colors.accLavender : TS.colors.accPeach;
+          ctx.fillText(bandTxt, cx, by + 66);
+
+          // percentile line (only when validated)
+          let y = 1130;
+          if (r.passed) {
+            ctx.fillStyle = TS.colors.ink;
+            ctx.font = `500 60px ${TS.SERIF}`;
+            ctx.fillText(`Faster than ${r.pct}% of readers`, cx, y);
+            ctx.fillStyle = TS.colors.inkFaint;
+            ctx.font = `400 36px ${TS.MONO}`;
+            ctx.fillText('(estimated)', cx, y + 56);
+            y += 130;
+          } else {
+            ctx.fillStyle = TS.colors.accPeach;
+            ctx.font = `400 40px ${TS.SANS}`;
+            ctx.fillText('Comprehension too low to verify', cx, y);
+            y += 90;
+          }
+
+          // comprehension stat
+          ctx.fillStyle = TS.colors.inkSoft;
+          ctx.font = `500 52px ${TS.SERIF}`;
+          ctx.fillText(`Comprehension  ${r.correct}/${r.total}`, cx, y + 40);
+
+          // divider
+          ctx.strokeStyle = '#ece7df';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(cx - 260, y + 150);
+          ctx.lineTo(cx + 260, y + 150);
+          ctx.stroke();
+
+          // beat me line
+          ctx.fillStyle = TS.colors.ink;
+          ctx.font = `500 50px ${TS.SERIF}`;
+          ctx.fillText('Think you read faster?', cx, y + 250);
+          ctx.fillStyle = TS.colors.accSky;
+          ctx.font = `500 44px ${TS.MONO}`;
+          ctx.fillText('Beat me at ' + TS.SITE + '/t/read-rate', cx, y + 320);
+
+          TS.watermark(ctx, w, h, TS.SITE);
+        }
+      });
+    }
+
+    async function shareResult() {
+      if (!lastResult) return;
+      const canvas = buildCard();
+      const txt = `I read at ${lastResult.wpm} wpm${lastResult.passed ? ` — faster than ${lastResult.pct}% of readers` : ''}. Find your real reading speed at ${TS.SITE}/t/read-rate`;
+      TS.confetti();
+      await TS.shareOrDownload(canvas, 'read-rate.png', txt);
+    }
+
+    /* ---------- wiring ---------- */
+    $('btn-start').addEventListener('click', startTest);
+    $('btn-done').addEventListener('click', finishReading);
+    $('quiz-form').addEventListener('submit', (e) => { e.preventDefault(); showResult(); });
+    $('btn-share').addEventListener('click', shareResult);
+    $('btn-copy').addEventListener('click', () => TS.copyLink('https://' + TS.SITE + '/t/read-rate/'));
+    $('btn-again').addEventListener('click', startTest);
+  </script>
+</body>
+</html>

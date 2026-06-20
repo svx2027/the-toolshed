@@ -1,0 +1,9 @@
+# Netlify: pure static site, no build step. Publish the repo root as-is.
+[build]
+  publish = "."
+  command = ""
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"

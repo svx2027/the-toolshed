@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Year in Emoji — sum up your year in twelve emoji and twelve words</title>
+<meta name="description" content="Give every month of your year one emoji and a few words, then export a share-ready card. Saved on your device, year by year — nothing leaves your browser.">
+<link rel="canonical" href="https://shivamvashisth.com/t/year-in-emoji/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Year in Emoji — The Toolshed">
+<meta property="og:description" content="Sum up your year in twelve emoji and twelve words, then post the card.">
+<meta property="og:url" content="https://shivamvashisth.com/t/year-in-emoji/">
+<meta property="og:image" content="https://shivamvashisth.com/assets/og-year-in-emoji.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/brand.css">
+</head>
+<body>
+<h1 class="sr-only">Year in Emoji — sum up your year in twelve emoji and twelve words</h1>
+
+<div id="nav"></div>
+
+<header class="wrap" style="padding-top:48px">
+  <p class="eyebrow">Year in Emoji</p>
+  <h2 style="margin-top:0">Twelve months, twelve emoji.</h2>
+  <p class="lead">Pick one emoji and a few words for each month. It builds into a card you can post. Everything stays on this device — pick a year and it remembers.</p>
+
+  <div class="row" style="align-items:flex-end;gap:14px;margin-top:18px">
+    <div class="field" style="margin:0">
+      <label for="year">Year</label>
+      <select id="year" aria-label="Choose a year"></select>
+    </div>
+    <div class="field" style="margin:0;flex:1;min-width:0">
+      <label id="qp-label">Quick-pick an emoji</label>
+      <div class="quickpick" id="quickpick" role="group" aria-labelledby="qp-label"></div>
+    </div>
+  </div>
+</header>
+
+<section style="padding-top:24px">
+<div class="wrap">
+  <div class="layout">
+    <!-- ===== editor ===== -->
+    <div class="card pad">
+      <p class="muted" style="margin:0 0 16px;font-size:.9rem" id="active-hint" aria-live="polite">Tap a month, then tap an emoji above — or type your own.</p>
+      <div id="months" class="months"></div>
+    </div>
+
+    <!-- ===== live preview + actions ===== -->
+    <div class="side">
+      <div class="card pad">
+        <strong class="serif" style="font-size:1.1rem">Your card</strong>
+        <div class="preview-frame">
+          <canvas id="preview" width="1080" height="1920" aria-label="Live preview of your Year in Emoji card"></canvas>
+        </div>
+        <div class="row" style="margin-top:16px;gap:10px">
+          <button class="btn" id="download" type="button">Save card</button>
+          <button class="btn ghost" id="copy" type="button">Copy link</button>
+        </div>
+        <button class="btn ghost" id="reset" type="button" style="margin-top:10px;width:100%">Clear this year</button>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div id="foot"></div>
+
+<style>
+  .layout{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:start}
+  .months{display:flex;flex-direction:column;gap:10px}
+  .month-row{display:grid;grid-template-columns:54px 64px 1fr;gap:10px;align-items:center;
+    padding:8px;border:1px solid var(--line);border-radius:var(--r-md);background:#fff;transition:border-color .12s,box-shadow .12s}
+  .month-row.active{border-color:var(--acc-sky);box-shadow:0 0 0 3px rgba(47,111,174,.15)}
+  .month-row .mname{font-family:var(--font-mono);font-size:.8rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em}
+  .month-row .emoji-in{font-size:1.5rem;text-align:center;padding:.3rem;line-height:1.2}
+  .month-row .word-in{font-size:.95rem}
+  .quickpick{display:flex;flex-wrap:wrap;gap:6px}
+  .quickpick button{font-size:1.25rem;line-height:1;padding:.3rem .4rem;border:1px solid var(--line-strong);
+    border-radius:var(--r-sm);background:#fff;cursor:pointer;transition:transform .1s,border-color .1s}
+  .quickpick button:hover{transform:translateY(-2px);border-color:var(--acc-sky)}
+  .side{position:sticky;top:76px}
+  .preview-frame{margin-top:14px;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;background:var(--paper)}
+  .preview-frame canvas{display:block;width:100%;height:auto}
+  @media(max-width:820px){
+    .layout{grid-template-columns:1fr}
+    .side{position:static}
+  }
+  @media(max-width:400px){
+    .month-row{grid-template-columns:46px 52px 1fr;gap:8px;padding:6px}
+    .month-row .emoji-in{font-size:1.3rem}
+  }
+</style>
+
+<script src="/assets/shared.js"></script>
+<script>
+  document.getElementById('nav').innerHTML = TS.toolnav();
+  document.getElementById('foot').innerHTML = TS.footer();
+
+  const MONTHS = ['January','February','March','April','May','June',
+                  'July','August','September','October','November','December'];
+  const QUICK = ['😀','😅','🥹','😍','🤔','😴','😭','🔥','🎉','💼','✈️','🏡',
+                 '❤️','💔','🌱','📈','📉','🎓','💍','👶','🏆','☕','🍂','❄️'];
+  const KEY = (y) => 'yie_' + y;
+
+  const yearSel   = document.getElementById('year');
+  const monthsEl  = document.getElementById('months');
+  const quickEl   = document.getElementById('quickpick');
+  const hintEl    = document.getElementById('active-hint');
+  const canvas    = document.getElementById('preview');
+
+  // 12 entries, Jan..Dec, each {emoji, word}
+  let data = MONTHS.map(() => ({ emoji: '', word: '' }));
+  let activeMonth = 0;
+  let curYear;
+
+  /* ---------- year picker ---------- */
+  const THIS_YEAR = new Date().getFullYear();
+  for (let y = THIS_YEAR; y >= THIS_YEAR - 6; y--) {
+    const o = document.createElement('option');
+    o.value = String(y); o.textContent = String(y);
+    yearSel.appendChild(o);
+  }
+  yearSel.value = String(THIS_YEAR);
+
+  /* ---------- persistence ---------- */
+  function save() {
+    try { localStorage.setItem(KEY(curYear), JSON.stringify(data)); } catch (_) {}
+  }
+  function load(year) {
+    let parsed = null;
+    try { parsed = JSON.parse(localStorage.getItem(KEY(year)) || 'null'); } catch (_) {}
+    // always rebuild exactly 12 rows, Jan..Dec, even if storage is partial/garbage
+    data = MONTHS.map((_, i) => {
+      const e = parsed && parsed[i] ? parsed[i] : {};
+      return { emoji: typeof e.emoji === 'string' ? e.emoji : '',
+               word:  typeof e.word  === 'string' ? e.word  : '' };
+    });
+  }
+
+  /* ---------- editor render ---------- */
+  function renderMonths() {
+    monthsEl.innerHTML = '';
+    MONTHS.forEach((name, i) => {
+      const row = document.createElement('div');
+      row.className = 'month-row' + (i === activeMonth ? ' active' : '');
+      row.dataset.idx = i;
+
+      const label = document.createElement('span');
+      label.className = 'mname';
+      label.textContent = name.slice(0, 3);
+
+      const emojiIn = document.createElement('input');
+      emojiIn.type = 'text';
+      emojiIn.className = 'emoji-in';
+      emojiIn.value = data[i].emoji;
+      emojiIn.maxLength = 4;
+      emojiIn.setAttribute('aria-label', name + ' emoji');
+      emojiIn.placeholder = '·';
+
+      const wordIn = document.createElement('input');
+      wordIn.type = 'text';
+      wordIn.className = 'word-in';
+      wordIn.value = data[i].word;
+      wordIn.maxLength = 40;
+      wordIn.setAttribute('aria-label', name + ' caption');
+      wordIn.placeholder = 'a few words…';
+
+      const focusRow = () => { activeMonth = i; markActive(); };
+      emojiIn.addEventListener('focus', focusRow);
+      wordIn.addEventListener('focus', focusRow);
+      emojiIn.addEventListener('input', () => { data[i].emoji = emojiIn.value; save(); drawPreview(); });
+      wordIn.addEventListener('input',  () => { data[i].word  = wordIn.value;  save(); drawPreview(); });
+
+      row.append(label, emojiIn, wordIn);
+      monthsEl.appendChild(row);
+    });
+  }
+  function markActive() {
+    monthsEl.querySelectorAll('.month-row').forEach(r => {
+      r.classList.toggle('active', Number(r.dataset.idx) === activeMonth);
+    });
+    hintEl.textContent = 'Editing ' + MONTHS[activeMonth] + ' — tap an emoji above to fill it.';
+  }
+
+  /* ---------- quick-pick ---------- */
+  QUICK.forEach(em => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = em;
+    b.setAttribute('aria-label', 'Use ' + em + ' for ' + MONTHS[activeMonth]);
+    b.addEventListener('click', () => {
+      data[activeMonth].emoji = em;                 // fills the CURRENT active row
+      const input = monthsEl.querySelector(`.month-row[data-idx="${activeMonth}"] .emoji-in`);
+      if (input) input.value = em;
+      save();
+      drawPreview();
+      // advance to next empty-ish month for fast entry, wrapping at Dec
+      if (activeMonth < 11) { activeMonth++; markActive(); }
+    });
+    quickEl.appendChild(b);
+  });
+
+  /* ---------- canvas card ---------- */
+  function buildCardCanvas() {
+    return TS.makeCard({
+      width: 1080, height: 1920,
+      filename: `year-in-emoji-${curYear}.png`,
+      draw(ctx, w, h) {
+        const padX = 96;
+
+        // header
+        ctx.textAlign = 'left';
+        ctx.fillStyle = TS.colors.inkFaint;
+        ctx.font = `500 30px ${TS.MONO}`;
+        ctx.fillText('YEAR IN EMOJI', padX, 150);
+
+        ctx.fillStyle = TS.colors.ink;
+        ctx.font = `600 150px ${TS.SERIF}`;
+        ctx.fillText(String(curYear), padX, 300);
+
+        // 12 lines, one per month — empties still render the month label
+        const top = 420, bottom = h - 220;
+        const rowH = (bottom - top) / 12;          // fixed slot per month -> no overflow
+        const emojiX = padX;
+        const labelX = padX + 96;
+        const wordX  = padX + 240;
+        const maxWordW = w - wordX - padX;
+
+        for (let i = 0; i < 12; i++) {
+          const y = top + rowH * i + rowH / 2;
+          const e = data[i];
+
+          // month label
+          ctx.textAlign = 'left';
+          ctx.textBaseline = 'middle';
+          ctx.fillStyle = TS.colors.inkFaint;
+          ctx.font = `500 30px ${TS.MONO}`;
+          ctx.fillText(MONTHS[i].slice(0, 3).toUpperCase(), labelX, y);
+
+          // emoji via fillText (renders nothing gracefully if empty)
+          ctx.textAlign = 'center';
+          ctx.font = `400 58px ${TS.SANS}`;
+          ctx.fillText(e.emoji || '·', emojiX + 28, y);
+
+          // caption word, clamped to fit (fitFont shrinks; no wrap/overflow)
+          ctx.textAlign = 'left';
+          ctx.fillStyle = e.word ? TS.colors.ink : TS.colors.inkFaint;
+          const text = e.word || '—';
+          const px = TS.fitFont(ctx, text, TS.SANS, '500', 40, 22, maxWordW);
+          ctx.font = `500 ${px}px ${TS.SANS}`;
+          ctx.fillText(text, wordX, y);
+        }
+
+        ctx.textBaseline = 'alphabetic';
+        TS.watermark(ctx, w, h);                    // ends the draw with the watermark
+      }
+    });
+  }
+
+  function drawPreview() {
+    const card = buildCardCanvas();
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(card, 0, 0);
+  }
+
+  /* ---------- actions ---------- */
+  document.getElementById('download').addEventListener('click', async () => {
+    const card = buildCardCanvas();
+    await TS.shareOrDownload(card, `year-in-emoji-${curYear}.png`,
+      `My ${curYear} in twelve emoji — made at ${TS.SITE}/t/year-in-emoji/`);
+    TS.confetti();
+  });
+
+  document.getElementById('copy').addEventListener('click', () => {
+    TS.copyLink('https://shivamvashisth.com/t/year-in-emoji/');
+  });
+
+  document.getElementById('reset').addEventListener('click', () => {
+    try { localStorage.removeItem(KEY(curYear)); } catch (_) {}
+    data = MONTHS.map(() => ({ emoji: '', word: '' }));
+    activeMonth = 0;
+    renderMonths(); markActive(); drawPreview();
+    TS.toast('Cleared ' + curYear);
+  });
+
+  /* ---------- year switch wires everything together ---------- */
+  function switchYear(year) {
+    curYear = Number(year);
+    load(curYear);
+    activeMonth = 0;
+    renderMonths();
+    markActive();
+    drawPreview();
+  }
+  yearSel.addEventListener('change', () => switchYear(yearSel.value));
+
+  // boot
+  switchYear(yearSel.value);
+</script>
+</body>
+</html>

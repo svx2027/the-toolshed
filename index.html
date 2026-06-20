@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shivam Vashisth — operator, not engineer. Tiny tools, built to be shared.</title>
+<meta name="description" content="I make small things on the internet. Some are useful, all are quick. A shed of tiny share-first tools, shipped weekly with AI.">
+<link rel="canonical" href="https://shivamvashisth.com/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Shivam Vashisth — The Toolshed">
+<meta property="og:description" content="Operator, not engineer. I build tiny tools, most of them made to be shared.">
+<meta property="og:url" content="https://shivamvashisth.com/">
+<meta property="og:image" content="https://shivamvashisth.com/assets/og-home.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/brand.css">
+</head>
+<body>
+<h1 class="sr-only">Shivam Vashisth — The Toolshed: tiny tools built to be shared</h1>
+
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="/">Shivam&nbsp;Vashisth</a>
+  <div class="links">
+    <a href="#toolshed">The Toolshed</a>
+    <a href="#cases" class="hide-sm">Case studies</a>
+    <a href="#about" class="hide-sm">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+</div></nav>
+
+<!-- ===================== HERO ===================== -->
+<header class="wrap" style="padding-top:48px">
+  <div style="display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center" class="hero-grid">
+    <div>
+      <div class="avatar" aria-hidden="true">
+        <svg viewBox="0 0 120 120" width="92" height="92">
+          <defs>
+            <radialGradient id="av" cx="35%" cy="30%" r="80%">
+              <stop offset="0%" stop-color="#F8E2D4"/><stop offset="45%" stop-color="#E6E0F2"/>
+              <stop offset="100%" stop-color="#DCEAF5"/>
+            </radialGradient>
+          </defs>
+          <circle cx="60" cy="60" r="58" fill="url(#av)" stroke="#1C1B1A" stroke-width="2"/>
+          <text x="60" y="76" text-anchor="middle" font-family="Fraunces, serif" font-weight="600" font-size="44" fill="#1C1B1A">SV</text>
+        </svg>
+      </div>
+      <p class="eyebrow" style="margin-top:18px">Hi, I'm Shivam</p>
+      <h1 style="margin-top:0"><span class="ink-underline">Operator, not engineer.</span></h1>
+      <p class="lead">I build tiny tools — most of them made to be shared. Words, data, and small machines, shipped weekly with AI.</p>
+      <div class="row" style="margin-top:8px">
+        <a class="btn" href="#toolshed">Explore the Toolshed</a>
+        <a class="btn ghost" href="#contact">Say hi</a>
+      </div>
+    </div>
+
+    <!-- micro-toy: Thumbnail Showdown -->
+    <div class="card pad showdown" id="showdown" aria-label="Thumbnail Showdown mini-game">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <strong class="serif" style="font-size:1.15rem">Thumbnail Showdown</strong>
+        <span class="pill">streak <span class="mono" id="sd-streak">0</span></span>
+      </div>
+      <p class="muted" style="margin:0 0 14px;font-size:.92rem">Which thumbnail won the higher click-through? Tap one.</p>
+      <div id="sd-arena" class="sd-arena"></div>
+      <div id="sd-result" class="sd-result" aria-live="polite"></div>
+      <div class="row" style="margin-top:14px;justify-content:space-between;align-items:center">
+        <span class="muted mono" style="font-size:.8rem">best <span id="sd-best">0</span></span>
+        <button class="btn ghost" id="sd-share" style="padding:.5rem 1rem;font-size:.9rem">Share my streak</button>
+      </div>
+    </div>
+  </div>
+  <p class="center muted" style="margin-top:44px;font-size:.9rem">↓ scroll to the shed</p>
+</header>
+
+<!-- ===================== TOOLSHED ===================== -->
+<section id="toolshed">
+<div class="wrap">
+  <p class="eyebrow center">The Toolshed</p>
+  <h2 class="center">A shed of tiny tools</h2>
+  <p class="lead center" style="margin:0 auto 28px">Live ones open in a tap. The rest are brewing — the shed fills up week by week.</p>
+
+  <div class="filters center" role="tablist" aria-label="Filter tools">
+    <button class="chip active" data-filter="all">All</button>
+    <button class="chip" data-filter="everyone">For everyone</button>
+    <button class="chip" data-filter="creator">For creators</button>
+  </div>
+
+  <div class="grid" id="grid"></div>
+</div>
+</section>
+
+<!-- ===================== CASE STUDIES ===================== -->
+<section id="cases">
+<div class="wrap">
+  <p class="eyebrow center">Build notes</p>
+  <h2 class="center">Three things I built (and what I skipped)</h2>
+  <div class="cases">
+    <article class="card pad">
+      <h3>This very site</h3>
+      <p>Built blank-folder-to-live in an afternoon: static HTML, a shared canvas "share-card" engine, and a pastel watercolour brand in one CSS file. No framework, no database.</p>
+      <p class="muted" style="font-size:.9rem"><strong>Skipped:</strong> a CMS. Every page is just files — easy to host anywhere, free.</p>
+    </article>
+    <article class="card pad">
+      <h3>The share-card pattern</h3>
+      <p>Every tool exports a 1080×1920 PNG from a single reusable canvas function. Build it once, reuse it everywhere — the card <em>is</em> the marketing.</p>
+      <p class="muted" style="font-size:.9rem"><strong>Skipped:</strong> server-side image rendering. The browser draws it; nothing leaves your device.</p>
+    </article>
+    <article class="card pad">
+      <h3>Privacy by default</h3>
+      <p>Life in Weeks never sends your birthday anywhere. Aligned encodes its quiz state in the URL, so two people can play with zero backend.</p>
+      <p class="muted" style="font-size:.9rem"><strong>Skipped:</strong> accounts and tracking, until a tool genuinely needs them.</p>
+    </article>
+  </div>
+</div>
+</section>
+
+<!-- ===================== ABOUT ===================== -->
+<section id="about">
+<div class="wrap" style="max-width:760px">
+  <p class="eyebrow">About</p>
+  <h2>From notes to tiny machines</h2>
+  <p class="lead">I spend my days deep in content and data — competitive intelligence for education YouTube, transcripts, market data. Along the way I kept building little tools to make the work less manual.</p>
+  <p>This shed is where the general-audience ones live: small, fast, and built so the output is something you'd actually want to post. I'm an operator who learned to ship with AI in the terminal — the judgment of <em>what</em> to build matters more than the code.</p>
+</div>
+</section>
+
+<!-- ===================== CONTACT / NOW ===================== -->
+<section id="contact">
+<div class="wrap" style="max-width:680px">
+  <div class="card pad center">
+    <p class="eyebrow">Now &amp; next</p>
+    <h2 style="margin-bottom:.3rem">Shipping a new tool most weeks</h2>
+    <p class="lead" style="margin:0 auto 20px">Drop your email and I'll send the next one when it's live. No spam, just tools.</p>
+    <form id="subscribe" class="row" style="justify-content:center;gap:10px;flex-wrap:nowrap;max-width:460px;margin:0 auto">
+      <input type="email" id="sub-email" placeholder="you@email.com" aria-label="Your email" required>
+      <button class="btn" type="submit">Notify me</button>
+    </form>
+    <p class="muted" style="font-size:.85rem;margin-top:14px">or just email <a href="mailto:hi@shivamvashisth.com">hi@shivamvashisth.com</a></p>
+  </div>
+</div>
+</section>
+
+<div id="foot"></div>
+
+<style>
+  .hero-grid{align-items:stretch}
+  .avatar{display:inline-block}
+  .sd-arena{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .sd-thumb{cursor:pointer;border:2px solid var(--line);border-radius:var(--r-md);overflow:hidden;background:#fff;transition:transform .12s,box-shadow .12s,border-color .12s;text-align:left}
+  .sd-thumb:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);border-color:var(--line-strong)}
+  .sd-thumb .pic{height:78px;display:flex;align-items:center;justify-content:center;padding:8px;color:#fff;font-family:var(--font-display);font-weight:600;font-size:.95rem;text-align:center;line-height:1.15}
+  .sd-thumb .meta{padding:7px 9px;font-size:.74rem;color:var(--ink-soft);display:flex;justify-content:space-between;align-items:center}
+  .sd-thumb.win{border-color:var(--acc-mint)}
+  .sd-thumb.lose{opacity:.55}
+  .sd-thumb .ctr{font-family:var(--font-mono);font-weight:500}
+  .sd-result{min-height:22px;margin-top:12px;font-size:.9rem;font-weight:500}
+  .sd-result.good{color:var(--acc-mint)} .sd-result.bad{color:var(--acc-rose)}
+  .filters{display:flex;gap:10px;justify-content:center;margin-bottom:26px;flex-wrap:wrap}
+  .chip{font-family:var(--font-body);font-size:.92rem;padding:.45rem 1rem;border-radius:var(--r-pill);border:1px solid var(--line-strong);background:rgba(255,255,255,.6);cursor:pointer;color:var(--ink-soft);transition:all .12s}
+  .chip.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .tool-card{display:flex;flex-direction:column;gap:10px;padding:22px;border-radius:var(--r-lg);background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);text-decoration:none;color:var(--ink);transition:transform .14s,box-shadow .14s}
+  .tool-card:hover{transform:translateY(-4px) rotate(-.5deg);box-shadow:var(--shadow-lift)}
+  .tool-card.soon{cursor:default;opacity:.92}
+  .tool-card.soon:hover{transform:none;box-shadow:var(--shadow)}
+  .tool-card .ic{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+  .tool-card h3{margin:0;font-size:1.12rem}
+  .tool-card p{margin:0;font-size:.9rem;color:var(--ink-soft)}
+  .tool-card .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
+  .cases{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:8px}
+  @media(max-width:820px){.hero-grid{grid-template-columns:1fr!important}.grid{grid-template-columns:repeat(2,1fr)}.cases{grid-template-columns:1fr}}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}.sd-thumb .pic{height:88px}}
+</style>
+
+<script src="/assets/shared.js"></script>
+<script src="/assets/showdown.js"></script>
+<script>
+  document.getElementById('foot').innerHTML = TS.footer();
+
+  /* ---------- Toolshed grid ---------- */
+  const TOOLS = [
+    {slug:'life-in-weeks', name:'Life in Weeks', desc:'See your whole life as a grid of weeks, then post it.', aud:'everyone', live:true, c:'#DCEAF5', ac:'#2f6fae', icon:'grid'},
+    {slug:'read-rate', name:'Read Rate', desc:'Find your real reading speed in 60 seconds.', aud:'everyone', live:true, c:'#DFF0E6', ac:'#2f8f63', icon:'gauge'},
+    {slug:'year-in-emoji', name:'Year in Emoji', desc:'Sum up your year in twelve emoji and twelve words.', aud:'everyone', live:true, c:'#F8E2D4', ac:'#c2693a', icon:'cal'},
+    {slug:'aligned', name:'Aligned', desc:'See how aligned you and someone else really are.', aud:'everyone', live:true, c:'#E6E0F2', ac:'#6d5bb0', icon:'heart'},
+    {slug:'comment-goldmine', name:'Comment Goldmine', desc:'Turn a video’s comments into ten content ideas.', aud:'creator', live:false, c:'#E6E0F2', ac:'#6d5bb0', icon:'chat'},
+    {slug:'outlier-radar', name:'Outlier Radar', desc:'Spot what’s overperforming in your niche right now.', aud:'creator', live:false, c:'#DCEAF5', ac:'#2f6fae', icon:'radar'},
+    {slug:'sealed', name:'Sealed', desc:'Write a letter to your future self, delivered on a date.', aud:'everyone', live:false, c:'#F8E2D4', ac:'#c2693a', icon:'mail'}
+  ];
+  const ICONS = {
+    grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+    gauge:'<path d="M12 13a4 4 0 0 1 4-4"/><circle cx="12" cy="13" r="9"/><path d="M12 13l4-3"/>',
+    cal:'<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/>',
+    heart:'<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>',
+    chat:'<path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/>',
+    radar:'<circle cx="12" cy="12" r="9"/><path d="M12 12l6-3M12 12V4"/><circle cx="12" cy="12" r="3"/>',
+    mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'
+  };
+  function svgIcon(name, color){
+    return `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="${color}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]||ICONS.grid}</svg>`;
+  }
+  const grid = document.getElementById('grid');
+  function renderGrid(filter='all'){
+    grid.innerHTML = TOOLS.filter(t=>filter==='all'||t.aud===filter).map(t=>{
+      const tag = `<span class="pill ${t.live?'live':'brewing'}">${t.live?'live':'brewing'}</span><span class="pill ${t.aud}">${t.aud==='creator'?'creators':'everyone'}</span>`;
+      const inner = `<div class="ic" style="background:${t.c}">${svgIcon(t.icon,t.ac)}</div>
+        <h3>${t.name}</h3><p>${t.desc}</p><div class="tags">${tag}</div>`;
+      return t.live
+        ? `<a class="tool-card" href="/t/${t.slug}/">${inner}</a>`
+        : `<div class="tool-card soon">${inner}</div>`;
+    }).join('');
+  }
+  renderGrid();
+  document.querySelectorAll('.chip').forEach(ch=>ch.addEventListener('click',()=>{
+    document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+    ch.classList.add('active'); renderGrid(ch.dataset.filter);
+  }));
+
+  /* ---------- email capture (no backend yet — stores locally, honest) ---------- */
+  document.getElementById('subscribe').addEventListener('submit', e=>{
+    e.preventDefault();
+    const v = document.getElementById('sub-email').value.trim();
+    if(!v) return;
+    try{ localStorage.setItem('ts_sub', v); }catch(_){}
+    TS.toast('Thanks! I’ll email you when the next tool ships.');
+    e.target.reset();
+  });
+</script>
+</body>
+</html>

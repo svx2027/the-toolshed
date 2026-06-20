@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Life in Weeks — see your whole life as a grid, then post it</title>
+  <meta name="description" content="Map your entire life onto a grid of weeks. One cell per week, the current week lit up, the rest still to come. Calculated privately in your browser.">
+  <link rel="canonical" href="https://shivamvashisth.com/t/life-in-weeks/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Life in Weeks">
+  <meta property="og:description" content="See your whole life as a grid of weeks, then post it.">
+  <meta property="og:url" content="https://shivamvashisth.com/t/life-in-weeks/">
+  <meta property="og:image" content="https://shivamvashisth.com/assets/og-life-in-weeks.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/brand.css">
+  <style>
+    .head { padding: 40px 0 8px; }
+    .head .eyebrow { margin-bottom: .8rem; }
+    .controls .row { align-items: flex-end; }
+    .controls .field { margin-bottom: 0; flex: 1 1 200px; min-width: 0; }
+    .controls .actions { display: flex; gap: .6rem; flex-wrap: wrap; margin-top: 1.1rem; }
+
+    .hint { color: var(--ink-faint); font-size: .95rem; }
+    .privacy { display: inline-flex; align-items: center; gap: .45rem; color: var(--ink-faint); font-size: .85rem; margin-top: .9rem; }
+    .privacy svg { flex: none; }
+
+    .readout { margin: 4px 0 2px; }
+    .readout .big { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: clamp(1.05rem, 3.4vw, 1.4rem); color: var(--ink); font-weight: 500; }
+    .readout .sub { font-family: var(--font-mono); font-size: .9rem; color: var(--ink-faint); margin-top: .2rem; }
+
+    .legend { display: flex; flex-wrap: wrap; gap: 1rem; margin: 2px 0 18px; font-size: .82rem; color: var(--ink-soft); }
+    .legend span { display: inline-flex; align-items: center; gap: .4rem; }
+    .swatch { width: 13px; height: 13px; border-radius: 3px; border: 1px solid var(--line-strong); flex: none; }
+    .sw-lived { background: var(--ink); border-color: var(--ink); }
+    .sw-now { background: var(--acc-rose); border-color: var(--acc-rose); }
+    .sw-future { background: #fff; }
+
+    .gridwrap { overflow: hidden; }
+    .yearlabels-row { display: flex; gap: 10px; align-items: flex-start; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(52, 1fr);
+      gap: clamp(1px, .35vw, 3px);
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .cell {
+      aspect-ratio: 1 / 1;
+      border-radius: 2px;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+    .cell.lived { background: var(--ink); border-color: var(--ink); }
+    .cell.now { background: var(--acc-rose); border-color: var(--acc-rose); box-shadow: 0 0 0 2px rgba(194,82,116,.25); }
+
+    .empty-state { color: var(--ink-faint); text-align: center; padding: 48px 8px; font-family: var(--font-mono); font-size: .95rem; }
+
+    .share-row { display: flex; gap: .6rem; flex-wrap: wrap; margin-top: 22px; }
+
+    @media (max-width: 460px) {
+      .grid { gap: 1px; }
+      .controls .actions .btn { flex: 1 1 auto; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <h1 class="sr-only">Life in Weeks — visualise your whole life as a grid of weeks and share it as an image.</h1>
+  <div id="nav"></div>
+
+  <main class="wrap">
+    <div class="head">
+      <p class="eyebrow">For everyone</p>
+      <h2 class="serif">Life in weeks</h2>
+      <p class="lead">Each little square is one week of your life. Fill in the ones you've lived, light up the one you're in, and see the rest stretch ahead.</p>
+    </div>
+
+    <section style="padding: 8px 0 0;">
+      <div class="card pad controls">
+        <form id="form">
+          <div class="row">
+            <div class="field">
+              <label for="dob">Date of birth</label>
+              <input type="date" id="dob" name="dob" required max="">
+            </div>
+            <div class="field" style="flex: 0 1 200px;">
+              <label for="exp">Life expectancy (years)</label>
+              <input type="number" id="exp" name="exp" value="80" min="40" max="120" step="1" inputmode="numeric">
+            </div>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn">Draw my life</button>
+            <button type="button" id="clearBtn" class="btn ghost">Clear</button>
+          </div>
+        </form>
+        <p class="privacy">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          Your birthday never leaves this page.
+        </p>
+      </div>
+    </section>
+
+    <section style="padding: 24px 0 8px;" aria-live="polite" id="resultRegion">
+      <div class="card pad">
+        <div id="readout" class="readout" hidden>
+          <div class="big" id="readoutBig"></div>
+          <div class="sub" id="readoutSub"></div>
+        </div>
+
+        <div class="legend" id="legend" hidden>
+          <span><span class="swatch sw-lived"></span> weeks lived</span>
+          <span><span class="swatch sw-now"></span> this week</span>
+          <span><span class="swatch sw-future"></span> still to come</span>
+        </div>
+
+        <div id="emptyState" class="empty-state">Enter your date of birth above to draw your grid of weeks.</div>
+
+        <div class="gridwrap" id="gridwrap" hidden>
+          <div class="grid" id="grid" role="img" aria-label="A grid of weeks representing a life. Each row is one year of 52 weeks."></div>
+        </div>
+
+        <div class="share-row" id="shareRow" hidden>
+          <button type="button" class="btn" id="shareBtn">Share this card</button>
+          <button type="button" class="btn ghost" id="linkBtn">Copy link to this tool</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="foot"></div>
+
+  <script src="/assets/shared.js"></script>
+  <script>
+    document.getElementById('nav').innerHTML = TS.toolnav();
+    document.getElementById('foot').innerHTML = TS.footer();
+
+    var WEEK_MS = 7 * 24 * 3600 * 1000;
+    var STORE_KEY = 'tsLifeInWeeks';
+
+    var form = document.getElementById('form');
+    var dobEl = document.getElementById('dob');
+    var expEl = document.getElementById('exp');
+    var clearBtn = document.getElementById('clearBtn');
+    var emptyState = document.getElementById('emptyState');
+    var gridwrap = document.getElementById('gridwrap');
+    var gridEl = document.getElementById('grid');
+    var readout = document.getElementById('readout');
+    var readoutBig = document.getElementById('readoutBig');
+    var readoutSub = document.getElementById('readoutSub');
+    var legend = document.getElementById('legend');
+    var shareRow = document.getElementById('shareRow');
+    var shareBtn = document.getElementById('shareBtn');
+    var linkBtn = document.getElementById('linkBtn');
+
+    // cap "today" input so future DOBs can't be picked by mistake
+    dobEl.max = new Date().toISOString().slice(0, 10);
+
+    var state = null;          // {dob, exp, lived, total, percent}
+    var firstExport = true;
+
+    function fmt(n) { return n.toLocaleString('en-US'); }
+
+    function compute(dobStr, expYears) {
+      var dob = new Date(dobStr + 'T00:00:00');
+      if (isNaN(dob.getTime())) return { error: 'invalid' };
+      var now = new Date();
+      if (dob.getTime() > now.getTime()) return { error: 'future' };
+
+      var exp = Math.round(Number(expYears) || 80);
+      if (exp < 40) exp = 40;
+      if (exp > 120) exp = 120;
+
+      var total = Math.round(exp * 52);
+      var lived = Math.floor((now.getTime() - dob.getTime()) / WEEK_MS);
+      if (lived < 0) lived = 0;
+      if (lived > total) lived = total;
+      var percent = total > 0 ? (lived / total) * 100 : 0;
+
+      return { dob: dob, exp: exp, total: total, lived: lived, percent: percent };
+    }
+
+    function renderGrid(s) {
+      var rows = Math.round(s.total / 52); // expectancy rows
+      var cells = rows * 52;
+      var frag = document.createDocumentFragment();
+      for (var i = 0; i < cells; i++) {
+        var d = document.createElement('div');
+        d.className = 'cell';
+        // weeks lived fill cells 0..lived-1; the current week is cell index `lived`
+        if (i < s.lived) d.className = 'cell lived';
+        else if (i === s.lived) d.className = 'cell now';
+        // else future (default)
+        frag.appendChild(d);
+      }
+      gridEl.innerHTML = '';
+      gridEl.appendChild(frag);
+
+      gridEl.setAttribute('aria-label',
+        s.lived + ' of ' + s.total + ' weeks lived in a ' + s.exp + '-year life, ' +
+        Math.round(s.percent) + ' percent. Each row is one year of 52 weeks.');
+    }
+
+    function showResult(s) {
+      state = s;
+      var left = s.total - s.lived;
+      readoutBig.textContent = fmt(s.lived) + ' weeks lived · ' + fmt(left) + ' weeks left';
+      readoutSub.textContent = s.percent.toFixed(1) + '% of an ' + s.exp + '-year life';
+      renderGrid(s);
+
+      readout.hidden = false;
+      legend.hidden = false;
+      gridwrap.hidden = false;
+      shareRow.hidden = false;
+      emptyState.hidden = true;
+    }
+
+    function showHint(msg) {
+      state = null;
+      readout.hidden = true;
+      legend.hidden = true;
+      gridwrap.hidden = true;
+      shareRow.hidden = true;
+      emptyState.hidden = false;
+      emptyState.textContent = msg;
+    }
+
+    function update(persist) {
+      var dobStr = dobEl.value;
+      if (!dobStr) { showHint('Enter your date of birth above to draw your grid of weeks.'); return; }
+      var s = compute(dobStr, expEl.value);
+      if (s.error === 'future') { showHint('That date is in the future — pick the day you were born.'); return; }
+      if (s.error) { showHint('That date doesn’t look right — try again.'); return; }
+      showResult(s);
+      if (persist) {
+        try { localStorage.setItem(STORE_KEY, JSON.stringify({ dob: dobStr, exp: s.exp })); } catch (e) {}
+      }
+    }
+
+    form.addEventListener('submit', function (e) { e.preventDefault(); update(true); });
+    dobEl.addEventListener('change', function () { update(true); });
+    expEl.addEventListener('change', function () { if (dobEl.value) update(true); });
+    expEl.addEventListener('input', function () { if (state) update(false); });
+
+    clearBtn.addEventListener('click', function () {
+      dobEl.value = '';
+      expEl.value = '80';
+      try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+      showHint('Enter your date of birth above to draw your grid of weeks.');
+    });
+
+    linkBtn.addEventListener('click', function () {
+      TS.copyLink('https://' + TS.SITE + '/t/life-in-weeks/');
+    });
+
+    /* ---------- share card 1080x1920 ---------- */
+    function drawCard(ctx, w, h) {
+      var s = state;
+      var C = TS.colors;
+      var pad = 96;
+
+      // header
+      ctx.textAlign = 'center';
+      ctx.fillStyle = C.inkFaint;
+      ctx.font = '500 30px ' + TS.MONO;
+      ctx.fillText('LIFE IN WEEKS', w / 2, 200);
+
+      ctx.fillStyle = C.ink;
+      ctx.font = '500 92px ' + TS.SERIF;
+      ctx.fillText('My life in weeks', w / 2, 300);
+
+      // ---- grid geometry ----
+      var cols = 52;
+      var rows = Math.round(s.total / 52);
+      var gridTop = 420;
+      var gridBottom = h - 470;
+      var availH = gridBottom - gridTop;
+      var availW = w - pad * 2;
+
+      // choose a cell+gap size that fits both dimensions
+      var gap;
+      // solve so cols*cell + (cols-1)*gap = availW, with gap ~ 22% of cell
+      var cellW = availW / (cols + (cols - 1) * 0.22);
+      var cellH = availH / (rows + (rows - 1) * 0.22);
+      var cell = Math.min(cellW, cellH);
+      gap = cell * 0.22;
+      var r = Math.max(2, cell * 0.18);
+
+      var gridW = cols * cell + (cols - 1) * gap;
+      var gridH = rows * cell + (rows - 1) * gap;
+      var startX = (w - gridW) / 2;
+      var startY = gridTop + (availH - gridH) / 2;
+
+      for (var i = 0; i < rows * cols; i++) {
+        var rr = Math.floor(i / cols), cc = i % cols;
+        var x = startX + cc * (cell + gap);
+        var y = startY + rr * (cell + gap);
+
+        var isNow = (i === s.lived);
+        var isLived = i < s.lived;
+
+        if (isNow) ctx.fillStyle = C.accRose;
+        else if (isLived) ctx.fillStyle = C.ink;
+        else ctx.fillStyle = '#ffffff';
+
+        TS.roundRect(ctx, x, y, cell, cell, r);
+        ctx.fill();
+
+        if (!isNow && !isLived) {
+          ctx.lineWidth = Math.max(1, cell * 0.05);
+          ctx.strokeStyle = '#e3ddd3';
+          ctx.stroke();
+        }
+      }
+
+      // ---- readout ----
+      var left = s.total - s.lived;
+      var by = gridBottom + 96;
+      ctx.textAlign = 'center';
+      ctx.fillStyle = C.ink;
+      ctx.font = '500 50px ' + TS.MONO;
+      ctx.fillText(fmt(s.lived) + ' lived  ·  ' + fmt(left) + ' left', w / 2, by);
+
+      ctx.fillStyle = C.accRose;
+      ctx.font = '500 40px ' + TS.MONO;
+      ctx.fillText(s.percent.toFixed(1) + '% of an ' + s.exp + '-year life', w / 2, by + 64);
+
+      // make every week count line
+      ctx.fillStyle = C.inkSoft;
+      ctx.font = '400 32px ' + TS.SANS;
+      ctx.fillText('make the next square count', w / 2, by + 132);
+
+      TS.watermark(ctx, w, h, TS.SITE);
+    }
+
+    shareBtn.addEventListener('click', function () {
+      if (!state) { TS.toast('Draw your grid first'); return; }
+      var canvas = TS.makeCard({ draw: drawCard, width: 1080, height: 1920, wash: true });
+      TS.shareOrDownload(canvas, 'life-in-weeks.png', 'My life in weeks — ' + TS.SITE + '/t/life-in-weeks/');
+      if (firstExport) { firstExport = false; TS.confetti(); }
+    });
+
+    /* ---------- restore saved DOB (optional) ---------- */
+    (function restore() {
+      try {
+        var raw = localStorage.getItem(STORE_KEY);
+        if (!raw) return;
+        var saved = JSON.parse(raw);
+        if (saved && saved.dob) {
+          dobEl.value = saved.dob;
+          if (saved.exp) expEl.value = saved.exp;
+          update(false);
+        }
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

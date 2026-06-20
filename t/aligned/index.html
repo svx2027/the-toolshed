@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aligned — see how in sync you and someone else really are</title>
+  <meta name="description" content="A 10-question either/or quiz for couples and friends. Answer, send the link, and find out your alignment percentage and the thing you clash most on.">
+  <link rel="canonical" href="https://shivamvashisth.com/t/aligned/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Aligned — how in sync are you two, really?">
+  <meta property="og:description" content="Answer 10 quick questions, send the link, and reveal your alignment score with someone you love.">
+  <meta property="og:url" content="https://shivamvashisth.com/t/aligned/">
+  <meta property="og:image" content="https://shivamvashisth.com/assets/og-aligned.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/brand.css">
+  <style>
+    .a-hero { text-align: center; }
+    .a-decks { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.25rem; }
+    @media (max-width: 460px) { .a-decks { grid-template-columns: 1fr; } }
+    .deck-btn {
+      display: flex; flex-direction: column; gap: .4rem; text-align: left;
+      padding: 1.1rem 1.2rem; border-radius: var(--r-md); cursor: pointer;
+      border: 1px solid var(--line-strong); background: rgba(255,255,255,.6);
+      font: inherit; color: var(--ink); transition: transform .12s, box-shadow .12s, background .12s;
+      min-height: 44px;
+    }
+    .deck-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lift); background: rgba(255,255,255,.85); }
+    .deck-btn .d-name { font-family: var(--font-display, serif); font-size: 1.3rem; font-weight: 600; }
+    .deck-btn .d-sub { color: var(--ink-faint); font-size: .9rem; }
+    .deck-btn .d-emoji { font-size: 1.6rem; }
+
+    .progress { height: 8px; border-radius: var(--r-pill); background: rgba(0,0,0,.06); overflow: hidden; margin-bottom: 1.25rem; }
+    .progress > i { display: block; height: 100%; background: var(--acc-lavender); border-radius: var(--r-pill); transition: width .3s ease; }
+    .q-count { font-family: var(--font-mono); font-size: .8rem; color: var(--ink-faint); letter-spacing: .1em; text-transform: uppercase; margin-bottom: .5rem; }
+    .q-text { font-family: var(--font-display, serif); font-size: clamp(1.3rem, 5vw, 1.7rem); line-height: 1.25; margin: 0 0 1.4rem; }
+
+    .opts { display: grid; gap: .7rem; }
+    .opt {
+      display: flex; align-items: center; gap: .7rem; width: 100%;
+      padding: .95rem 1.1rem; border-radius: var(--r-md); cursor: pointer;
+      border: 1px solid var(--line-strong); background: rgba(255,255,255,.6);
+      font: inherit; font-size: 1.02rem; color: var(--ink); text-align: left;
+      transition: transform .1s, box-shadow .1s, background .1s, border-color .1s;
+      min-height: 44px;
+    }
+    .opt:hover { transform: translateY(-1px); box-shadow: var(--shadow-lift); background: rgba(255,255,255,.9); }
+    .opt.sel { border-color: var(--acc-lavender); background: var(--lavender); }
+    .opt .dot { flex: 0 0 auto; width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--line-strong); }
+    .opt.sel .dot { border-color: var(--acc-lavender); background: var(--acc-lavender); box-shadow: inset 0 0 0 3px var(--card); }
+
+    .scale-row { display: flex; gap: .5rem; }
+    .scale-row .opt { flex: 1; flex-direction: column; gap: .35rem; text-align: center; padding: .8rem .4rem; font-size: .82rem; }
+    .scale-row .opt .dot { width: 22px; height: 22px; }
+    @media (max-width: 420px) { .scale-row .opt { font-size: .7rem; padding: .7rem .2rem; } }
+
+    .nav-row { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1.5rem; }
+    .link-box {
+      font-family: var(--font-mono); font-size: .82rem; word-break: break-all;
+      background: rgba(0,0,0,.04); border: 1px dashed var(--line-strong);
+      border-radius: var(--r-md); padding: .9rem 1rem; margin: 1rem 0; color: var(--ink-soft);
+    }
+    .big-score {
+      font-family: var(--font-display, serif); font-weight: 600;
+      font-size: clamp(3.5rem, 18vw, 6rem); line-height: 1; color: var(--acc-lavender); margin: .2rem 0;
+    }
+    .ring-wrap { display: flex; justify-content: center; margin: .5rem 0 1rem; }
+    .clash-card {
+      background: var(--peach); border: 1px solid #f3d9ab; border-radius: var(--r-md);
+      padding: 1rem 1.2rem; margin-top: 1rem;
+    }
+    .clash-card .lbl { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--acc-peach); margin-bottom: .3rem; }
+    .a-actions { display: flex; gap: .8rem; flex-wrap: wrap; margin-top: 1.4rem; }
+    .a-actions .btn { flex: 1; min-width: 140px; }
+    .breakdown { margin-top: 1.5rem; }
+    .breakdown h3 { font-size: 1rem; margin: 0 0 .6rem; }
+    .brow { display: flex; align-items: center; gap: .6rem; padding: .55rem 0; border-top: 1px solid var(--line); font-size: .92rem; }
+    .brow .bdot { flex: 0 0 auto; width: 10px; height: 10px; border-radius: 50%; }
+    .brow .bdot.m { background: var(--acc-mint); }
+    .brow .bdot.p { background: var(--acc-peach); }
+    .brow .bdot.x { background: var(--acc-rose); }
+    .brow .btopic { flex: 1; color: var(--ink-soft); }
+  </style>
+</head>
+<body>
+  <h1 class="sr-only">Aligned: answer ten quick questions and see how in sync you and someone else really are.</h1>
+  <div id="nav"></div>
+  <main class="wrap" style="padding-top: 2rem; padding-bottom: 3rem;">
+    <div class="card pad" style="max-width: 620px; margin: 0 auto;">
+      <div id="app" aria-live="polite"></div>
+    </div>
+  </main>
+  <div id="foot"></div>
+
+  <script src="/assets/shared.js"></script>
+  <script>
+    document.getElementById('nav').innerHTML = TS.toolnav();
+    document.getElementById('foot').innerHTML = TS.footer();
+
+    /* ---------------- decks ----------------
+       Each statement: { topic, kind:'either'|'scale', a, b }
+       'either' = two choices (answer 0 or 1)
+       'scale'  = 5-point agree scale (answer 0..4) for a single statement
+    */
+    const DECKS = {
+      couples: {
+        name: 'Couples',
+        emoji: '💞',
+        sub: 'Money, mess, plans & the small stuff.',
+        questions: [
+          { topic: 'Date night', kind: 'either', prompt: 'The ideal Friday night is…', a: 'Out — plans, people, somewhere new', b: 'In — couch, takeout, no pants' },
+          { topic: 'Money', kind: 'scale', prompt: '"We should save aggressively, even if it means skipping fun stuff now."' },
+          { topic: 'Tidiness', kind: 'scale', prompt: '"A messy home genuinely stresses me out."' },
+          { topic: 'Planning', kind: 'either', prompt: 'Holidays are best when they are…', a: 'Planned to the hour', b: 'Figured out as we go' },
+          { topic: 'Mornings', kind: 'either', prompt: 'Before 8am, I am…', a: 'Up, cheerful, productive', b: 'Do not talk to me yet' },
+          { topic: 'Conflict', kind: 'scale', prompt: '"Hash it out now" beats "sleep on it and talk tomorrow."' },
+          { topic: 'Social life', kind: 'either', prompt: 'A free weekend should mostly be…', a: 'Seeing friends & family', b: 'Just the two of us' },
+          { topic: 'Spending', kind: 'either', prompt: 'On a splurge, I would rather buy…', a: 'Experiences (trips, dinners)', b: 'Things (gear, home, stuff)' },
+          { topic: 'Future', kind: 'scale', prompt: '"I want to know roughly where we will be in 5 years."' },
+          { topic: 'PDA', kind: 'scale', prompt: '"Holding hands and being affectionate in public is lovely."' }
+        ]
+      },
+      friends: {
+        name: 'Friends',
+        emoji: '🤝',
+        sub: 'Plans, group chats & true colours.',
+        questions: [
+          { topic: 'Punctuality', kind: 'either', prompt: 'Arriving "on time" actually means…', a: 'Five minutes early', b: 'Fashionably late is fine' },
+          { topic: 'Group chat', kind: 'scale', prompt: '"A good group chat should be active every single day."' },
+          { topic: 'Plans', kind: 'either', prompt: 'The better kind of hangout is…', a: 'Booked weeks ahead', b: 'Spontaneous, same-day' },
+          { topic: 'Splitting bills', kind: 'either', prompt: 'When the bill lands, we should…', a: 'Split it evenly, no maths', b: 'Pay for exactly what we ordered' },
+          { topic: 'Nights out', kind: 'either', prompt: 'A great night out ends…', a: 'When the sun comes up', b: 'Home by midnight, thanks' },
+          { topic: 'Honesty', kind: 'scale', prompt: '"Tell me bluntly if I am making a mistake — even if it stings."' },
+          { topic: 'Adventure', kind: 'scale', prompt: '"I will say yes to almost any last-minute trip."' },
+          { topic: 'Hosting', kind: 'either', prompt: 'For a get-together I would rather…', a: 'Host at mine', b: 'Go to someone else’s' },
+          { topic: 'Replies', kind: 'scale', prompt: '"Leaving a text on read for a day is totally fine."' },
+          { topic: 'Competition', kind: 'either', prompt: 'Game night is about…', a: 'Winning, obviously', b: 'Just having a laugh' }
+        ]
+      }
+    };
+
+    const SCALE_LABELS = ['Strongly disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly agree'];
+
+    /* ---------------- state ---------------- */
+    const app = document.getElementById('app');
+    let state = { deck: null, name: '', answers: [], idx: 0 };
+
+    /* ---------------- hash codec (unicode-safe) ---------------- */
+    function encodeState(obj) {
+      try { return btoa(encodeURIComponent(JSON.stringify(obj))); }
+      catch (e) { return ''; }
+    }
+    function decodeState(str) {
+      try {
+        const obj = JSON.parse(decodeURIComponent(atob(str)));
+        if (!obj || typeof obj !== 'object') return null;
+        if (!DECKS[obj.deck]) return null;
+        const qs = DECKS[obj.deck].questions;
+        if (!Array.isArray(obj.answers) || obj.answers.length !== qs.length) return null;
+        // validate each answer in range
+        for (let i = 0; i < qs.length; i++) {
+          const max = qs[i].kind === 'scale' ? 4 : 1;
+          const v = obj.answers[i];
+          if (typeof v !== 'number' || v < 0 || v > max || !Number.isFinite(v)) return null;
+        }
+        return { deck: obj.deck, name: typeof obj.name === 'string' ? obj.name.slice(0, 40) : '', answers: obj.answers };
+      } catch (e) { return null; }
+    }
+
+    function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+
+    /* ---------------- screens ---------------- */
+    function renderStart() {
+      app.innerHTML = `
+        <div class="a-hero">
+          <p class="eyebrow">A 10-question vibe check</p>
+          <h2 class="serif" style="font-size: clamp(1.8rem,7vw,2.4rem); margin:.2rem 0 .5rem;">How aligned are you two?</h2>
+          <p class="lead" style="margin: 0 auto;">Pick a deck, answer ten quick questions, then send the link to the other person. They answer too — and you both get the score.</p>
+        </div>
+        <div class="a-decks">
+          ${Object.entries(DECKS).map(([k, d]) => `
+            <button class="deck-btn" data-deck="${k}">
+              <span class="d-emoji">${d.emoji}</span>
+              <span class="d-name">${esc(d.name)}</span>
+              <span class="d-sub">${esc(d.sub)}</span>
+            </button>`).join('')}
+        </div>`;
+      app.querySelectorAll('.deck-btn').forEach(b => {
+        b.addEventListener('click', () => {
+          state.deck = b.dataset.deck;
+          renderName();
+        });
+      });
+    }
+
+    function renderName() {
+      const d = DECKS[state.deck];
+      app.innerHTML = `
+        <p class="eyebrow">${esc(d.name)} deck ${d.emoji}</p>
+        <h2 class="serif" style="font-size: clamp(1.5rem,6vw,2rem); margin:.2rem 0 1rem;">First, what should we call you?</h2>
+        <div class="field">
+          <label for="nm">Your first name <span class="muted">(optional)</span></label>
+          <input id="nm" type="text" maxlength="40" placeholder="e.g. Alex" autocomplete="given-name">
+        </div>
+        <div class="nav-row">
+          <button class="btn ghost" id="back">← Back</button>
+          <button class="btn" id="go">Start the quiz →</button>
+        </div>`;
+      const input = app.querySelector('#nm');
+      input.focus();
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') start(); });
+      app.querySelector('#back').addEventListener('click', () => { state.deck = null; renderStart(); });
+      app.querySelector('#go').addEventListener('click', start);
+      function start() {
+        state.name = input.value.trim().slice(0, 40);
+        state.answers = new Array(d.questions.length).fill(null);
+        state.idx = 0;
+        renderQuestion('A');
+      }
+    }
+
+    /* role: 'A' (creating link) or 'B' (answering shared link) */
+    let role = 'A';
+    let partner = null; // decoded A state when role B
+
+    function renderQuestion(r) {
+      role = r;
+      const d = DECKS[state.deck];
+      const qs = d.questions;
+      const i = state.idx;
+      const q = qs[i];
+      const pct = Math.round((i / qs.length) * 100);
+
+      let optsHtml;
+      if (q.kind === 'either') {
+        optsHtml = `<div class="opts">
+          ${[q.a, q.b].map((txt, oi) => `
+            <button class="opt${state.answers[i] === oi ? ' sel' : ''}" data-v="${oi}">
+              <span class="dot"></span><span>${esc(txt)}</span>
+            </button>`).join('')}
+        </div>`;
+      } else {
+        optsHtml = `<div class="scale-row">
+          ${SCALE_LABELS.map((txt, oi) => `
+            <button class="opt${state.answers[i] === oi ? ' sel' : ''}" data-v="${oi}" aria-label="${esc(txt.replace(/ /g,' '))}">
+              <span class="dot"></span><span>${esc(txt)}</span>
+            </button>`).join('')}
+        </div>`;
+      }
+
+      app.innerHTML = `
+        <div class="progress" aria-hidden="true"><i style="width:${pct}%"></i></div>
+        <p class="q-count">Question ${i + 1} of ${qs.length}${role === 'B' && partner && partner.name ? ' · answering for ' + esc(partner.name) + '’s quiz' : ''}</p>
+        <p class="q-text">${esc(q.prompt)}</p>
+        ${optsHtml}
+        <div class="nav-row">
+          <button class="btn ghost" id="prev"${i === 0 ? ' disabled' : ''}>← Prev</button>
+          <button class="btn" id="next"${state.answers[i] === null ? ' disabled' : ''}>${i === qs.length - 1 ? 'Finish →' : 'Next →'}</button>
+        </div>`;
+
+      app.querySelectorAll('.opt').forEach(o => {
+        o.addEventListener('click', () => {
+          state.answers[i] = parseInt(o.dataset.v, 10);
+          app.querySelectorAll('.opt').forEach(x => x.classList.remove('sel'));
+          o.classList.add('sel');
+          app.querySelector('#next').disabled = false;
+        });
+      });
+      app.querySelector('#prev').addEventListener('click', () => { if (state.idx > 0) { state.idx--; renderQuestion(role); } });
+      app.querySelector('#next').addEventListener('click', () => {
+        if (state.answers[i] === null) return;
+        if (i < qs.length - 1) { state.idx++; renderQuestion(role); }
+        else { role === 'A' ? renderShareLink() : renderResult(); }
+      });
+    }
+
+    /* ---------- Person A: produce link (do NOT reveal answers) ---------- */
+    function renderShareLink() {
+      const payload = { deck: state.deck, name: state.name, answers: state.answers };
+      const hash = encodeState(payload);
+      const url = location.origin + location.pathname + '#' + hash;
+      const d = DECKS[state.deck];
+      app.innerHTML = `
+        <div class="a-hero">
+          <p class="eyebrow">${esc(d.name)} deck ${d.emoji}</p>
+          <h2 class="serif" style="font-size: clamp(1.6rem,6vw,2.1rem); margin:.2rem 0 .6rem;">Locked in${state.name ? ', ' + esc(state.name) : ''}. ✅</h2>
+          <p class="lead" style="margin:0 auto;">Now send this link to the other person. They answer the same ten — without seeing your answers — and you both get the result.</p>
+        </div>
+        <div class="link-box" id="lnk">${esc(url)}</div>
+        <div class="a-actions">
+          <button class="btn" id="copy">Copy the link</button>
+          <button class="btn ghost" id="restart">Start over</button>
+        </div>
+        <p class="muted center" style="margin-top:1rem; font-size:.85rem;">Tip: your answers are tucked into the link only — nothing is stored anywhere.</p>`;
+      app.querySelector('#copy').addEventListener('click', () => TS.copyLink(url));
+      app.querySelector('#restart').addEventListener('click', () => { history.replaceState(null, '', location.pathname); resetAndStart(); });
+    }
+
+    /* ---------- Person B: result ---------- */
+    function computeResult() {
+      const qs = DECKS[state.deck].questions;
+      let totalScore = 0; // 0..1 per question
+      const rows = qs.map((q, i) => {
+        const av = partner.answers[i], bv = state.answers[i];
+        let s; // 0..1 alignment
+        if (q.kind === 'scale') {
+          const diff = Math.abs(av - bv); // 0..4
+          if (diff === 0) s = 1;
+          else if (diff === 1) s = 0.5; // within-1 partial
+          else s = 0;
+        } else {
+          s = av === bv ? 1 : 0;
+        }
+        totalScore += s;
+        return { topic: q.topic, score: s, diff: q.kind === 'scale' ? Math.abs(av - bv) : (av === bv ? 0 : 1), kind: q.kind };
+      });
+      const pct = Math.round((totalScore / qs.length) * 100);
+      // biggest clash = max disagreement; for scale use diff, for either use 1; break ties by order
+      let clash = null;
+      rows.forEach(r => {
+        const sev = r.kind === 'scale' ? r.diff / 4 : (r.score === 0 ? 1 : 0);
+        if (!clash || sev > clash.sev) clash = { topic: r.topic, sev, score: r.score };
+      });
+      const hasClash = !!clash && clash.sev > 0;
+      return { pct, rows, clash, hasClash };
+    }
+
+    function renderResult() {
+      const res = computeResult();
+      const d = DECKS[state.deck];
+      const aName = partner.name || 'Person A';
+      const bName = state.name || 'You';
+      const blurb = res.pct >= 85 ? 'Practically the same brain. 🧠' :
+        res.pct >= 65 ? 'Strongly in sync — with spice in the gaps.' :
+          res.pct >= 45 ? 'A healthy mix of same and different.' :
+            res.pct >= 25 ? 'Opposites — which is its own kind of fun.' :
+              'Wildly different wiring. Never a dull moment.';
+
+      const clashHtml = res.hasClash ? `
+        <div class="clash-card">
+          <div class="lbl">You clash most on</div>
+          <div class="serif" style="font-size:1.25rem;font-weight:600;">${esc(res.clash.topic)}</div>
+        </div>` : `
+        <div class="clash-card" style="background:var(--mint);border-color:#bfe3cd;">
+          <div class="lbl" style="color:var(--acc-mint);">No real clashes</div>
+          <div class="serif" style="font-size:1.25rem;font-weight:600;">You agreed on everything. 🎯</div>
+        </div>`;
+
+      app.innerHTML = `
+        <div class="a-hero">
+          <p class="eyebrow">${esc(d.name)} deck ${d.emoji} · ${esc(aName)} & ${esc(bName)}</p>
+          <div class="ring-wrap"><canvas id="ring" width="200" height="200" style="width:170px;height:170px;"></canvas></div>
+          <div class="big-score">${res.pct}%</div>
+          <h2 class="serif" style="font-size: clamp(1.4rem,6vw,1.9rem); margin:.1rem 0 .4rem;">aligned</h2>
+          <p class="lead" style="margin:0 auto;">${esc(blurb)}</p>
+        </div>
+        ${clashHtml}
+        <div class="breakdown">
+          <h3>Question by question</h3>
+          ${res.rows.map(r => {
+            const cls = r.score === 1 ? 'm' : r.score === 0.5 ? 'p' : 'x';
+            const tag = r.score === 1 ? 'Matched' : r.score === 0.5 ? 'Close' : 'Clashed';
+            return `<div class="brow"><span class="bdot ${cls}"></span><span class="btopic">${esc(r.topic)}</span><span class="muted mono" style="font-size:.78rem;">${tag}</span></div>`;
+          }).join('')}
+        </div>
+        <div class="a-actions">
+          <button class="btn" id="share">Save the share card</button>
+          <button class="btn ghost" id="again">Try the other deck</button>
+        </div>`;
+
+      drawRing(res.pct);
+
+      app.querySelector('#share').addEventListener('click', () => {
+        const canvas = buildCard(res, d, aName, bName, blurb);
+        TS.shareOrDownload(canvas, 'aligned-' + res.pct + '.png', 'We are ' + res.pct + '% aligned on the ' + d.name + ' deck.');
+      });
+      app.querySelector('#again').addEventListener('click', () => { history.replaceState(null, '', location.pathname); resetAndStart(); });
+
+      if (res.pct >= 80) setTimeout(() => TS.confetti(), 350);
+    }
+
+    function drawRing(pct) {
+      const cv = document.getElementById('ring');
+      if (!cv) return;
+      const ctx = cv.getContext('2d');
+      const cx = 100, cy = 100, r = 80;
+      ctx.lineWidth = 16; ctx.lineCap = 'round';
+      ctx.strokeStyle = 'rgba(0,0,0,.07)';
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+      ctx.strokeStyle = TS.colors.accLavender;
+      ctx.beginPath(); ctx.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * (pct / 100)); ctx.stroke();
+    }
+
+    /* ---------------- share card ---------------- */
+    function buildCard(res, d, aName, bName, blurb) {
+      return TS.makeCard({
+        width: 1080, height: 1920, wash: true,
+        draw(ctx, w, h) {
+          const cx = w / 2;
+          ctx.textAlign = 'center';
+
+          // eyebrow
+          ctx.fillStyle = TS.colors.inkFaint;
+          ctx.font = `500 30px ${TS.MONO}`;
+          ctx.fillText(d.name.toUpperCase() + ' DECK', cx, 230);
+
+          // names
+          ctx.fillStyle = TS.colors.inkSoft;
+          const namesLine = aName + '  &  ' + bName;
+          let nf = TS.fitFont(ctx, namesLine, TS.SERIF, '600', 64, 34, w - 180);
+          ctx.font = `600 ${nf}px ${TS.SERIF}`;
+          ctx.fillText(namesLine, cx, 320);
+
+          // ring
+          const ry = 720, rr = 250;
+          ctx.lineWidth = 40; ctx.lineCap = 'round';
+          ctx.strokeStyle = 'rgba(0,0,0,.06)';
+          ctx.beginPath(); ctx.arc(cx, ry, rr, 0, Math.PI * 2); ctx.stroke();
+          ctx.strokeStyle = TS.colors.accLavender;
+          ctx.beginPath(); ctx.arc(cx, ry, rr, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * (res.pct / 100)); ctx.stroke();
+
+          // big % inside ring
+          ctx.fillStyle = TS.colors.accLavender;
+          ctx.font = `600 170px ${TS.SERIF}`;
+          ctx.textBaseline = 'middle';
+          ctx.fillText(res.pct + '%', cx, ry - 6);
+          ctx.textBaseline = 'alphabetic';
+
+          // "aligned"
+          ctx.fillStyle = TS.colors.ink;
+          ctx.font = `600 80px ${TS.SERIF}`;
+          ctx.fillText('aligned', cx, ry + rr + 130);
+
+          // blurb (wrapped)
+          ctx.fillStyle = TS.colors.inkSoft;
+          ctx.font = `400 40px ${TS.SANS}`;
+          const lines = TS.wrapText(ctx, blurb, w - 240);
+          let by = ry + rr + 210;
+          lines.forEach(l => { ctx.fillText(l, cx, by); by += 54; });
+
+          // clash chip (or a "matched everything" chip when nothing clashed)
+          const chipY = by + 70, chipW = w - 200, chipH = 220, chipX = (w - chipW) / 2;
+          const chipLabel = res.hasClash ? 'YOU CLASH MOST ON' : 'NO REAL CLASHES';
+          const chipBody = res.hasClash ? res.clash.topic : 'You agreed on everything';
+          ctx.fillStyle = res.hasClash ? TS.colors.peach : TS.colors.mint;
+          TS.roundRect(ctx, chipX, chipY, chipW, chipH, 32); ctx.fill();
+          ctx.fillStyle = res.hasClash ? TS.colors.accPeach : TS.colors.accMint;
+          ctx.font = `500 28px ${TS.MONO}`;
+          ctx.fillText(chipLabel, cx, chipY + 70);
+          ctx.fillStyle = TS.colors.ink;
+          let cf = TS.fitFont(ctx, chipBody, TS.SERIF, '600', 64, 36, chipW - 100);
+          ctx.font = `600 ${cf}px ${TS.SERIF}`;
+          ctx.fillText(chipBody, cx, chipY + 150);
+
+          TS.watermark(ctx, w, h, TS.SITE + '/t/aligned');
+        }
+      });
+    }
+
+    /* ---------------- boot ---------------- */
+    function resetAndStart() {
+      state = { deck: null, name: '', answers: [], idx: 0 };
+      partner = null;
+      renderStart();
+    }
+
+    function boot() {
+      const raw = location.hash.replace(/^#/, '');
+      if (raw) {
+        const decoded = decodeState(raw);
+        if (decoded) {
+          // Person B flow
+          partner = decoded;
+          state = { deck: decoded.deck, name: '', answers: new Array(DECKS[decoded.deck].questions.length).fill(null), idx: 0 };
+          renderPersonBIntro();
+          return;
+        }
+        // garbled hash → silently fall back to start
+      }
+      resetAndStart();
+    }
+
+    function renderPersonBIntro() {
+      const d = DECKS[state.deck];
+      const who = partner.name ? esc(partner.name) : 'Someone';
+      app.innerHTML = `
+        <div class="a-hero">
+          <p class="eyebrow">${esc(d.name)} deck ${d.emoji}</p>
+          <h2 class="serif" style="font-size: clamp(1.7rem,6.5vw,2.3rem); margin:.2rem 0 .6rem;">${who} wants to know how aligned you two are.</h2>
+          <p class="lead" style="margin:0 auto;">Answer the same ten questions — you won’t see their answers until you’re done. Then you’ll both get the score.</p>
+        </div>
+        <div class="field" style="margin-top:1.3rem;">
+          <label for="bnm">Your first name <span class="muted">(optional)</span></label>
+          <input id="bnm" type="text" maxlength="40" placeholder="e.g. Sam" autocomplete="given-name">
+        </div>
+        <div class="nav-row">
+          <span></span>
+          <button class="btn" id="bgo">Start answering →</button>
+        </div>`;
+      const input = app.querySelector('#bnm');
+      input.focus();
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+      app.querySelector('#bgo').addEventListener('click', go);
+      function go() {
+        state.name = input.value.trim().slice(0, 40);
+        state.idx = 0;
+        renderQuestion('B');
+      }
+    }
+
+    boot();
+  </script>
+</body>
+</html>

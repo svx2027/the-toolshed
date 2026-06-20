@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Outlier Radar — see what's overperforming in your niche right now</title>
+  <meta name="description" content="Rank what's overperforming in your niche right now, scored against each channel's own baseline, with a one-line read on why. Coming soon to The Toolshed.">
+  <link rel="canonical" href="https://shivamvashisth.com/t/outlier-radar/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Outlier Radar — what's overperforming in your niche, ranked">
+  <meta property="og:description" content="See what's overperforming in your niche right now — ranked, with a one-line read on why.">
+  <meta property="og:url" content="https://shivamvashisth.com/t/outlier-radar/">
+  <meta property="og:image" content="https://shivamvashisth.com/assets/og-outlier-radar.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/brand.css">
+  <style>
+    .brew-wrap { max-width: 640px; margin: 0 auto; padding-top: clamp(40px, 9vw, 90px); padding-bottom: 64px; }
+    .brew-card { text-align: center; }
+    .pill-row { display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.4rem; }
+    .brew-card h2 { font-size: clamp(1.9rem, 5.5vw, 2.7rem); margin-bottom: .5rem; }
+    .brew-card .lead { margin: 0 auto 1.8rem; }
+    .brew-list { list-style: none; padding: 0; margin: 0 0 2rem; text-align: left; }
+    .brew-list li { position: relative; padding: .55rem 0 .55rem 1.9rem; color: var(--ink-soft); border-top: 1px solid var(--line); }
+    .brew-list li:first-child { border-top: none; }
+    .brew-list li::before { content: "→"; position: absolute; left: 0; top: .55rem; color: var(--acc-sky); font-family: var(--font-mono); }
+    .capture { text-align: left; margin-top: .5rem; }
+    .capture .row { align-items: flex-end; }
+    .capture .field { flex: 1 1 220px; margin-bottom: 0; }
+    .capture .btn { min-height: 44px; }
+    @media (max-width: 480px){ .capture .btn { width: 100%; justify-content: center; } }
+    .fineprint { font-size: .82rem; margin-top: .9rem; margin-bottom: 0; }
+  </style>
+</head>
+<body>
+  <h1 class="sr-only">Outlier Radar is brewing — see what's overperforming in your niche right now, ranked.</h1>
+  <div id="nav"></div>
+  <main class="wrap">
+    <div class="brew-wrap">
+      <div class="card pad brew-card">
+        <p class="eyebrow">brewing</p>
+        <div class="pill-row">
+          <span class="pill creator">for creators</span>
+          <span class="pill brewing">brewing</span>
+        </div>
+        <h2 class="serif">See what's overperforming in your niche right now — ranked, with a one-line read on why.</h2>
+        <p class="lead">Not the biggest channels — the biggest surprises. Outlier Radar finds videos beating their own baseline and tells you, briefly, what's working.</p>
+        <ul class="brew-list">
+          <li>Scores each recent upload against its OWN channel's baseline — an outlier multiplier — plus views-per-hour velocity.</li>
+          <li>YouTube-first via the public YouTube Data API. Instagram is best-effort and manual.</li>
+          <li>Export a "biggest outlier in [niche] this week" card.</li>
+          <li>A weekly digest email lands later. The math is deterministic; AI only writes the optional "why it works" line.</li>
+        </ul>
+        <form class="capture" id="subForm" novalidate>
+          <div class="row">
+            <div class="field">
+              <label for="email">Get an email when it opens</label>
+              <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+            </div>
+            <button class="btn" type="submit">Notify me</button>
+          </div>
+          <p class="fineprint muted" aria-live="polite" id="formNote">One email when this tool goes live. No list, no spam.</p>
+        </form>
+      </div>
+    </div>
+  </main>
+  <div id="foot"></div>
+  <script src="/assets/shared.js"></script>
+  <script>
+    document.getElementById('nav').innerHTML = TS.toolnav();
+    document.getElementById('foot').innerHTML = TS.footer();
+
+    const SLUG = 'outlier-radar';
+    const form = document.getElementById('subForm');
+    const emailEl = document.getElementById('email');
+    const note = document.getElementById('formNote');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const email = emailEl.value.trim();
+      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+        note.textContent = 'That email looks off — mind checking it?';
+        emailEl.focus();
+        return;
+      }
+      let subs;
+      try { subs = JSON.parse(localStorage.getItem('ts_sub') || '[]'); }
+      catch (err) { subs = []; }
+      if (!Array.isArray(subs)) subs = [];
+      subs.push({ email: email, tool: SLUG, at: new Date().toISOString() });
+      try { localStorage.setItem('ts_sub', JSON.stringify(subs)); } catch (err) {}
+      TS.toast("I'll email you when this opens.");
+      note.textContent = "You're on the list. I'll email you when this opens.";
+      form.reset();
+    });
+  </script>
+</body>
+</html>
