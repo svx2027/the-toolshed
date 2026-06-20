@@ -71,14 +71,14 @@
   .layout{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:start}
   .months{display:flex;flex-direction:column;gap:10px}
   .month-row{display:grid;grid-template-columns:54px 64px 1fr;gap:10px;align-items:center;
-    padding:8px;border:1px solid var(--line);border-radius:var(--r-md);background:#fff;transition:border-color .12s,box-shadow .12s}
+    padding:8px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--card);transition:border-color .12s,box-shadow .12s}
   .month-row.active{border-color:var(--acc-sky);box-shadow:0 0 0 3px rgba(47,111,174,.15)}
   .month-row .mname{font-family:var(--font-mono);font-size:.8rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em}
   .month-row .emoji-in{font-size:1.5rem;text-align:center;padding:.3rem;line-height:1.2}
   .month-row .word-in{font-size:.95rem}
   .quickpick{display:flex;flex-wrap:wrap;gap:6px}
   .quickpick button{font-size:1.25rem;line-height:1;padding:.3rem .4rem;border:1px solid var(--line-strong);
-    border-radius:var(--r-sm);background:#fff;cursor:pointer;transition:transform .1s,border-color .1s}
+    border-radius:var(--r-sm);background:var(--card);cursor:pointer;transition:transform .1s,border-color .1s}
   .quickpick button:hover{transform:translateY(-2px);border-color:var(--acc-sky)}
   .side{position:sticky;top:76px}
   .preview-frame{margin-top:14px;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;background:var(--paper)}
