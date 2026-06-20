@@ -13,6 +13,7 @@
   <meta property="og:image" content="https://shivamvashisth.com/assets/og-read-rate.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <script>try{var t=localStorage.getItem("ts_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
   <link rel="stylesheet" href="/assets/brand.css">
   <style>
     .rr-shell { max-width: 720px; margin: 40px auto 64px; }
@@ -33,9 +34,9 @@
     .rr-opt {
       display: flex; align-items: flex-start; gap: .65rem; padding: .7rem .85rem;
       border: 1px solid var(--line-strong); border-radius: var(--r-sm); margin-bottom: .5rem;
-      cursor: pointer; background: #fff; transition: border-color .15s, background .15s;
+      cursor: pointer; background: var(--card); transition: border-color .15s, background .15s;
     }
-    .rr-opt:hover { border-color: var(--acc-sky); background: rgba(220,234,245,.35); }
+    .rr-opt:hover { border-color: var(--acc-sky); background: rgba(132,182,230,.15); }
     .rr-opt input { width: auto; margin: .25rem 0 0; flex: 0 0 auto; accent-color: var(--acc-sky); }
     .rr-opt span { font-size: .98rem; color: var(--ink-soft); }
     fieldset { border: 0; padding: 0; margin: 0; }

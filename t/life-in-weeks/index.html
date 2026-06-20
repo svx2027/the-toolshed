@@ -13,6 +13,7 @@
   <meta property="og:image" content="https://shivamvashisth.com/assets/og-life-in-weeks.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <script>try{var t=localStorage.getItem("ts_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
   <link rel="stylesheet" href="/assets/brand.css">
   <style>
     .head { padding: 40px 0 8px; }
@@ -34,7 +35,7 @@
     .swatch { width: 13px; height: 13px; border-radius: 3px; border: 1px solid var(--line-strong); flex: none; }
     .sw-lived { background: var(--ink); border-color: var(--ink); }
     .sw-now { background: var(--acc-rose); border-color: var(--acc-rose); }
-    .sw-future { background: #fff; }
+    .sw-future { background: var(--card); }
 
     .gridwrap { overflow: hidden; }
     .yearlabels-row { display: flex; gap: 10px; align-items: flex-start; }
@@ -48,7 +49,7 @@
     .cell {
       aspect-ratio: 1 / 1;
       border-radius: 2px;
-      background: #fff;
+      background: var(--card);
       border: 1px solid var(--line);
     }
     .cell.lived { background: var(--ink); border-color: var(--ink); }
