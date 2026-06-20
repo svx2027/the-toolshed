@@ -162,17 +162,72 @@
   TS.footer = function () {
     const year = new Date().getFullYear();
     return `<footer class="foot"><div class="wrap">
-      <span>© ${year} Shivam Vashisth · built with AI, shipped weekly</span>
-      <span><a href="/">The Toolshed</a> · <a href="mailto:hi@shivamvashisth.com">hi@shivamvashisth.com</a></span>
+      <span>Made in a garage, with AI, by one creator who replies to DMs.</span>
+      <span>© ${year} Code for Creatives India · <a href="/">The Garage</a> · <a href="https://instagram.com/svx2027" target="_blank" rel="noopener">@svx2027</a> · <a href="mailto:hi@shivamvashisth.com">hi@shivamvashisth.com</a></span>
     </div></footer>`;
   };
 
-  // standard back-to-shed bar for tool pages
+  // standard back-to-Garage bar for tool pages
   TS.toolnav = function () {
     return `<nav class="toolnav"><div class="wrap">
-      <a class="back" href="/">← The Toolshed</a>
+      <a class="back" href="/">← The Garage</a>
       <a class="back" href="/#toolshed">more tools</a>
     </div></nav>`;
+  };
+
+  /* ---------- jargon: plain-English definitions on hover / tap ---------- */
+  TS.GLOSSARY = {
+    prompt: "What you type to tell an AI what you want.",
+    terminal: "The text window where you type commands. Scarier-looking than it is.",
+    ship: "To actually release it, not just plan it forever.",
+    "no-code": "Building software with visual tools or AI, without writing code.",
+    static: "A website that is just files. Fast, cheap, hard to break.",
+    canvas: "The browser's drawing board. It's how the share-cards get made.",
+    backend: "The server side you never see. Most apps here skip it.",
+    api: "A way for two apps to talk to each other.",
+    png: "An image file, the kind you would actually post.",
+    github: "A giant, free library of code and tools anyone can use.",
+    skill: "A saved instruction pack that teaches an AI one specific job."
+  };
+  var jCount = 0;
+  TS.initJargon = function () {
+    var nodes = document.querySelectorAll('.jargon[data-define]');
+    for (var i = 0; i < nodes.length; i++) {
+      (function (el) {
+        if (el._jReady) return;
+        var key = (el.getAttribute('data-define') || el.textContent || '').trim().toLowerCase();
+        var def = TS.GLOSSARY[key];
+        if (!def) return;
+        el._jReady = true;
+        var pop = document.createElement('span');
+        pop.className = 'jargon-pop';
+        pop.id = 'jdef-' + (++jCount);
+        pop.setAttribute('role', 'tooltip');
+        pop.textContent = def; // textContent only — never innerHTML
+        el.appendChild(pop);
+        el.setAttribute('tabindex', '0');
+        el.setAttribute('aria-describedby', pop.id);
+        function toggle(e) {
+          e.preventDefault(); e.stopPropagation();
+          var willOpen = !el.classList.contains('open');
+          var others = document.querySelectorAll('.jargon.open');
+          for (var k = 0; k < others.length; k++) others[k].classList.remove('open');
+          if (willOpen) el.classList.add('open');
+        }
+        el.addEventListener('click', toggle);
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') toggle(e);
+          else if (e.key === 'Escape') el.classList.remove('open');
+        });
+      })(nodes[i]);
+    }
+    if (!TS._jDoc) {
+      TS._jDoc = true;
+      document.addEventListener('click', function () {
+        var open = document.querySelectorAll('.jargon.open');
+        for (var k = 0; k < open.length; k++) open[k].classList.remove('open');
+      });
+    }
   };
 
   /* ---------- theme (light / dark) ---------- */
@@ -211,6 +266,7 @@
 
   window.TS = TS;
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', TS.initTheme);
-  else TS.initTheme();
+  function TS_init() { TS.initTheme(); TS.initJargon(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', TS_init);
+  else TS_init();
 })();

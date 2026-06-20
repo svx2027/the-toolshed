@@ -230,6 +230,35 @@ body { transition: background-color .45s ease, color .35s ease; }
 [data-theme="dark"] .chip { background: rgba(255,255,255,.05); color: var(--ink-soft); border-color: var(--line-strong); }
 [data-theme="dark"] .chip.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 
+/* ---------- jargon: gently-defined tech terms ---------- */
+.jargon {
+  border-bottom: 1px dotted var(--ink-faint);
+  cursor: help; position: relative; color: inherit; text-decoration: none;
+}
+.jargon:focus-visible { outline: 2px solid var(--acc-sky); outline-offset: 2px; border-radius: 2px; }
+.jargon-pop {
+  display: none;
+  position: absolute; left: 50%; bottom: calc(100% + 9px);
+  transform: translateX(-50%);
+  width: max-content; max-width: min(240px, 78vw);
+  background: var(--card); color: var(--ink-soft);
+  border: 1px solid var(--line-strong); border-radius: var(--r-sm); box-shadow: var(--shadow-lift);
+  padding: .5rem .65rem;
+  font-family: var(--font-body); font-size: .82rem; font-weight: 400; line-height: 1.45;
+  letter-spacing: normal; text-transform: none; text-align: left; white-space: normal;
+  z-index: 120;
+}
+.jargon-pop::after {
+  content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  border: 5px solid transparent; border-top-color: var(--card);
+}
+.jargon:hover .jargon-pop, .jargon:focus .jargon-pop,
+.jargon:focus-within .jargon-pop, .jargon.open .jargon-pop {
+  display: block;
+}
+.jargon-hint { font-size: .82rem; color: var(--ink-faint); }
+.jargon-hint .jargon { border-bottom-style: dotted; }
+
 /* reduced motion */
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
