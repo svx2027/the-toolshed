@@ -8,14 +8,14 @@ const jetbrains = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500"], v
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://shivamvashisth.com"),
-  title: "Code for Creatives India: you don't need to be a coder. Build tiny apps with AI.",
+  title: "Code for Creators in India — you don't need to be a coder. Build tiny apps with AI.",
   description:
-    "Code for Creatives India. A YouTube strategist building tiny apps with AI, and showing creators how to build their own. No dev team, no CS degree.",
+    "Code for Creators in India. A YouTube strategist building tiny apps with AI, and handing creators the words to build their own. No dev team, no CS degree.",
   alternates: { canonical: "/" },
   icons: { icon: "/assets/favicon.svg" },
   openGraph: {
     type: "website",
-    title: "Code for Creatives India: you don't need to be a coder",
+    title: "Code for Creators in India — you don't need to be a coder",
     description:
       "I'm a YouTube strategist who builds tiny apps with AI. If you can write a prompt, you can build one too. I'll show you how.",
     url: "/",
@@ -28,6 +28,22 @@ export const metadata: Metadata = {
 // key with the static tool pages so the choice persists across the whole site.
 const themeScript = `try{var t=localStorage.getItem('ts_theme')||((window.matchMedia&&matchMedia('(prefers-color-scheme:dark)').matches)?'dark':'light');if(t==='dark')document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}`;
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Code for Creators in India",
+  alternateName: "The Toolshed",
+  url: "https://shivamvashisth.com",
+  description:
+    "Code for Creators in India — tiny apps built with AI, and the words creators need to build their own.",
+  author: {
+    "@type": "Person",
+    name: "Shivam Vashisth",
+    url: "https://shivamvashisth.com",
+    sameAs: ["https://instagram.com/svx2027"],
+  },
+};
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
@@ -37,6 +53,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     >
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         {children}
       </body>
     </html>

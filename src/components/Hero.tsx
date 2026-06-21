@@ -6,27 +6,20 @@ export function Hero() {
     <header id="top" className="relative z-10 mx-auto max-w-6xl px-5 pt-28 pb-10 sm:px-7 sm:pt-32">
       <div className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
         <div>
-          <div
-            className="grid h-[88px] w-[88px] place-items-center rounded-full border-2 border-ink font-display text-3xl font-semibold"
-            style={{ background: "radial-gradient(120% 120% at 35% 30%, #F8E2D4 0%, #E6E0F2 45%, #DCEAF5 100%)" }}
-            aria-hidden
-          >
-            <span style={{ color: "#1C1B1A" }}>SV</span>
-          </div>
+          <p className="font-mono text-xs uppercase tracking-[0.18em] text-ink-faint">Hi, I&rsquo;m Shivam</p>
 
-          <p className="mt-5 font-mono text-xs uppercase tracking-[0.18em] text-ink-faint">Hi, I&rsquo;m Shivam</p>
-
-          <h1 className="mt-2 font-display text-5xl font-medium leading-[1.04] tracking-tight text-ink sm:text-6xl lg:text-7xl">
+          <h1 className="mt-3 font-display text-5xl font-medium leading-[1.04] tracking-tight text-ink sm:text-6xl lg:text-7xl">
             <span className="ink-underline">You don&rsquo;t need to be a coder.</span>
           </h1>
 
           <p className="mt-7 max-w-xl text-lg text-ink-soft">
-            Code for Creatives India. I&rsquo;m a YouTube strategist who builds tiny apps with AI: no dev team, no CS
-            degree. If you can write a <Jargon term="prompt">prompt</Jargon>, you can build one too. I&rsquo;ll show
-            you how.
+            <strong className="font-semibold text-ink">Code for Creators in India.</strong>{" "}
+            I&rsquo;m a YouTube strategist who builds tiny apps with AI: no dev team, no CS degree. If you can write a{" "}
+            <Jargon term="prompt">prompt</Jargon>, you can build one too. I&rsquo;ll show you how.
           </p>
 
-          <div className="mt-7 flex flex-wrap items-center gap-3">
+          {/* three doors — rule of three: Build · Download · Follow */}
+          <div className="mt-8 flex flex-wrap items-center gap-3">
             <a
               href="#toolshed"
               className="cta-glow inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 font-medium text-paper transition-transform hover:-translate-y-0.5"
@@ -34,12 +27,20 @@ export function Hero() {
               Open the Garage
             </a>
             <a
+              href="https://files.shivamvashisth.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-full border border-line-strong px-6 py-3 font-medium text-ink transition-colors hover:border-ink"
+            >
+              Browse the Files <span aria-hidden className="text-ink-faint">↗</span>
+            </a>
+            <a
               href="https://instagram.com/svx2027"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-line-strong px-6 py-3 font-medium text-ink transition-colors hover:border-ink"
+              className="inline-flex items-center gap-1.5 rounded-full border border-line-strong px-6 py-3 font-medium text-ink transition-colors hover:border-ink"
             >
-              Follow on Instagram
+              Follow the build <span aria-hidden className="text-ink-faint">↗</span>
             </a>
           </div>
 
@@ -53,7 +54,7 @@ export function Hero() {
         </div>
       </div>
 
-      <p className="mt-16 text-center font-mono text-sm text-ink-faint">↓ scroll to the garage</p>
+      <p className="mt-16 text-center font-mono text-sm text-ink-faint">↓ scroll to the mission</p>
     </header>
   );
 }

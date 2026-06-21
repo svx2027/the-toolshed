@@ -77,6 +77,12 @@ export function Garage() {
           </a>{" "}
           to watch each one come together.
         </p>
+        <p className="mx-auto mt-4 max-w-xl text-sm text-ink-faint">
+          New here? Start with{" "}
+          <a href="/t/life-in-weeks/" target="_blank" rel="noopener noreferrer" className="text-acc-sky underline-offset-2 hover:underline">Life in Weeks</a>,{" "}
+          <a href="/t/read-rate/" target="_blank" rel="noopener noreferrer" className="text-acc-sky underline-offset-2 hover:underline">Read Rate</a>, or{" "}
+          <a href="/t/aligned/" target="_blank" rel="noopener noreferrer" className="text-acc-sky underline-offset-2 hover:underline">Aligned</a>.
+        </p>
       </Reveal>
 
       <div className="mt-10 flex flex-wrap justify-center gap-2.5" role="tablist" aria-label="Filter apps">
