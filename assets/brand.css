@@ -263,3 +263,39 @@ body { transition: background-color .45s ease, color .35s ease; }
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* ---------- Files: header nav pill (entry point to the file vault) ---------- */
+.nav .links a.nav-files {
+  padding: .3rem .85rem;
+  border-radius: var(--r-pill);
+  background: var(--acc-sky);
+  color: #fff;
+  font-weight: 600;
+}
+.nav .links a.nav-files::after { display: none; }      /* skip the underline used by other nav links */
+.nav .links a.nav-files:hover { filter: brightness(1.07); transform: translateY(-1px); }
+
+/* ---------- Garage CTA: soft pulsing glow + slow shine to invite the click ---------- */
+@keyframes garageGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(47,111,174,0); }
+  50%      { box-shadow: 0 0 24px 3px rgba(47,111,174,.45); }
+}
+@keyframes garageShine {
+  0%      { transform: translateX(-130%) skewX(-12deg); }
+  60%,100%{ transform: translateX(130%) skewX(-12deg); }
+}
+.btn.glow {
+  position: relative;
+  overflow: hidden;
+  animation: garageGlow 2.6s ease-in-out infinite;
+}
+.btn.glow::before {
+  content: "";
+  position: absolute; top: 0; bottom: 0; left: 0; width: 60%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.4), transparent);
+  transform: translateX(-130%) skewX(-12deg);
+  animation: garageShine 3.6s ease-in-out infinite;
+  pointer-events: none;
+}
+.btn.glow:hover { animation-play-state: paused; box-shadow: var(--shadow-lift); }
+.btn.glow:hover::before { animation-play-state: paused; }
