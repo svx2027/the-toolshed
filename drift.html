@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Drift: a one-button calm game</title>
+<style>
+  :root { color-scheme: light dark; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: #FCFCFA;
+    color: #1C1B1A;
+    font-family: -apple-system, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  html[data-theme="dark"], html[data-theme="dark"] body { background: #1A1815; color: #ECE7DD; }
+  /* Standalone page chrome — a minimal, intentional frame around the game. */
+  .page {
+    min-height: 100vh; min-height: 100svh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    box-sizing: border-box; padding: 24px 18px 40px;
+    gap: 18px;
+  }
+  .masthead { text-align: center; user-select: none; }
+  .masthead h1 {
+    margin: 0; font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 600; font-size: clamp(28px, 5vw, 44px); letter-spacing: 0.01em;
+    color: #1C1B1A;
+  }
+  html[data-theme="dark"] .masthead h1 { color: #ECE7DD; }
+  .masthead p {
+    margin: 6px 0 0; font-size: 14px; color: #8b867f; font-weight: 400;
+  }
+  html[data-theme="dark"] .masthead p { color: #B6AFA2; }
+  #drift-game {
+    width: min(880px, 100%);
+    aspect-ratio: 16 / 9;
+    max-height: 70vh;
+  }
+  @media (max-aspect-ratio: 1/1) {
+    #drift-game { aspect-ratio: 4 / 3; }
+  }
+  .footnote {
+    font-size: 12px; color: #8b867f; text-align: center; max-width: 40ch; line-height: 1.5;
+  }
+  html[data-theme="dark"] .footnote { color: #B6AFA2; }
+  .theme-toggle {
+    position: fixed; top: 16px; right: 16px;
+    background: transparent; border: 1px solid #ece7df; color: #56524d;
+    border-radius: 999px; padding: 7px 14px; font-size: 12px; cursor: pointer;
+    font-family: inherit; transition: border-color .3s, color .3s;
+  }
+  html[data-theme="dark"] .theme-toggle { border-color: #2E2B25; color: #B6AFA2; }
+  .theme-toggle:hover { border-color: #2f6fae; color: #2f6fae; }
+  html[data-theme="dark"] .theme-toggle:hover { border-color: #84B6E6; color: #84B6E6; }
+</style>
+</head>
+<body>
+  <!-- Theme bootstrap: mirror the site's convention (localStorage "ts_theme"). -->
+  <script>try{var t=localStorage.getItem("ts_theme")||((window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle day or night theme">night</button>
+
+  <div class="page">
+    <div class="masthead">
+      <h1>Drift</h1>
+      <p>One button. Let the thoughts pass beneath you.</p>
+    </div>
+
+    <!-- The game mounts itself here. -->
+    <div id="drift-game"></div>
+
+    <p class="footnote">Tap, click, or press space to hop. A small, kind game about staying steady.</p>
+  </div>
+
+  <script>
+    // Standalone-only theme toggle (the embedded site has its own).
+    (function(){
+      var btn = document.getElementById('themeToggle');
+      if(!btn) return;
+      function sync(){
+        var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+        btn.textContent = dark ? 'day' : 'night';
+      }
+      sync();
+      btn.addEventListener('click', function(){
+        var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+        var next = dark ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('ts_theme', next); } catch(e){}
+        sync();
+      });
+    })();
+  </script>
+
+<script>
+/* ============================================================================
+   DRIFT — a one-button calm game.   window.initDrift(container, options)
+   ----------------------------------------------------------------------------
+   Self-contained. No libraries, no network, no fonts, no images. All procedural.
+   ============================================================================ */
+(function () {
+  "use strict";
+
+  /* ==========================================================================
+     CONFIG — safe for a non-coder to edit. Change values; don't touch logic.
+     ========================================================================== */
+  var CONFIG = {
+    // "auto" follows the site's day/night toggle. Force with "day" or "night".
+    theme: "auto",
+
+    // Accent colour name. One of: sky, mint, peach, lavender, rose.
+    accent: "sky",
+
+    // Figure drawing style: "stroll" (walking line-figure) or "orb" (a calm dot).
+    characterStyle: "stroll",
+
+    // Sound is OFF by default. Soft WebAudio tones only; starts after first tap.
+    sound: false,
+
+    // Gentleness of the climb. Lower = calmer, slower difficulty rise.
+    difficulty: 1.0,        // 0.6 very gentle … 1.6 livelier. 1.0 = default.
+
+    // Parallax depth. true = 3 layers of soft hills; false = minimal.
+    parallax: true,
+
+    // Show the psychologist-style observations. true = on.
+    observations: true,
+
+    // localStorage key for the best calm streak.
+    storageKey: "drift.bestCalm"
+  };
+
+  /* ==========================================================================
+     OBSERVATION POOL — the "gentle psychologist" voice.
+     GUARDRAILS: every line is warm, playful, game-flavoured. Never a diagnosis,
+     never clinical, never names a real condition. A friendly mirror, not therapy.
+     Each entry: { tag, lines:[...] }. Chosen to FIT a tracked signal; surfaced
+     sparingly; never twice in a row.
+     ========================================================================== */
+  var OBSERVATIONS = {
+    earlyHopper: [
+      "You leap early. Anticipation can be its own kind of calm.",
+      "You move before you have to. There's a quiet grace in reading what's coming.",
+      "Always a step ahead of the thought. That foresight is yours to keep."
+    ],
+    lateHopper: [
+      "You wait until the last moment. There is a quiet confidence in that timing.",
+      "You let it get close, then rise. Trusting your own timing looks good on you.",
+      "Right to the edge, then up. You don't panic, you choose your moment."
+    ],
+    frequentStumbles: [
+      "Falling often just means you are still moving. That counts.",
+      "A few stumbles and you keep going. Persistence is its own kind of grace.",
+      "You trip, you rise, you carry on. The rising is the whole point."
+    ],
+    longStreak: [
+      "Notice how steady this felt. You can come back to it.",
+      "That was a long, smooth stretch. Remember your shoulders settling like that.",
+      "You found a rhythm and held it. That steadiness was always in you."
+    ],
+    instantRestart: [
+      "Beginning again is a skill, not a failure.",
+      "Straight back up, no sulking. That willingness to restart is rare.",
+      "You don't dwell, you simply begin again. Quietly impressive."
+    ],
+    calmGeneral: [
+      "Breathe with the scrolling. There's no finish line to reach.",
+      "The thoughts keep coming, and you keep letting them pass. Nicely done.",
+      "Nothing here is chasing you. Take it as slow as you like.",
+      "Each hop is one small letting-go. Watch them drift behind you."
+    ]
+  };
+
+  /* ==========================================================================
+     PALETTES — day & night families. Long runs slowly shift the wash (dawn→dusk).
+     ========================================================================== */
+  var ACCENTS = {
+    day:   { sky:"#2f6fae", mint:"#2f8f63", peach:"#c2693a", lavender:"#6d5bb0", rose:"#c25274" },
+    night: { sky:"#84B6E6", mint:"#76C9A2", peach:"#E7A47E", lavender:"#B9ABE8", rose:"#E78EA8" }
+  };
+
+  // Mood washes: subtle background tints we lerp toward as calm grows.
+  // Each is [r,g,b]. Kept inside the day/night family — never garish.
+  var MOOD = {
+    day: [
+      [252,252,250], // 0  morning paper
+      [250,248,244], // dawn warmth
+      [247,247,250], // soft sky
+      [248,245,250]  // dusk lavender hush
+    ],
+    night: [
+      [26,24,21],    // 0  deep night
+      [24,24,28],    // indigo
+      [22,26,28],    // teal hush
+      [28,24,28]     // dusk plum
+    ]
+  };
+
+  /* ==========================================================================
+     SMALL HELPERS
+     ========================================================================== */
+  function clamp(v, lo, hi){ return v < lo ? lo : (v > hi ? hi : v); }
+  function lerp(a, b, t){ return a + (b - a) * t; }
+  function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+  function rand(a, b){ return a + Math.random() * (b - a); }
+  function rgb(arr, a){ return "rgba(" + (arr[0]|0) + "," + (arr[1]|0) + "," + (arr[2]|0) + "," + (a==null?1:a) + ")"; }
+  function lerpArr(a, b, t){ return [lerp(a[0],b[0],t), lerp(a[1],b[1],t), lerp(a[2],b[2],t)]; }
+
+  /* ==========================================================================
+     MAIN INIT
+     ========================================================================== */
+  function initDrift(container, options) {
+    options = options || {};
+    if (!container) return;
+
+    // Merge options over CONFIG (options win).
+    var cfg = {};
+    for (var k in CONFIG) cfg[k] = CONFIG[k];
+    if (options.accent) cfg.accent = options.accent;
+    if (options.characterStyle) cfg.characterStyle = options.characterStyle;
+    if (typeof options.soundDefault === "boolean") cfg.sound = options.soundDefault;
+    if (typeof options.sound === "boolean") cfg.sound = options.sound;
+    if (options.theme) cfg.theme = options.theme;
+    if (options.background) cfg.forcedBg = options.background; // optional override
+
+    // --- Build DOM (canvas + accessible controls) inside container. ---------
+    container.innerHTML = "";
+    var root = document.createElement("div");
+    root.style.cssText = "position:relative;width:100%;height:100%;border-radius:14px;overflow:hidden;outline:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;";
+    root.setAttribute("tabindex", "0");
+    root.setAttribute("role", "application");
+    root.setAttribute("aria-label", "Drift: a one-button calm game. Press space, click, or tap to hop.");
+
+    var canvas = document.createElement("canvas");
+    canvas.style.cssText = "display:block;width:100%;height:100%;";
+    root.appendChild(canvas);
+
+    // Visually-hidden status for screen readers + a real button (the one rule).
+    var sr = document.createElement("div");
+    sr.setAttribute("aria-live", "polite");
+    sr.style.cssText = "position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;";
+    root.appendChild(sr);
+
+    var srBtn = document.createElement("button");
+    srBtn.textContent = "Hop";
+    srBtn.setAttribute("aria-label", "Hop: the only control in Drift");
+    srBtn.style.cssText = "position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0;padding:0;";
+    root.appendChild(srBtn);
+
+    // Mute toggle (only meaningful if sound is enabled). Discreet, top-right.
+    var muteBtn = document.createElement("button");
+    muteBtn.type = "button";
+    muteBtn.style.cssText = "position:absolute;top:10px;right:12px;background:transparent;border:0;font:12px -apple-system,system-ui,sans-serif;cursor:pointer;padding:6px 8px;opacity:.65;z-index:3;";
+    root.appendChild(muteBtn);
+
+    container.appendChild(root);
+
+    var ctx;
+    try { ctx = canvas.getContext("2d"); } catch (e) { ctx = null; }
+    if (!ctx) { return; } // degrade silently — render nothing, throw nothing.
+
+    /* ----- Theme resolution + live following of the site toggle ----------- */
+    var mqDark = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+    function resolveNight() {
+      if (cfg.theme === "day") return false;
+      if (cfg.theme === "night") return true;
+      var attr = document.documentElement.getAttribute("data-theme");
+      if (attr === "dark") return true;
+      if (attr === "light") return false;
+      return !!(mqDark && mqDark.matches);
+    }
+    var night = resolveNight();
+    var reduceMQ = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+    var reduced = !!(reduceMQ && reduceMQ.matches);
+
+    function pal() {
+      var fam = night ? "night" : "day";
+      var accent = (ACCENTS[fam][cfg.accent] || ACCENTS[fam].sky);
+      return {
+        fam: fam,
+        ink:   night ? [236,231,221] : [28,27,26],
+        soft:  night ? [182,175,162] : [86,82,77],
+        faint: night ? [120,114,104] : [139,134,127],
+        hair:  night ? [46,43,37]    : [236,231,223],
+        accent: accent,
+        moods: MOOD[fam]
+      };
+    }
+    var P = pal();
+
+    /* ----- Sizing (devicePixelRatio aware) -------------------------------- */
+    var W = 0, H = 0, dpr = 1, groundY = 0;
+    function resize() {
+      var rect = root.getBoundingClientRect();
+      W = Math.max(1, rect.width);
+      H = Math.max(1, rect.height);
+      dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 3));
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      groundY = Math.round(H * 0.78);
+    }
+    resize();
+
+    /* ======================================================================
+       GAME STATE
+       ====================================================================== */
+    var STATE = { READY: 0, PLAY: 1, STUMBLE: 2 };
+    var state = STATE.READY;
+
+    var figureX;                 // fixed-ish screen x for the figure
+    function figureHomeX(){ return Math.round(W * 0.26); }
+
+    var fig = {
+      x: 0, y: 0, vy: 0,
+      onGround: true,
+      legPhase: 0,
+      r: 0                       // radius for orb / body scale
+    };
+
+    var world = {
+      scroll: 0,                 // total distance scrolled (px)
+      speed: 0,                  // current px/sec
+      baseSpeed: 0,
+      calm: 0,                   // "seconds of calm" = score
+      moodT: 0,                  // 0..1 mood progress (slow)
+      spawnTimer: 0,
+      obstacles: [],
+      hills: [],                 // parallax shapes
+      stumbleT: 0,               // remaining stumble time (slow-mo)
+      reframe: "",
+      obsText: "",               // current floating observation
+      obsAlpha: 0,
+      obsTimer: 0,               // time since last observation
+      lastObsTag: ""
+    };
+
+    // Signals tracked for the psychologist layer.
+    var signals = {
+      hops: 0,
+      leadSum: 0,                // sum of lead-times (sec) before clearing
+      leadCount: 0,
+      stumbles: 0,
+      longestCalm: 0,
+      lastDeathAt: 0,            // performance.now of last stumble
+      restartedFast: false,
+      runStartCalm: 0
+    };
+
+    var best = 0;
+    try { best = parseFloat(localStorage.getItem(cfg.storageKey)) || 0; } catch (e) { best = 0; }
+
+    var WORDS = ["later", "what if", "deadline", "should have", "not enough", "hurry", "almost", "again"];
+
+    /* ----- Difficulty curve --------------------------------------------------
+       Tuned so the first 60s is SUPER easy, then easy, then medium, then a slow
+       even climb. Anyone should clear 60s comfortably. Speed px/sec, gap secs.
+       (cfg.difficulty D scales the whole climb: 0.6 calmer ... 1.6 livelier.) */
+    var D = cfg.difficulty;
+    function baseSpeedFor(calm) {
+      var c = calm, s;
+      if (c < 60)       s = 120 + c * 0.50;          // 0-60s  : 120 -> 150  super easy
+      else if (c < 120) s = 150 + (c - 60) * 0.83;   // 60-120 : 150 -> ~200 easy
+      else if (c < 180) s = 200 + (c - 120) * 1.00;  // 120-180: 200 -> 260  medium
+      else              s = 260 + (c - 180) * 0.80;  // 180+   : even climb
+      s = Math.min(s, 520) * D;
+      if (reduced) s *= 0.7;
+      return s;
+    }
+    function spawnGapFor(calm) {
+      var c = calm, g;
+      if (c < 60)       g = 2.80 - c * 0.0120;          // 0-60s  : 2.8 -> ~2.1s sparse
+      else if (c < 120) g = 2.08 - (c - 60) * 0.0100;   // 60-120 : -> ~1.48s
+      else if (c < 180) g = 1.48 - (c - 120) * 0.0060;  // 120-180: -> ~1.12s
+      else              g = 1.12 - (c - 180) * 0.0020;  // 180+   : slow tighten
+      g = g / D;
+      return Math.max(reduced ? 1.4 : 0.92, g);
+    }
+
+    /* ======================================================================
+       AUDIO — soft WebAudio tones only. Off by default. Created lazily after
+       a user gesture so browsers permit it.
+       ====================================================================== */
+    var audio = { ctx: null, enabled: cfg.sound, ready: false };
+    function ensureAudio() {
+      if (!audio.enabled || audio.ready) return;
+      try {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) { audio.enabled = false; return; }
+        audio.ctx = new AC();
+        audio.ready = true;
+      } catch (e) { audio.enabled = false; }
+    }
+    function tone(freq, dur, gainPeak, type) {
+      if (!audio.enabled || !audio.ready || !audio.ctx) return;
+      try {
+        var t0 = audio.ctx.currentTime;
+        var osc = audio.ctx.createOscillator();
+        var g = audio.ctx.createGain();
+        osc.type = type || "sine";
+        osc.frequency.setValueAtTime(freq, t0);
+        g.gain.setValueAtTime(0.0001, t0);
+        g.gain.exponentialRampToValueAtTime(gainPeak || 0.05, t0 + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+        osc.connect(g); g.connect(audio.ctx.destination);
+        osc.start(t0); osc.stop(t0 + dur + 0.02);
+      } catch (e) {}
+    }
+    function hopSound(){ tone(392, 0.18, 0.045, "sine"); }
+    function milestoneSound(){ tone(523.25, 0.5, 0.04, "sine"); setTimeout(function(){ tone(659.25, 0.55, 0.035, "sine"); }, 90); }
+
+    function renderMute() {
+      if (!cfg.sound) { muteBtn.style.display = "none"; return; }
+      muteBtn.style.display = "block";
+      muteBtn.textContent = audio.enabled ? "sound on" : "sound off";
+      muteBtn.style.color = rgb(P.soft);
+      muteBtn.setAttribute("aria-label", audio.enabled ? "Sound on. Click to mute." : "Sound off. Click to enable soft tones.");
+    }
+    muteBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      audio.enabled = !audio.enabled;
+      if (audio.enabled) ensureAudio();
+      renderMute();
+    });
+
+    /* ======================================================================
+       PARALLAX HILLS — soft rolling shapes at 3 depths.
+       ====================================================================== */
+    function seedHills() {
+      world.hills = [];
+      if (!cfg.parallax) return;
+      var layers = [
+        { depth: 0.18, amp: 0.10, ySeat: 0.55, count: 4 },
+        { depth: 0.40, amp: 0.14, ySeat: 0.66, count: 5 },
+        { depth: 0.72, amp: 0.10, ySeat: 0.74, count: 6 }
+      ];
+      for (var li = 0; li < layers.length; li++) {
+        var L = layers[li];
+        for (var i = 0; i < L.count; i++) {
+          world.hills.push({
+            layer: li, depth: L.depth, ySeat: L.ySeat, amp: L.amp,
+            x: rand(0, 1) * (W * 2), w: rand(0.5, 1.1), phase: rand(0, 6.28)
+          });
+        }
+      }
+    }
+
+    /* ======================================================================
+       RESET / START
+       ====================================================================== */
+    function resetRun() {
+      fig.x = figureHomeX();
+      fig.r = clamp(H * 0.028, 9, 18);
+      fig.y = groundY;
+      fig.vy = 0;
+      fig.onGround = true;
+      fig.legPhase = 0;
+
+      world.scroll = 0;
+      world.calm = 0;
+      world.moodT = 0;
+      world.spawnTimer = 2.2;   // ease in: the first thought arrives gently, not instantly
+      world.obstacles = [];
+      world.stumbleT = 0;
+      world.reframe = "";
+      world.obsText = "";
+      world.obsAlpha = 0;
+      world.obsTimer = 0;
+      world.speed = baseSpeedFor(0);
+      world.obsHold = 0;
+      seedHills();
+
+      signals.runStartCalm = 0;
+      lastMilestone = 0;          // reset per-run so chimes fire again after a restart
+    }
+
+    function startPlay() {
+      if (state === STATE.PLAY) return;
+      var wasStumble = (state === STATE.STUMBLE);
+      if (wasStumble) {
+        // Did they restart quickly? (within 2.2s of stumble)
+        signals.restartedFast = (performance.now() - signals.lastDeathAt) < 2200;
+      }
+      resetRun();
+      state = STATE.PLAY;
+      sr.textContent = "Playing. Hop to let the thoughts pass beneath you.";
+      // If they bounced back instantly, gently acknowledge it.
+      if (wasStumble && signals.restartedFast && cfg.observations) {
+        queueObservation("instantRestart", 1.2);
+      }
+    }
+
+    /* ======================================================================
+       INPUT — the single verb.
+       ====================================================================== */
+    var pendingHopAt = -1; // when an obstacle is hopped, mark lead time
+
+    function doHop() {
+      ensureAudio();
+      if (state === STATE.READY) { startPlay(); return; }
+      if (state === STATE.STUMBLE) {
+        // Only allow "begin again" once the stumble settle has elapsed.
+        if (world.stumbleT <= 0) startPlay();
+        return;
+      }
+      if (state === STATE.PLAY && fig.onGround) {
+        var jumpV = -(reduced ? 470 : 560);
+        fig.vy = jumpV;
+        fig.onGround = false;
+        signals.hops++;
+        hopSound();
+        // Record lead time to the nearest upcoming obstacle (for "early/late").
+        var nearest = null;
+        for (var i = 0; i < world.obstacles.length; i++) {
+          var o = world.obstacles[i];
+          if (o.x + o.w > fig.x) { nearest = o; break; }
+        }
+        if (nearest) {
+          var dist = (nearest.x) - (fig.x + fig.r);
+          if (dist > -10) {
+            var lead = dist / Math.max(40, world.speed); // seconds of runway
+            signals.leadSum += clamp(lead, 0, 2.5);
+            signals.leadCount++;
+          }
+        }
+      }
+    }
+
+    root.addEventListener("keydown", function (e) {
+      if (e.code === "Space" || e.code === "Enter" || e.key === " " || e.key === "Enter") {
+        e.preventDefault();
+        doHop();
+      }
+    });
+    // Pointer/touch — keep it from scrolling the page.
+    root.addEventListener("pointerdown", function (e) {
+      if (e.target === muteBtn) return;
+      e.preventDefault();
+      root.focus({ preventScroll: true });
+      doHop();
+    });
+    root.addEventListener("touchstart", function (e) {
+      if (e.target === muteBtn) return;
+      e.preventDefault();
+    }, { passive: false });
+    srBtn.addEventListener("click", function (e) { e.stopPropagation(); doHop(); });
+
+    /* ======================================================================
+       OBSERVATIONS — surface a fitting line, sparingly, never back-to-back.
+       ====================================================================== */
+    function pickObservationTag() {
+      // Choose the tag that best fits current tracked signals.
+      var avgLead = signals.leadCount ? (signals.leadSum / signals.leadCount) : null;
+      var candidates = [];
+      if (signals.stumbles >= 3 && (signals.stumbles / Math.max(1, world.calm / 18)) > 1) {
+        candidates.push("frequentStumbles");
+      }
+      if (world.calm > 28 && world.calm - signals.runStartCalm > 24) {
+        candidates.push("longStreak");
+      }
+      if (avgLead !== null && signals.leadCount >= 3) {
+        if (avgLead > 0.62) candidates.push("earlyHopper");
+        else if (avgLead < 0.34) candidates.push("lateHopper");
+      }
+      if (signals.restartedFast) candidates.push("instantRestart");
+      if (!candidates.length) candidates.push("calmGeneral");
+
+      // Avoid repeating the same tag back-to-back.
+      var filtered = candidates.filter(function (c) { return c !== world.lastObsTag; });
+      var pool = filtered.length ? filtered : candidates;
+      return pool[(Math.random() * pool.length) | 0];
+    }
+
+    function queueObservation(forceTag, delay) {
+      if (!cfg.observations) return;
+      var tag = forceTag || pickObservationTag();
+      var lines = OBSERVATIONS[tag] || OBSERVATIONS.calmGeneral;
+      var line = lines[(Math.random() * lines.length) | 0];
+      world.obsText = line;
+      world.lastObsTag = tag;
+      world.obsAlpha = 0;        // fade in
+      world.obsHold = (delay || 0) + 5.4; // seconds visible
+      world.obsTimer = 0;        // reset the spacing clock
+      signals.restartedFast = false;
+      sr.textContent = line;
+    }
+
+    /* ======================================================================
+       UPDATE (fixed timestep step = dtSec seconds)
+       ====================================================================== */
+    var lastMilestone = 0;
+
+    function update(dtSec) {
+      if (state === STATE.STUMBLE) {
+        // Slow settle, then allow "begin again".
+        world.stumbleT = Math.max(0, world.stumbleT - dtSec);
+        // figure eases down / pauses; gentle bob
+        fig.legPhase += dtSec * 1.2;
+        return;
+      }
+      if (state !== STATE.PLAY) return;
+
+      // --- Speed & mood climb very slowly. ---
+      world.calm += dtSec;
+      world.baseSpeed = baseSpeedFor(world.calm);
+      world.speed = lerp(world.speed, world.baseSpeed, clamp(dtSec * 1.5, 0, 1));
+      world.scroll += world.speed * dtSec;
+      world.moodT = clamp(world.calm / 120, 0, 1); // full dusk ~2 minutes
+
+      // --- Figure physics ---
+      var grav = (reduced ? 1500 : 1750);
+      if (!fig.onGround) {
+        fig.vy += grav * dtSec;
+        fig.y += fig.vy * dtSec;
+        if (fig.y >= groundY) {
+          fig.y = groundY; fig.vy = 0; fig.onGround = true;
+        }
+      } else {
+        fig.legPhase += world.speed * dtSec * 0.045;
+      }
+
+      // --- Spawning ---
+      world.spawnTimer -= dtSec;
+      if (world.spawnTimer <= 0) {
+        spawnObstacle();
+        world.spawnTimer = spawnGapFor(world.calm) * rand(0.85, 1.18);
+      }
+
+      // --- Move & cull obstacles, detect clears + collisions ---
+      var fx0 = fig.x, fx1 = fig.x + fig.r * 1.2;
+      for (var i = world.obstacles.length - 1; i >= 0; i--) {
+        var o = world.obstacles[i];
+        o.x -= world.speed * dtSec;
+        o.bob += dtSec;
+
+        // Collision uses a COMPACT core centred on the obstacle, independent of
+        // rendered word length, so even long words are always clearable in one hop.
+        var ox1 = o.x + o.w;
+        var ocx = o.x + o.w / 2;                  // visual centre of the thought
+        var coreHalf = (o.hitW || 22) / 2;
+        var overlapX = (fx1 > ocx - coreHalf) && (fx0 < ocx + coreHalf);
+        var figBottom = fig.y;
+        var figTop = fig.y - fig.r * 2.0;
+        var obTop = groundY - o.h;
+        var lowEnough = figBottom > obTop + o.h * 0.30;
+        if (!o.cleared && overlapX && lowEnough) {
+          triggerStumble(o);
+          return;
+        }
+        // Cleared (passed behind the figure)
+        if (!o.cleared && ox1 < fig.x) { o.cleared = true; }
+        if (o.x + o.w < -60) world.obstacles.splice(i, 1);
+      }
+
+      // --- Milestones (every 30s of calm): gentle chime + maybe a line. ---
+      var ms = Math.floor(world.calm / 30);
+      if (ms > lastMilestone) {
+        lastMilestone = ms;
+        milestoneSound();
+        if (cfg.observations) queueObservation(null, 0);
+      }
+
+      // --- Observation cadence: every ~22–30s, if none showing. ---
+      world.obsTimer += dtSec;
+      if (cfg.observations && world.obsTimer > rand(22, 30) && world.obsAlpha < 0.05) {
+        // small chance gate so it doesn't feel mechanical
+        if (Math.random() < 0.7) queueObservation(null, 0);
+        else world.obsTimer = 12;
+      }
+
+      // --- Observation fade lifecycle ---
+      if (world.obsText) {
+        if (world.obsHold > 0) {
+          world.obsAlpha = Math.min(1, world.obsAlpha + dtSec * 1.6);
+          world.obsHold -= dtSec;
+        } else {
+          world.obsAlpha = Math.max(0, world.obsAlpha - dtSec * 1.1);
+          if (world.obsAlpha <= 0) world.obsText = "";
+        }
+      }
+
+      if (world.calm > signals.longestCalm) signals.longestCalm = world.calm;
+    }
+
+    function spawnObstacle() {
+      var useWord = Math.random() < 0.5;
+      var scale = clamp(H * 0.05, 16, 30);
+      var core = clamp(H * 0.05, 16, 26);   // compact hitbox: one hop always clears it
+      if (useWord) {
+        var word = WORDS[(Math.random() * WORDS.length) | 0];
+        var fs = scale * rand(0.78, 0.95);
+        // measure later in draw; approximate width here
+        var w = word.length * fs * 0.52 + 16;
+        var h = fs * 1.5;
+        world.obstacles.push({
+          type: "word", text: word, x: W + 40, w: w, h: h, fs: fs, hitW: core,
+          bob: rand(0, 6.28), cleared: false
+        });
+      } else {
+        var cw = scale * rand(1.5, 2.4);
+        var ch = scale * rand(0.7, 1.05);
+        world.obstacles.push({
+          type: "cloud", x: W + 40, w: cw, h: ch, hitW: core,
+          bob: rand(0, 6.28), cleared: false
+        });
+      }
+    }
+
+    /* ----- STUMBLE — soft, no death, no red, no shame. -------------------- */
+    var REFRAMES = [
+      "Even still water ripples sometimes.",
+      "A pause is not a setback. Breathe.",
+      "The thought touched you, then it's gone.",
+      "Softly now. Nothing is lost.",
+      "You stumbled. The path is still here.",
+      "Let it settle. Then, when ready —"
+    ];
+    function triggerStumble(o) {
+      state = STATE.STUMBLE;
+      o.hit = true;
+      world.stumbleT = reduced ? 0.9 : 1.35;       // slow settle window
+      world.reframe = REFRAMES[(Math.random() * REFRAMES.length) | 0];
+      signals.stumbles++;
+      signals.lastDeathAt = performance.now();
+      fig.vy = -180; fig.onGround = false;         // tiny soft bump
+
+      // Record best.
+      if (world.calm > best) {
+        best = world.calm;
+        try { localStorage.setItem(cfg.storageKey, String(Math.round(best * 10) / 10)); } catch (e) {}
+      }
+      tone(294, 0.5, 0.03, "sine"); // soft low note, not harsh
+      sr.textContent = "A soft stumble. " + world.reframe + " Press space to begin again.";
+    }
+
+    /* ======================================================================
+       DRAW
+       ====================================================================== */
+    function currentBg() {
+      // Lerp through mood washes as moodT grows; segmented across the array.
+      var moods = P.moods;
+      var seg = world.moodT * (moods.length - 1);
+      var i = Math.floor(seg);
+      var f = seg - i;
+      var a = moods[clamp(i, 0, moods.length - 1)];
+      var b = moods[clamp(i + 1, 0, moods.length - 1)];
+      return lerpArr(a, b, f);
+    }
+
+    function draw() {
+      // Slow-motion factor during stumble for a gentle hush.
+      var bg = currentBg();
+      ctx.clearRect(0, 0, W, H);
+
+      // Background fill (very subtle vertical wash).
+      var grad = ctx.createLinearGradient(0, 0, 0, H);
+      grad.addColorStop(0, rgb(bg, 1));
+      grad.addColorStop(1, rgb(lerpArr(bg, P.ink, night ? 0.06 : 0.03), 1));
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+
+      // Parallax hills
+      drawHills();
+
+      // Ground hairline
+      ctx.strokeStyle = rgb(P.hair, night ? 0.9 : 1);
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(0, groundY + fig.r * 0.0 + 1);
+      ctx.lineTo(W, groundY + 1);
+      ctx.stroke();
+
+      // A faint moving texture on the ground (subtle dashes drifting left).
+      drawGroundDrift();
+
+      // Obstacles
+      for (var i = 0; i < world.obstacles.length; i++) drawObstacle(world.obstacles[i]);
+
+      // Figure
+      drawFigure();
+
+      // HUD: calm seconds + best (minimal)
+      drawHUD();
+
+      // Observation line (floating, centred-upper)
+      drawObservation();
+
+      // Ready / stumble overlays
+      if (state === STATE.READY) drawReady();
+      if (state === STATE.STUMBLE) drawStumble();
+    }
+
+    function drawHills() {
+      if (!cfg.parallax) return;
+      for (var li = 0; li < 3; li++) {
+        for (var i = 0; i < world.hills.length; i++) {
+          var hI = world.hills[i];
+          if (hI.layer !== li) continue;
+          var off = (world.scroll * hI.depth) % (W * 2);
+          var x = ((hI.x - off) % (W * 2));
+          if (x < -W) x += W * 2;
+          var baseY = H * hI.ySeat;
+          var amp = H * hI.amp;
+          var w = W * 0.7 * hI.w;
+          // Soft hill as a low ellipse arc.
+          var tint = night ? 0.05 + li * 0.045 : 0.04 + li * 0.05;
+          ctx.fillStyle = rgb(lerpArr(currentBg(), P.ink, tint), 1);
+          ctx.beginPath();
+          ctx.moveTo(x - w, groundY);
+          ctx.bezierCurveTo(
+            x - w * 0.4, baseY - amp,
+            x + w * 0.4, baseY - amp,
+            x + w, groundY
+          );
+          ctx.closePath();
+          ctx.fill();
+        }
+      }
+    }
+
+    function drawGroundDrift() {
+      ctx.strokeStyle = rgb(P.faint, night ? 0.35 : 0.28);
+      ctx.lineWidth = 1;
+      var spacing = 64;
+      var off = (world.scroll * 0.9) % spacing;
+      for (var x = -off; x < W; x += spacing) {
+        ctx.beginPath();
+        ctx.moveTo(x, groundY + 9);
+        ctx.lineTo(x + 14, groundY + 9);
+        ctx.stroke();
+      }
+    }
+
+    function drawObstacle(o) {
+      var x = o.x, top = groundY - o.h;
+      var bob = Math.sin(o.bob * 1.4) * 3;
+      var fade = o.cleared ? 0.35 : 1;
+      if (o.type === "cloud") {
+        ctx.save();
+        ctx.translate(x + o.w / 2, top + o.h / 2 + bob);
+        ctx.strokeStyle = rgb(P.soft, 0.85 * fade);
+        ctx.lineWidth = 1.6;
+        // a simple line-art cloud: a few overlapping arcs
+        var rw = o.w / 2, rh = o.h / 2;
+        ctx.beginPath();
+        ctx.moveTo(-rw, rh * 0.5);
+        ctx.bezierCurveTo(-rw, -rh*0.3, -rw*0.45, -rh, -rw*0.1, -rh*0.7);
+        ctx.bezierCurveTo(rw*0.1, -rh*1.15, rw*0.7, -rh*0.95, rw*0.7, -rh*0.2);
+        ctx.bezierCurveTo(rw*1.05, -rh*0.3, rw*1.05, rh*0.45, rw*0.6, rh*0.5);
+        ctx.lineTo(-rw, rh*0.5);
+        ctx.stroke();
+        ctx.restore();
+      } else {
+        // worry-word: light, italic-feeling serif, drifting
+        ctx.save();
+        ctx.translate(x + o.w / 2, top + o.h / 2 + bob);
+        ctx.font = "italic " + o.fs + "px Georgia, 'Times New Roman', serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = rgb(P.accent, 0.78 * fade);
+        ctx.fillText(o.text, 0, 0);
+        // faint underline-wash to read as an object to hop
+        ctx.strokeStyle = rgb(P.accent, 0.22 * fade);
+        ctx.lineWidth = 1;
+        var hw = ctx.measureText(o.text).width / 2;
+        ctx.beginPath();
+        ctx.moveTo(-hw, o.fs * 0.55);
+        ctx.lineTo(hw, o.fs * 0.55);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+
+    function drawFigure() {
+      var x = fig.x, y = fig.y;
+      var r = fig.r;
+      var airborne = !fig.onGround;
+      ctx.save();
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = rgb(P.ink, 1);
+      ctx.fillStyle = rgb(P.ink, 1);
+
+      // soft contact shadow
+      var shadowSquash = clamp((groundY - (y)) / (H * 0.18), 0, 1);
+      ctx.save();
+      ctx.globalAlpha = 0.12 * (1 - shadowSquash * 0.7);
+      ctx.fillStyle = rgb(P.ink, 1);
+      ctx.beginPath();
+      ctx.ellipse(x, groundY + 4, r * (1.1 - shadowSquash * 0.4), r * 0.28, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      if (cfg.characterStyle === "orb") {
+        // A calm dot with a subtle trail.
+        ctx.beginPath();
+        ctx.arc(x, y - r, r, 0, Math.PI * 2);
+        ctx.fillStyle = rgb(P.ink, 0.92);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(x, y - r, r + 4, 0, Math.PI * 2);
+        ctx.strokeStyle = rgb(P.accent, 0.45);
+        ctx.lineWidth = 1.4;
+        ctx.stroke();
+        ctx.restore();
+        return;
+      }
+
+      // "stroll": minimalist line-figure.
+      ctx.lineWidth = 2.0;
+      var headR = r * 0.55;
+      var hipY = y - r * 1.5;
+      var headCY = y - r * 2.55;
+      var bodyTopY = y - r * 2.0;
+
+      // body lean (slight forward, more when airborne)
+      var lean = airborne ? 0.14 : 0.05;
+      ctx.translate(x, 0);
+      ctx.rotate(lean);
+
+      // head
+      ctx.beginPath();
+      ctx.arc(0, headCY, headR, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // torso
+      ctx.beginPath();
+      ctx.moveTo(0, bodyTopY);
+      ctx.lineTo(0, hipY);
+      ctx.stroke();
+
+      // legs — walking cycle on ground; tucked when airborne
+      var swing = airborne ? 0.5 : Math.sin(fig.legPhase) * 0.9;
+      var swing2 = airborne ? -0.3 : Math.sin(fig.legPhase + Math.PI) * 0.9;
+      var legLen = r * 1.5;
+      ctx.beginPath();
+      ctx.moveTo(0, hipY);
+      ctx.lineTo(Math.sin(swing) * legLen * 0.5, hipY + legLen * (airborne ? 0.7 : 1));
+      ctx.moveTo(0, hipY);
+      ctx.lineTo(Math.sin(swing2) * legLen * 0.5, hipY + legLen * (airborne ? 0.55 : 1));
+      ctx.stroke();
+
+      // arms — gentle counter-swing
+      var armSwing = airborne ? -0.6 : Math.sin(fig.legPhase + Math.PI) * 0.6;
+      var armSwing2 = airborne ? 0.6 : Math.sin(fig.legPhase) * 0.6;
+      var armLen = r * 1.1;
+      var shoulderY = bodyTopY + r * 0.35;
+      ctx.beginPath();
+      ctx.moveTo(0, shoulderY);
+      ctx.lineTo(Math.sin(armSwing) * armLen, shoulderY + armLen * 0.75);
+      ctx.moveTo(0, shoulderY);
+      ctx.lineTo(Math.sin(armSwing2) * armLen, shoulderY + armLen * 0.75);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    function fmtCalm(s) {
+      return (Math.round(s * 10) / 10).toFixed(1);
+    }
+
+    function drawHUD() {
+      ctx.save();
+      ctx.textBaseline = "top";
+      // calm seconds — quiet, monospace numerals
+      ctx.textAlign = "left";
+      ctx.fillStyle = rgb(P.faint, 1);
+      ctx.font = "11px -apple-system, system-ui, sans-serif";
+      ctx.fillText("calm", 16, 14);
+      ctx.fillStyle = rgb(P.soft, 1);
+      ctx.font = "600 22px ui-monospace, 'JetBrains Mono', Menlo, monospace";
+      ctx.fillText(fmtCalm(world.calm) + "s", 16, 27);
+
+      // best — discreet, right
+      if (best > 0) {
+        ctx.textAlign = "right";
+        ctx.fillStyle = rgb(P.faint, 1);
+        ctx.font = "11px -apple-system, system-ui, sans-serif";
+        ctx.fillText("best", W - 16, 14);
+        ctx.fillStyle = rgb(P.faint, 1);
+        ctx.font = "600 14px ui-monospace, 'JetBrains Mono', Menlo, monospace";
+        ctx.fillText(fmtCalm(best) + "s", W - 16, 28);
+      }
+      ctx.restore();
+    }
+
+    function drawObservation() {
+      if (!world.obsText || world.obsAlpha <= 0.01) return;
+      ctx.save();
+      ctx.globalAlpha = world.obsAlpha;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      var fs = clamp(W * 0.026, 14, 21);
+      ctx.font = "italic " + fs + "px Georgia, 'Times New Roman', serif";
+      ctx.fillStyle = rgb(P.soft, 1);
+      var y = H * 0.20;
+      // soft wrap if long
+      wrapText(world.obsText, W / 2, y, W * 0.78, fs * 1.4);
+      ctx.restore();
+    }
+
+    function wrapText(text, cx, cy, maxW, lh) {
+      var words = text.split(" ");
+      var lines = [];
+      var line = "";
+      for (var i = 0; i < words.length; i++) {
+        var test = line ? line + " " + words[i] : words[i];
+        if (ctx.measureText(test).width > maxW && line) {
+          lines.push(line); line = words[i];
+        } else line = test;
+      }
+      if (line) lines.push(line);
+      var startY = cy - (lines.length - 1) * lh / 2;
+      for (var j = 0; j < lines.length; j++) ctx.fillText(lines[j], cx, startY + j * lh);
+    }
+
+    function drawReady() {
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      var pulse = 0.55 + 0.25 * Math.sin(performance.now() / 600);
+      ctx.globalAlpha = pulse;
+      var fs = clamp(W * 0.03, 15, 24);
+      ctx.font = "italic " + fs + "px Georgia, 'Times New Roman', serif";
+      ctx.fillStyle = rgb(P.accent, 1);
+      ctx.fillText("tap to begin", W / 2, H * 0.46);
+      ctx.globalAlpha = pulse * 0.7;
+      ctx.font = "13px -apple-system, system-ui, sans-serif";
+      ctx.fillStyle = rgb(P.faint, 1);
+      ctx.fillText("hop to let each thought pass beneath you", W / 2, H * 0.46 + fs * 1.5);
+      ctx.restore();
+    }
+
+    function drawStumble() {
+      ctx.save();
+      // dim wash (never red, never harsh)
+      ctx.fillStyle = rgb(lerpArr(currentBg(), P.ink, night ? 0.10 : 0.05), 0.55);
+      ctx.fillRect(0, 0, W, H);
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      var fs = clamp(W * 0.03, 16, 26);
+      ctx.font = "italic " + fs + "px Georgia, 'Times New Roman', serif";
+      ctx.fillStyle = rgb(P.soft, 1);
+      wrapText(world.reframe, W / 2, H * 0.42, W * 0.74, fs * 1.35);
+
+      var ready = world.stumbleT <= 0;
+      ctx.globalAlpha = ready ? (0.6 + 0.3 * Math.sin(performance.now() / 600)) : 0.3;
+      ctx.font = "14px -apple-system, system-ui, sans-serif";
+      ctx.fillStyle = rgb(P.accent, 1);
+      ctx.fillText(ready ? "begin again" : "…", W / 2, H * 0.42 + fs * 1.9);
+      ctx.restore();
+    }
+
+    /* ======================================================================
+       LOOP — RAF + fixed-timestep accumulator + visibility pause.
+       ====================================================================== */
+    var STEP_MS = 1000 / 60;
+    var acc = 0;
+    var lastT = 0;
+    var running = true;
+    var rafId = null;
+
+    function frame(now) {
+      if (!running) return;
+      if (!lastT) lastT = now;
+      var dt = now - lastT;
+      lastT = now;
+      if (dt > 250) dt = STEP_MS; // clamp huge gaps (tab was hidden, etc.)
+
+      // slow-motion during stumble settle: feed time slower
+      var timeScale = (state === STATE.STUMBLE) ? 0.45 : 1.0;
+      acc += dt * timeScale;
+
+      var steps = 0;
+      while (acc >= STEP_MS && steps < 5) {
+        update(STEP_MS / 1000);
+        acc -= STEP_MS;
+        steps++;
+      }
+      if (steps >= 5) acc = 0; // avoid spiral of death
+
+      draw();
+      rafId = requestAnimationFrame(frame);
+    }
+
+    function startLoop() {
+      if (rafId == null) { running = true; lastT = 0; acc = 0; rafId = requestAnimationFrame(frame); }
+    }
+    function stopLoop() {
+      running = false;
+      if (rafId != null) { cancelAnimationFrame(rafId); rafId = null; }
+    }
+
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) { stopLoop(); }
+      else { applyResize(); lastT = 0; acc = 0; startLoop(); } // reset accumulator → no jump
+    });
+    window.addEventListener("focus", function () { applyResize(); lastT = 0; acc = 0; startLoop(); });
+
+    /* ----- Resize handling ------------------------------------------------
+       Apply synchronously (not via rAF) so it still works when the tab is
+       hidden and rAF callbacks are throttled. A microtask coalesces bursts. */
+    var resizeQueued = false;
+    function applyResize() {
+      resizeQueued = false;
+      resize();
+      // keep figure anchored to its home x and on the ground
+      fig.x = figureHomeX();
+      if (fig.onGround) fig.y = groundY;
+      fig.r = clamp(H * 0.028, 9, 18);
+      if (!world.hills.length) seedHills();
+    }
+    function onResize() {
+      if (resizeQueued) return;
+      resizeQueued = true;
+      Promise.resolve().then(applyResize);
+    }
+    window.addEventListener("resize", onResize);
+    if (window.ResizeObserver) {
+      try { new ResizeObserver(onResize).observe(root); } catch (e) {}
+    }
+
+    /* ----- Theme change listeners (follow the site toggle live) ----------- */
+    function onThemeChange() {
+      var wasNight = night;
+      night = resolveNight();
+      if (night !== wasNight) { P = pal(); renderMute(); }
+    }
+    if (mqDark) {
+      try { mqDark.addEventListener("change", onThemeChange); }
+      catch (e) { try { mqDark.addListener(onThemeChange); } catch (e2) {} }
+    }
+    if (reduceMQ) {
+      try { reduceMQ.addEventListener("change", function(){ reduced = reduceMQ.matches; }); } catch(e){}
+    }
+    // Observe data-theme attribute flips on <html>.
+    if (window.MutationObserver) {
+      try {
+        new MutationObserver(onThemeChange).observe(document.documentElement, {
+          attributes: true, attributeFilter: ["data-theme"]
+        });
+      } catch (e) {}
+    }
+
+    /* ----- Go ------------------------------------------------------------- */
+    resetRun();
+    state = STATE.READY;
+    renderMute();
+    startLoop();
+
+    // Return a tiny handle (not required, but tidy).
+    return {
+      destroy: function () {
+        stopLoop();
+        window.removeEventListener("resize", onResize);
+      }
+    };
+  }
+
+  // Expose + auto-mount.
+  window.initDrift = initDrift;
+  function autoMount() {
+    var el = document.getElementById("drift-game");
+    if (el && !el.getAttribute("data-drift-mounted")) {
+      el.setAttribute("data-drift-mounted", "1");
+      try { initDrift(el, {}); } catch (e) { /* degrade silently */ }
+    }
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", autoMount);
+  } else {
+    autoMount();
+  }
+})();
+</script>
+</body>
+</html>
