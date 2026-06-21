@@ -49,6 +49,11 @@ yarn-error.log*
 .nuxt/
 out/
 
+# Next.js / Vercel / TS build
+next-env.d.ts
+*.tsbuildinfo
+.vercel
+
 # Logs and temp
 *.log
 *.tmp
