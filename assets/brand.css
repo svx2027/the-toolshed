@@ -8,7 +8,7 @@
   --paper: #FCFCFA;
   --ink: #1C1B1A;
   --ink-soft: #56524d;
-  --ink-faint: #8b867f;
+  --ink-faint: #6f6a62;   /* darkened from #8b867f so muted/eyebrow text clears WCAG AA (>=4.5:1) on paper & card */
   --line: #ece7df;
   --line-strong: #ddd6cb;
 
@@ -113,10 +113,11 @@ section { padding: 72px 0; }
 
 /* ---------- pills / tags ---------- */
 .pill { display: inline-flex; align-items: center; gap: .4rem; font-size: .78rem; font-weight: 500; padding: .28rem .7rem; border-radius: var(--r-pill); border: 1px solid var(--line-strong); background: rgba(255,255,255,.7); color: var(--ink-soft); }
-.pill.brewing { background: #fff6e9; border-color: #f3d9ab; color: var(--acc-peach); }
-.pill.live { background: #e9f7ef; border-color: #bfe6cf; color: var(--acc-mint); }
-.pill.everyone { background: var(--sky); border-color: #bcd6ef; color: var(--acc-sky); }
-.pill.creator { background: var(--lavender); border-color: #cfc4ea; color: var(--acc-lavender); }
+/* pill text deepened for WCAG AA on the light pastel washes; dark mode is re-toned separately below */
+.pill.brewing { background: #fff6e9; border-color: #f3d9ab; color: #a8551f; }
+.pill.live { background: #e9f7ef; border-color: #bfe6cf; color: #1f7a4f; }
+.pill.everyone { background: var(--sky); border-color: #bcd6ef; color: #235e95; }
+.pill.creator { background: var(--lavender); border-color: #cfc4ea; color: #5b4a9e; }
 
 /* ---------- site nav ---------- */
 .nav { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); background: rgba(252,252,250,.72); border-bottom: 1px solid var(--line); }
@@ -191,7 +192,7 @@ body { transition: background-color .45s ease, color .35s ease; }
   --paper: #1A1815;
   --ink: #ECE7DD;
   --ink-soft: #B6AFA2;
-  --ink-faint: #837C6E;
+  --ink-faint: #969084;   /* lightened from #837C6E so muted/eyebrow text clears WCAG AA (>=4.5:1) on dark card */
   --line: #2E2B25;
   --line-strong: #423D35;
   --card: #221F1A;

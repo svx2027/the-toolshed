@@ -57,10 +57,12 @@
     .rr-stat .k { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
     .rr-stat .v { font-family: var(--font-display); font-size: 1.7rem; font-weight: 500; color: var(--ink); }
     .rr-warn {
-      background: rgba(231,160,122,.12); border: 1px solid rgba(231,160,122,.4); color: var(--acc-peach);
+      background: rgba(231,160,122,.12); border: 1px solid rgba(231,160,122,.4); color: #9c4f24;
       border-radius: var(--r-md); padding: 1rem 1.1rem; margin: 1rem 0; font-size: .96rem;
     }
-    .rr-warn strong { color: var(--acc-peach); }
+    .rr-warn strong { color: #9c4f24; }
+    /* dark mode: the peach wash darkens over the dark card, so the brighter accent reads well */
+    [data-theme="dark"] .rr-warn, [data-theme="dark"] .rr-warn strong { color: var(--acc-peach); }
     .rr-actions { display: flex; gap: .7rem; flex-wrap: wrap; justify-content: center; margin-top: 1.4rem; }
     .rr-actions .btn { min-height: 44px; }
     .rr-hidden { display: none; }

@@ -28,7 +28,7 @@
     }
     .deck-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lift); background: rgba(255,255,255,.85); }
     .deck-btn .d-name { font-family: var(--font-display, serif); font-size: 1.3rem; font-weight: 600; }
-    .deck-btn .d-sub { color: var(--ink-faint); font-size: .9rem; }
+    .deck-btn .d-sub { color: var(--ink-soft); font-size: .9rem; }
     .deck-btn .d-emoji { font-size: 1.6rem; }
 
     .progress { height: 8px; border-radius: var(--r-pill); background: rgba(0,0,0,.06); overflow: hidden; margin-bottom: 1.25rem; }
@@ -70,7 +70,10 @@
       background: var(--peach); border: 1px solid #f3d9ab; border-radius: var(--r-md);
       padding: 1rem 1.2rem; margin-top: 1rem;
     }
-    .clash-card .lbl { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--acc-peach); margin-bottom: .3rem; }
+    .clash-card .lbl { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: #9c4f24; margin-bottom: .3rem; }
+    /* "no clashes" variant (set via .ok class, not inline, so dark mode can re-tone it) */
+    .clash-card.ok { background: var(--mint); border-color: #bfe3cd; }
+    .clash-card.ok .lbl { color: #1c7049; }
     .a-actions { display: flex; gap: .8rem; flex-wrap: wrap; margin-top: 1.4rem; }
     .a-actions .btn { flex: 1; min-width: 140px; }
     .breakdown { margin-top: 1.5rem; }
@@ -81,6 +84,19 @@
     .brow .bdot.p { background: var(--acc-peach); }
     .brow .bdot.x { background: var(--acc-rose); }
     .brow .btopic { flex: 1; color: var(--ink-soft); }
+
+    /* ---------- dark mode: re-tone light surfaces that don't flip ----------
+       In dark mode --ink becomes cream; translucent-white and pastel-wash
+       backgrounds stay light, so without these the text goes invisible. */
+    [data-theme="dark"] .deck-btn,
+    [data-theme="dark"] .opt { background: rgba(255,255,255,.05); }
+    [data-theme="dark"] .deck-btn:hover,
+    [data-theme="dark"] .opt:hover { background: rgba(255,255,255,.09); }
+    [data-theme="dark"] .opt.sel { background: rgba(185,171,232,.18); border-color: var(--acc-lavender); }
+    [data-theme="dark"] .clash-card { background: rgba(231,164,126,.14); border-color: #5e4632; }
+    [data-theme="dark"] .clash-card .lbl { color: #e7b693; }
+    [data-theme="dark"] .clash-card.ok { background: rgba(118,201,162,.14); border-color: #2f5d49; }
+    [data-theme="dark"] .clash-card.ok .lbl { color: #93dab9; }
   </style>
 </head>
 <body>
@@ -343,8 +359,8 @@
           <div class="lbl">You clash most on</div>
           <div class="serif" style="font-size:1.25rem;font-weight:600;">${esc(res.clash.topic)}</div>
         </div>` : `
-        <div class="clash-card" style="background:var(--mint);border-color:#bfe3cd;">
-          <div class="lbl" style="color:var(--acc-mint);">No real clashes</div>
+        <div class="clash-card ok">
+          <div class="lbl">No real clashes</div>
           <div class="serif" style="font-size:1.25rem;font-weight:600;">You agreed on everything. 🎯</div>
         </div>`;
 

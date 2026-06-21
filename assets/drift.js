@@ -869,7 +869,7 @@
       ctx.textBaseline = "top";
       // calm seconds — quiet, monospace numerals
       ctx.textAlign = "left";
-      ctx.fillStyle = rgb(P.faint, 1);
+      ctx.fillStyle = rgb(P.soft, 1);   // was P.faint — lifted to clear WCAG AA on the mood wash
       ctx.font = "11px -apple-system, system-ui, sans-serif";
       ctx.fillText("calm", 16, 14);
       ctx.fillStyle = rgb(P.soft, 1);
@@ -879,10 +879,10 @@
       // best — discreet, right
       if (best > 0) {
         ctx.textAlign = "right";
-        ctx.fillStyle = rgb(P.faint, 1);
+        ctx.fillStyle = rgb(P.soft, 1);   // was P.faint — lifted to clear WCAG AA
         ctx.font = "11px -apple-system, system-ui, sans-serif";
         ctx.fillText("best", W - 16, 14);
-        ctx.fillStyle = rgb(P.faint, 1);
+        ctx.fillStyle = rgb(P.soft, 1);   // was P.faint — lifted to clear WCAG AA
         ctx.font = "600 14px ui-monospace, 'JetBrains Mono', Menlo, monospace";
         ctx.fillText(fmtCalm(best) + "s", W - 16, 28);
       }
@@ -929,9 +929,9 @@
       ctx.font = "italic " + fs + "px Georgia, 'Times New Roman', serif";
       ctx.fillStyle = rgb(P.accent, 1);
       ctx.fillText("tap to begin", W / 2, H * 0.46);
-      ctx.globalAlpha = pulse * 0.7;
+      ctx.globalAlpha = 1;               // was pulse*0.7 — steadied so the how-to-play line stays legible
       ctx.font = "13px -apple-system, system-ui, sans-serif";
-      ctx.fillStyle = rgb(P.faint, 1);
+      ctx.fillStyle = rgb(P.soft, 1);    // was P.faint — lifted to clear WCAG AA
       ctx.fillText("hop to let each thought pass beneath you", W / 2, H * 0.46 + fs * 1.5);
       ctx.restore();
     }
