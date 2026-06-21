@@ -27,7 +27,7 @@
     <a href="#cases" class="hide-sm">Case studies</a>
     <a href="#about" class="hide-sm">About</a>
     <a href="#contact">Contact</a>
-    <a class="nav-files" href="https://files.shivamvashisth.com">Files</a>
+    <a class="nav-files" href="https://files.shivamvashisth.com" target="_blank" rel="noopener noreferrer">Files</a>
   </div>
 </div></nav>
 
@@ -232,7 +232,7 @@
 </style>
 
 <script src="/assets/shared.js"></script>
-<script src="/assets/showdown.js?v=2-real"></script>
+<script src="/assets/showdown.js?v=3-pool"></script>
 <script src="/assets/koi-pond.js"></script>
 <script>
   document.getElementById('foot').innerHTML = TS.footer();
@@ -268,7 +268,7 @@
       const inner = `<div class="ic" style="background:${t.c}">${svgIcon(t.icon,t.ac)}</div>
         <h3>${t.name}</h3><p>${t.desc}</p><div class="tags">${tag}</div>`;
       return t.live
-        ? `<a class="tool-card" href="/t/${t.slug}/">${inner}</a>`
+        ? `<a class="tool-card" href="/t/${t.slug}/" target="_blank" rel="noopener noreferrer">${inner}</a>`
         : `<div class="tool-card soon">${inner}</div>`;
     }).join('');
   }
