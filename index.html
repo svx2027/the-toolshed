@@ -57,14 +57,14 @@
         <strong class="serif" style="font-size:1.15rem">Thumbnail Showdown</strong>
         <span class="pill">streak <span class="mono" id="sd-streak">0</span></span>
       </div>
-      <p class="muted" style="margin:0 0 14px;font-size:.92rem">Which thumbnail won the higher click-through? Tap one.</p>
+      <p class="muted" style="margin:0 0 14px;font-size:.92rem">Real YouTube videos. Which one over-performed its channel more? Tap one.</p>
       <div id="sd-arena" class="sd-arena"></div>
       <div id="sd-result" class="sd-result" aria-live="polite"></div>
       <div class="row" style="margin-top:14px;justify-content:space-between;align-items:center">
         <span class="muted mono" style="font-size:.8rem">best <span id="sd-best">0</span></span>
         <button class="btn ghost" id="sd-share" style="padding:.5rem 1rem;font-size:.9rem">Share my streak</button>
       </div>
-      <p class="muted" style="font-size:.78rem;margin:12px 0 0">Built by a YouTube strategist, so the thumbnails fight dirty.</p>
+      <p class="muted" style="font-size:.78rem;margin:12px 0 0">“Breakout” = how far a video beat its own channel’s average (via vidIQ). Real thumbnails fight dirty.</p>
     </div>
 
     <div class="hero-body">
@@ -194,13 +194,17 @@
   .hero-body{grid-area:body}
   .avatar{display:inline-block}
   .sd-arena{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .sd-thumb{cursor:pointer;border:2px solid var(--line);border-radius:var(--r-md);overflow:hidden;background:#fff;transition:transform .12s,box-shadow .12s,border-color .12s,background-color .35s;text-align:left}
+  .sd-thumb{cursor:pointer;border:2px solid var(--line);border-radius:var(--r-md);overflow:hidden;background:var(--card);transition:transform .12s,box-shadow .12s,border-color .12s,opacity .25s,background-color .35s;text-align:left;padding:0}
   .sd-thumb:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);border-color:var(--line-strong)}
-  .sd-thumb .pic{height:78px;display:flex;align-items:center;justify-content:center;padding:8px;color:#fff;font-family:var(--font-display);font-weight:600;font-size:.95rem;text-align:center;line-height:1.15}
-  .sd-thumb .meta{padding:7px 9px;font-size:.74rem;color:var(--ink-soft);display:flex;justify-content:space-between;align-items:center}
+  .sd-thumb .pic{background:var(--line);overflow:hidden;line-height:0}
+  .sd-thumb .pic img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+  .sd-thumb .info{padding:8px 9px}
+  .sd-thumb .t{font-family:var(--font-display);font-weight:600;font-size:.84rem;line-height:1.2;color:var(--ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.05em}
+  .sd-thumb .meta{margin-top:5px;font-size:.72rem;color:var(--ink-soft);display:flex;justify-content:space-between;align-items:center;gap:6px}
+  .sd-thumb .meta .ch{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .sd-thumb.win{border-color:var(--acc-mint)}
-  .sd-thumb.lose{opacity:.55}
-  .sd-thumb .ctr{font-family:var(--font-mono);font-weight:500}
+  .sd-thumb.lose{opacity:.5}
+  .sd-thumb .ctr{font-family:var(--font-mono);font-weight:600;white-space:nowrap;color:var(--ink)}
   .sd-result{min-height:22px;margin-top:12px;font-size:.9rem;font-weight:500}
   .sd-result.good{color:var(--acc-mint)} .sd-result.bad{color:var(--acc-rose)}
   .filters{display:flex;gap:10px;justify-content:center;margin-bottom:26px;flex-wrap:wrap}
@@ -228,7 +232,7 @@
 </style>
 
 <script src="/assets/shared.js"></script>
-<script src="/assets/showdown.js"></script>
+<script src="/assets/showdown.js?v=2-real"></script>
 <script src="/assets/koi-pond.js"></script>
 <script>
   document.getElementById('foot').innerHTML = TS.footer();
