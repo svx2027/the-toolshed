@@ -124,6 +124,7 @@
 
         <div class="share-row" id="shareRow" hidden>
           <button type="button" class="btn" id="shareBtn">Share this card</button>
+          <button type="button" class="btn ghost" id="downloadBtn">Download PNG</button>
           <button type="button" class="btn ghost" id="linkBtn">Copy link to this tool</button>
         </div>
       </div>
@@ -153,6 +154,7 @@
     var legend = document.getElementById('legend');
     var shareRow = document.getElementById('shareRow');
     var shareBtn = document.getElementById('shareBtn');
+    var downloadBtn = document.getElementById('downloadBtn');
     var linkBtn = document.getElementById('linkBtn');
 
     // cap "today" input so future DOBs can't be picked by mistake
@@ -335,11 +337,32 @@
       TS.watermark(ctx, w, h, TS.SITE);
     }
 
+    // single source of truth for the card canvas, reused by share + download
+    function buildCard() {
+      return TS.makeCard({ draw: drawCard, width: 1080, height: 1920, wash: true });
+    }
+
     shareBtn.addEventListener('click', function () {
       if (!state) { TS.toast('Draw your grid first'); return; }
-      var canvas = TS.makeCard({ draw: drawCard, width: 1080, height: 1920, wash: true });
+      var canvas = buildCard();
       TS.shareOrDownload(canvas, 'life-in-weeks.png', 'My life in weeks — ' + TS.SITE + '/t/life-in-weeks/');
       if (firstExport) { firstExport = false; TS.confetti(); }
+    });
+
+    downloadBtn.addEventListener('click', function () {
+      if (!state) { TS.toast('Draw your grid first to save a PNG'); return; }
+      var canvas = buildCard();
+      canvas.toBlob(function (blob) {
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'life-in-weeks.png';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+      }, 'image/png');
+      TS.toast('Saved life-in-weeks.png to your device');
     });
 
     /* ---------- restore saved DOB (optional) ---------- */

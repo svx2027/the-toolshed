@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="/assets/brand.css">
 </head>
 <body>
+<div id="koi-pond" data-transparent="true" data-keepout-width="1100" data-min-width="1280" data-density="1" aria-hidden="true"></div>
 <h1 class="sr-only">Code for Creatives India: you don't need to be a coder to build tiny apps with AI</h1>
 
 <nav class="nav"><div class="wrap">
@@ -182,6 +183,7 @@
 <div id="foot"></div>
 
 <style>
+  #koi-pond{position:fixed;inset:0;z-index:0;pointer-events:none}
   .hero-grid{align-items:stretch}
   .avatar{display:inline-block}
   .sd-arena{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -220,6 +222,7 @@
 
 <script src="/assets/shared.js"></script>
 <script src="/assets/showdown.js"></script>
+<script src="/assets/koi-pond.js"></script>
 <script>
   document.getElementById('foot').innerHTML = TS.footer();
 
@@ -229,6 +232,7 @@
     {slug:'read-rate', name:'Read Rate', desc:'Find your real reading speed in 60 seconds.', aud:'everyone', live:true, c:'#DFF0E6', ac:'#2f8f63', icon:'gauge'},
     {slug:'year-in-emoji', name:'Year in Emoji', desc:'Sum up your year in twelve emoji and twelve words.', aud:'everyone', live:true, c:'#F8E2D4', ac:'#c2693a', icon:'cal'},
     {slug:'aligned', name:'Aligned', desc:'See how aligned you and someone else really are.', aud:'everyone', live:true, c:'#E6E0F2', ac:'#6d5bb0', icon:'heart'},
+    {slug:'drift', name:'Drift', desc:'A one-button calm game. Hop, and let the thoughts pass.', aud:'everyone', live:true, c:'#DFF0E6', ac:'#2f8f63', icon:'wave'},
     {slug:'comment-goldmine', name:'Comment Goldmine', desc:'Turn a video’s comments into ten content ideas.', aud:'creator', live:false, c:'#E6E0F2', ac:'#6d5bb0', icon:'chat'},
     {slug:'outlier-radar', name:'Outlier Radar', desc:'Spot what’s overperforming in your niche right now.', aud:'creator', live:false, c:'#DCEAF5', ac:'#2f6fae', icon:'radar'},
     {slug:'sealed', name:'Sealed', desc:'Write a letter to your future self, delivered on a date.', aud:'everyone', live:false, c:'#F8E2D4', ac:'#c2693a', icon:'mail'}
@@ -240,7 +244,8 @@
     heart:'<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>',
     chat:'<path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/>',
     radar:'<circle cx="12" cy="12" r="9"/><path d="M12 12l6-3M12 12V4"/><circle cx="12" cy="12" r="3"/>',
-    mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'
+    mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+    wave:'<path d="M3 12c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/><path d="M3 17c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/>'
   };
   function svgIcon(name, color){
     return `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="${color}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]||ICONS.grid}</svg>`;
