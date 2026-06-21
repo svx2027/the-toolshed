@@ -299,3 +299,16 @@ body { transition: background-color .45s ease, color .35s ease; }
 }
 .btn.glow:hover { animation-play-state: paused; box-shadow: var(--shadow-lift); }
 .btn.glow:hover::before { animation-play-state: paused; }
+
+/* ---------- Mobile-tidy header: short brand + single-line links ---------- */
+.nav .brand .brand-short { display: none; }     /* hidden on desktop; full name shown */
+.nav .links a { white-space: nowrap; }          /* never break "The Garage" across lines */
+@media (max-width: 640px) {
+  .nav .brand .brand-full { display: none; }     /* collapse "Shivam Vashisth" -> "SV" */
+  .nav .brand .brand-short { display: inline; }
+  .nav .links { gap: 1rem; }                      /* a touch tighter so it never crowds */
+}
+@media (max-width: 380px) {
+  .nav .links { gap: .8rem; }
+  .nav .links a { font-size: .9rem; }             /* tiny phones: keep it all on one row */
+}
