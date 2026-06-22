@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { buildPairs, fmtViews, fmtX, type Video } from "@/lib/showdown";
+import { PAIRS_URL, NICHE_LABEL, shuffle, thumb, fmtViews, fmtX, type Pair, type Video } from "@/lib/showdown";
 
 type Side = "left" | "right";
 type Picked = { side: Side; win: boolean } | null;
 
 export function Showdown() {
-  const [pairs, setPairs] = useState<[Video, Video][]>([]);
+  const [pairs, setPairs] = useState<Pair[]>([]);
   const [qi, setQi] = useState(0);
   const [flip, setFlip] = useState(false);
   const [picked, setPicked] = useState<Picked>(null);
@@ -16,25 +16,37 @@ export function Showdown() {
   const [result, setResult] = useState<{ text: string; good: boolean } | null>(null);
   const timer = useRef<number | null>(null);
 
-  // client-only init (random shuffle must not run during SSR)
   useEffect(() => {
-    setPairs(buildPairs());
+    let alive = true;
+    fetch(PAIRS_URL)
+      .then((r) => r.json())
+      .then((data: Pair[]) => {
+        if (!alive || !Array.isArray(data) || !data.length) return;
+        const shuffled = shuffle(data);
+        setPairs(shuffled);
+        schedulePrefetch(shuffled);
+      })
+      .catch(() => {});
     try {
       const b = parseInt(localStorage.getItem("sd_best") || "0", 10);
       if (!Number.isNaN(b)) setBest(b);
     } catch {}
     return () => {
+      alive = false;
       if (timer.current) window.clearTimeout(timer.current);
     };
   }, []);
 
   if (!pairs.length) {
-    return <div className="min-h-[360px] rounded-3xl border border-line bg-card/60" aria-hidden />;
+    return (
+      <div className="min-h-[360px] animate-pulse rounded-3xl border border-line bg-card/60" aria-label="Loading the game" />
+    );
   }
 
   const pair = pairs[qi % pairs.length];
-  const left = flip ? pair[1] : pair[0];
-  const right = flip ? pair[0] : pair[1];
+  const left = flip ? pair.b : pair.a;
+  const right = flip ? pair.a : pair.b;
+  const nextPair = pairs[(qi + 1) % pairs.length];
 
   const pick = (side: Side) => {
     if (picked) return;
@@ -72,14 +84,21 @@ export function Showdown() {
           streak <span className="font-mono text-ink">{streak}</span>
         </span>
       </div>
-      <p className="mb-4 text-[0.92rem] text-ink-soft">
-        Real YouTube videos. Which one over-performed its channel more? Tap one.
+      <p className="mb-3 text-[0.92rem] text-ink-soft">
+        Two videos from the same niche. Which one over-performed its channel more? Tap one.
       </p>
+
+      <div className="mb-2.5">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-ink/5 px-2.5 py-1 font-mono text-[0.66rem] uppercase tracking-[0.12em] text-ink-soft">
+          <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-acc-lavender" />
+          same niche · {NICHE_LABEL[pair.n] ?? "Picks"}
+        </span>
+      </div>
 
       <div className="grid grid-cols-2 gap-3">
         {(["left", "right"] as Side[]).map((side) => {
-          const it = side === "left" ? left : right;
-          const opp = side === "left" ? right : left;
+          const it: Video = side === "left" ? left : right;
+          const opp: Video = side === "left" ? right : left;
           const isWin = picked ? it.x >= opp.x : false;
           const isLose = picked ? it.x < opp.x : false;
           return (
@@ -93,9 +112,12 @@ export function Showdown() {
             >
               <div className="bg-line">
                 <img
-                  src={`https://i.ytimg.com/vi/${it.id}/maxresdefault.jpg`}
+                  src={thumb(it.id)}
                   alt=""
-                  loading="lazy"
+                  width={320}
+                  height={180}
+                  loading="eager"
+                  decoding="async"
                   className="block aspect-video w-full object-cover"
                   onError={(e) => {
                     const img = e.currentTarget;
@@ -123,6 +145,12 @@ export function Showdown() {
         })}
       </div>
 
+      {/* warm the next pair's images so the round flips instantly */}
+      <div aria-hidden className="hidden">
+        <img src={thumb(nextPair.a.id)} alt="" width={1} height={1} loading="eager" />
+        <img src={thumb(nextPair.b.id)} alt="" width={1} height={1} loading="eager" />
+      </div>
+
       <div className="mt-3 min-h-[22px] text-[0.9rem] font-medium">
         {result && <span className={result.good ? "text-acc-mint" : "text-acc-rose"}>{result.text}</span>}
       </div>
@@ -144,6 +172,22 @@ export function Showdown() {
   );
 }
 
+/* ---- prefetch every thumbnail through the service worker (offline play), once, on idle ---- */
+function schedulePrefetch(pairs: Pair[]) {
+  if (typeof navigator === "undefined" || !("serviceWorker" in navigator)) return;
+  const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+  if (conn && (conn.saveData || conn.effectiveType === "2g" || conn.effectiveType === "slow-2g")) return;
+  const urls = pairs.flatMap((p) => [thumb(p.a.id), thumb(p.b.id)]);
+  const send = () => {
+    const post = () => navigator.serviceWorker.controller?.postMessage({ type: "prefetch", urls });
+    if (navigator.serviceWorker.controller) post();
+    else navigator.serviceWorker.addEventListener("controllerchange", post, { once: true });
+  };
+  const ric = (window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => void }).requestIdleCallback;
+  if (ric) ric(send, { timeout: 4000 });
+  else window.setTimeout(send, 2000);
+}
+
 /* ---- self-contained share card + confetti (light wash, matches the site's share cards) ---- */
 async function shareStreak(best: number) {
   const w = 1080, h = 1080;
@@ -152,7 +196,6 @@ async function shareStreak(best: number) {
   const ctx = c.getContext("2d");
   if (!ctx) return;
 
-  // pastel wash on warm paper
   ctx.fillStyle = "#FCFCFA";
   ctx.fillRect(0, 0, w, h);
   const blooms: [number, number, string][] = [
@@ -185,7 +228,7 @@ async function shareStreak(best: number) {
   const blob = await new Promise<Blob | null>((res) => c.toBlob(res, "image/png", 0.95));
   if (!blob) return;
   const file = new File([blob], "thumbnail-showdown.png", { type: "image/png" });
-  const text = `My Thumbnail Showdown streak: ${best}. Beat me → shivamvashisth.com`;
+  const text = `My Thumbnail Showdown streak: ${best}. Beat me at shivamvashisth.com`;
   const navAny = navigator as Navigator & { canShare?: (d: { files: File[] }) => boolean };
   if (navAny.canShare && navAny.canShare({ files: [file] })) {
     try {

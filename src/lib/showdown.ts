@@ -1,5 +1,3 @@
-import poolData from "./showdown-pool.json";
-
 export interface Video {
   id: string;
   t: string; // title
@@ -8,20 +6,44 @@ export interface Video {
   views: number;
 }
 
-export const POOL: Video[] = poolData as Video[];
+// A baked head-to-head pair. Both videos are from the same niche `n`.
+export interface Pair {
+  n: string;
+  a: Video;
+  b: Video;
+}
 
-/** Build ~176 head-to-head pairs from the pool: shuffle, pair adjacent, drop ties. */
-export function buildPairs(rng: () => number = Math.random): [Video, Video][] {
-  const a = POOL.slice();
+export const PAIRS_URL = "/showdown-pairs.json";
+
+// Small, CORS-enabled, true-16:9 YouTube thumbnail (~12KB; always exists).
+export const thumb = (id: string): string => `https://i.ytimg.com/vi/${id}/mqdefault.jpg`;
+
+export const NICHE_LABEL: Record<string, string> = {
+  tech: "Tech",
+  gaming: "Gaming",
+  cooking: "Cooking",
+  food: "Food",
+  fitness: "Fitness",
+  beauty: "Beauty",
+  finance: "Finance",
+  sports: "Sports",
+  comedy: "Comedy",
+  music: "Music",
+  education: "Education",
+  vlog: "Vlogs",
+  kids: "Kids",
+  diy: "DIY",
+  auto: "Auto",
+  misc: "Picks",
+};
+
+export function shuffle<T>(arr: readonly T[], rng: () => number = Math.random): T[] {
+  const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(rng() * (i + 1));
     [a[i], a[j]] = [a[j], a[i]];
   }
-  const pairs: [Video, Video][] = [];
-  for (let i = 0; i + 1 < a.length; i += 2) {
-    if (a[i].x !== a[i + 1].x) pairs.push([a[i], a[i + 1]]);
-  }
-  return pairs;
+  return a;
 }
 
 export const fmtX = (x: number): string =>
