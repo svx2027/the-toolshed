@@ -15,7 +15,9 @@ const CONFIG = {
   idleSeconds: 6,       // seconds of no pointer input before the pond calms.
   transparent: false,   // true = draw ONLY lanterns over the page (no water fill).
   keepOut: null,        // optional (W,H) => {x,y,w,h}: a region lanterns avoid + bounce off.
-  minWidth: 0           // if the container is narrower than this many px, render nothing.
+  minWidth: 0,          // if the container is narrower than this many px, render nothing.
+  autoHide: 0,          // seconds to linger before a graceful self-dismiss (0 = stay forever).
+  fadeSeconds: 3.5      // how long the gentle fade-out takes when autoHide fires.
 };
 /* ===================================================================== */
 
@@ -617,7 +619,7 @@ const CONFIG = {
     // LOOP — fixed timestep accumulator
     // ---------------------------------------------------------------
     const STEP = 1000 / 60;     // ms
-    let acc = 0, last = performance.now(), raf = 0, running = false;
+    let acc = 0, last = performance.now(), raf = 0, running = false, destroyed = false;
 
     function simulate(dtSec) {
       clock += dtSec;
@@ -669,7 +671,7 @@ const CONFIG = {
     }
 
     function start() {
-      if (running) return;
+      if (running || destroyed) return;
       running = true; last = performance.now(); acc = 0;
       // prime background once so first frames aren't empty (skip when transparent)
       if (!cfg.transparent) { ctx.fillStyle = PAL.bg; ctx.fillRect(0,0,W,H); }
@@ -697,6 +699,7 @@ const CONFIG = {
     // public handle
     const api = {
       destroy() {
+        destroyed = true;
         stop();
         try { mqDark && (mqDark.removeEventListener ? mqDark.removeEventListener("change",refreshTheme) : mqDark.removeListener(refreshTheme)); } catch(e){}
         try { themeObserver && themeObserver.disconnect(); } catch(e){}
@@ -707,6 +710,20 @@ const CONFIG = {
       pause(){ if(!userPaused) btn.click(); },
       resume(){ if(userPaused) btn.click(); }
     };
+
+    // playful auto-dismiss: linger, then gently fade out and fully tear down,
+    // so it is gone before anyone notices (no lingering animation loop).
+    if (cfg.autoHide > 0) {
+      const fadeMs = Math.max(0, (cfg.fadeSeconds != null ? cfg.fadeSeconds : 3.5) * 1000);
+      setTimeout(() => {
+        if (destroyed || userPaused) return;
+        canvas.style.transition = "opacity " + (fadeMs / 1000) + "s cubic-bezier(.4,0,.2,1)";
+        void canvas.offsetHeight;   // force a reflow so the opacity transition reliably animates
+        canvas.style.opacity = "0";
+        setTimeout(() => { try { api.destroy(); } catch (e) {} }, fadeMs + 120);
+      }, cfg.autoHide * 1000);
+    }
+
     return api;
   }
 
@@ -723,6 +740,8 @@ const CONFIG = {
     if (ds.density) o.density = parseFloat(ds.density);
     if (ds.accent) o.accent = ds.accent;
     if (ds.theme) o.theme = ds.theme;
+    if (ds.autoHide) o.autoHide = parseFloat(ds.autoHide);
+    if (ds.fadeSeconds) o.fadeSeconds = parseFloat(ds.fadeSeconds);
     if (ds.transparent === "true" || ds.transparent === "") o.transparent = true;
     if (ds.keepoutWidth) {                       // a centred reading band lanterns avoid
       const kw = parseFloat(ds.keepoutWidth);
