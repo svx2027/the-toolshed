@@ -2,7 +2,7 @@ import { Reveal } from "./Reveal";
 
 const TRIAD = [
   { k: "01", line: "The tool is free.", sub: "Sitting on GitHub, ready for anyone on earth." },
-  { k: "02", line: "The talent is real.", sub: "Creators here are every bit as capable." },
+  { k: "02", line: "The talent is real.", sub: "Creatives here are every bit as capable." },
   { k: "03", line: "The bridge was never built.", sub: "Nobody handed them the words to cross it." },
 ];
 
@@ -16,7 +16,7 @@ export function Mission() {
         <Reveal>
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-paper/50">Why this exists</p>
           <h2 className="mt-4 max-w-3xl font-display text-4xl font-medium leading-[1.08] tracking-tight sm:text-6xl">
-            Creators don&rsquo;t lack talent. They lack the words.
+            Creatives don&rsquo;t lack talent. They lack the words.
           </h2>
         </Reveal>
 

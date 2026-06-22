@@ -9,14 +9,14 @@ const jetbrains = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500"], v
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://shivamvashisth.com"),
-  title: "Code for Creators India: you don't need to be a coder. Build tiny apps with AI.",
+  title: "Code for Creatives India: you don't need to be a coder. Build tiny apps with AI.",
   description:
-    "Code for Creators India. A YouTube strategist building tiny apps with AI, and handing creators and creatives the words to build their own. No dev team, no CS degree.",
+    "Code for Creatives India. A YouTube strategist building tiny apps with AI, and handing creatives and creators the words to build their own. No dev team, no CS degree.",
   alternates: { canonical: "/" },
   icons: { icon: "/assets/favicon.svg" },
   openGraph: {
     type: "website",
-    title: "Code for Creators India: you don't need to be a coder",
+    title: "Code for Creatives India: you don't need to be a coder",
     description:
       "I'm a YouTube strategist who builds tiny apps with AI. If you can write a prompt, you can build one too. I'll show you how.",
     url: "/",
@@ -32,11 +32,11 @@ const themeScript = `try{var t=localStorage.getItem('ts_theme')||((window.matchM
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "Code for Creators India",
+  name: "Code for Creatives India",
   alternateName: "The Toolshed",
   url: "https://shivamvashisth.com",
   description:
-    "Code for Creators India. Tiny apps built with AI, and the words creators and creatives need to build their own.",
+    "Code for Creatives India. Tiny apps built with AI, and the words creatives and creators need to build their own.",
   author: {
     "@type": "Person",
     name: "Shivam Vashisth",

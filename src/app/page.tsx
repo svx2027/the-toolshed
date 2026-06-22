@@ -99,13 +99,13 @@ export default function Home() {
             <p className="mt-6 text-lg text-ink-soft">
               By day I&rsquo;m a YouTube strategist, deep in content and data: competitive intelligence for education
               channels, transcripts, market numbers. I kept building little tools to make the grind less manual, then
-              realised creators and creatives everywhere fight the same grind.
+              realised creatives and creators everywhere fight the same grind.
             </p>
           </Reveal>
           <Reveal>
             <p className="mt-5 text-ink-soft">
-              So I started Code for Creators India: tiny apps anyone can build with AI, no dev team, no degree.
-              It&rsquo;s for creators and creatives both. YouTubers, writers, musicians, designers, comics, journalists.
+              So I started Code for Creatives India: tiny apps anyone can build with AI, no dev team, no degree.
+              It&rsquo;s for creatives and creators both. Writers, musicians, designers, comics, journalists, YouTubers.
               Anyone who makes and ships their own work. I learned to do this with AI doing the heavy lifting, which
               means the judgment of <em>what</em>{" "}to build matters far more than the code. I&rsquo;m documenting the
               whole thing on{" "}

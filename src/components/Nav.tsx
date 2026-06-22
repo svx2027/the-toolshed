@@ -74,10 +74,10 @@ export function Nav() {
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="min-w-0 truncate font-display text-base font-semibold text-ink sm:text-lg"
-            aria-label="Code for Creators India, back to top"
+            aria-label="Code for Creatives India, back to top"
           >
-            <span className="hidden sm:inline">Code&nbsp;for&nbsp;Creators&nbsp;India</span>
-            <span className="sm:hidden">Code&nbsp;for&nbsp;Creators</span>
+            <span className="hidden sm:inline">Code&nbsp;for&nbsp;Creatives&nbsp;India</span>
+            <span className="sm:hidden">Code&nbsp;for&nbsp;Creatives</span>
           </button>
 
           <div className="flex flex-shrink-0 items-center gap-2 sm:gap-2.5">
@@ -172,7 +172,7 @@ export function Nav() {
                 <a href="mailto:hi@shivamvashisth.com" className="transition-colors hover:text-paper">
                   hi@shivamvashisth.com
                 </a>
-                <span className="text-paper/35">Code for Creators India</span>
+                <span className="text-paper/35">Code for Creatives India</span>
               </motion.div>
             </div>
           </motion.nav>

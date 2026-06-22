@@ -13,11 +13,11 @@ export function Hero() {
           </h1>
 
           <p className="mt-6 font-mono text-xs uppercase tracking-[0.22em] text-ink-faint">
-            Code for creators&nbsp;·&nbsp;creatives
+            Code for creatives&nbsp;·&nbsp;creators
           </p>
 
           <p className="mt-4 max-w-xl text-lg text-ink-soft">
-            <strong className="font-semibold text-ink">Code for Creators India.</strong>{" "}
+            <strong className="font-semibold text-ink">Code for Creatives India.</strong>{" "}
             I&rsquo;m a YouTube strategist who builds tiny apps with AI: no dev team, no CS degree. If you can write a{" "}
             <Jargon term="prompt">prompt</Jargon>, you can build one too. I&rsquo;ll show you how.
           </p>
