@@ -14,7 +14,7 @@ export function Pwa() {
       const sw = navigator.serviceWorker.controller;
       if (!sw) return;
       const origin = location.origin;
-      const urls = new Set<string>([origin + "/", origin + "/showdown-pairs.json"]);
+      const urls = new Set<string>([origin + "/", origin + "/showdown-pairs.json", origin + "/assets/koi-pond.js"]);
       try {
         const entries = performance.getEntriesByType("resource") as PerformanceResourceTiming[];
         for (const e of entries) {

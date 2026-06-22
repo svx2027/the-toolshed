@@ -1,4 +1,5 @@
 import { Nav } from "@/components/Nav";
+import { KoiPond } from "@/components/KoiPond";
 import { Hero } from "@/components/Hero";
 import { Mission } from "@/components/Mission";
 import { Garage } from "@/components/Garage";
@@ -11,6 +12,7 @@ import { ContactForm } from "@/components/ContactForm";
 export default function Home() {
   return (
     <>
+      <KoiPond />
       <RevealController />
       <Nav />
       <main>
