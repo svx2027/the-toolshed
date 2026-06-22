@@ -80,10 +80,10 @@ export default function Home() {
 
         {/* ---------- ABOUT ---------- */}
         <section id="about" className="relative isolate z-10 mx-auto max-w-3xl scroll-mt-24 overflow-hidden px-5 py-24 sm:px-7 sm:py-32">
-          {/* maker's mark, buried in the background */}
+          {/* maker's mark, buried in the background (centered + sized to fit, never clipped) */}
           <span
             aria-hidden
-            className="pointer-events-none absolute -bottom-4 -right-2 -z-10 select-none font-display text-[22vw] font-semibold leading-none tracking-tight text-ink/[0.045] sm:text-[13rem]"
+            className="pointer-events-none absolute inset-x-0 bottom-8 -z-10 select-none text-center font-display text-[clamp(3rem,16vw,8.5rem)] font-semibold leading-none tracking-tight text-ink/[0.05]"
           >
             svx2027
           </span>
