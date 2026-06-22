@@ -3,7 +3,7 @@ import crypto from "node:crypto";
 /**
  * Email capture → Supabase `subscribers` (insert-only RLS).
  * The browser POSTs {email, company} here; this server route inserts via the
- * Supabase REST endpoint with the PUBLISHABLE (anon) key — the same browser-safe
+ * Supabase REST endpoint with the PUBLISHABLE (anon) key: the same browser-safe
  * key already shipped in the Files-vault bundle. No service-role key, ever.
  * RLS allows the anon role to INSERT only (never SELECT), so a leaked key cannot
  * read the list. Keeping the call server-side keeps CSP connect-src at 'self'.
@@ -46,7 +46,7 @@ export async function POST(request: Request) {
     return json(400, { ok: false });
   }
 
-  // honeypot: bots fill the hidden "company" field — silently accept, store nothing
+  // honeypot: bots fill the hidden "company" field, silently accept, store nothing
   if (typeof data.company === "string" && data.company.trim() !== "") return json(200, { ok: true });
 
   const email = typeof data.email === "string" ? data.email.trim().toLowerCase() : "";
@@ -73,7 +73,7 @@ export async function POST(request: Request) {
     if (res.ok || res.status === 409) return json(200, { ok: true });
     return json(502, { ok: false });
   } catch {
-    // correlation id only — never log the email or the upstream error body
+    // correlation id only, never log the email or the upstream error body
     console.error("subscribe failed", crypto.randomUUID());
     return json(502, { ok: false });
   }

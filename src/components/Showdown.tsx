@@ -46,14 +46,14 @@ export function Showdown() {
     if (win) {
       const ns = streak + 1;
       setStreak(ns);
-      setResult({ text: `Right! ${fmtX(chosen.x)} beat ${fmtX(other.x)} — ${fmtViews(chosen.views)} views.`, good: true });
+      setResult({ text: `Right! ${fmtX(chosen.x)} beat ${fmtX(other.x)}, on ${fmtViews(chosen.views)} views.`, good: true });
       if (ns > best) {
         setBest(ns);
         try { localStorage.setItem("sd_best", String(ns)); } catch {}
       }
     } else {
       setStreak(0);
-      setResult({ text: `Nope — the other was the bigger outlier: ${fmtX(other.x)} vs ${fmtX(chosen.x)}.`, good: false });
+      setResult({ text: `Nope. The other was the bigger outlier: ${fmtX(other.x)} vs ${fmtX(chosen.x)}.`, good: false });
     }
 
     timer.current = window.setTimeout(() => {
@@ -177,7 +177,7 @@ async function shareStreak(best: number) {
   ctx.fillText(String(best), w / 2, h / 2 + 90);
   ctx.fillStyle = "#56524d";
   ctx.font = "500 46px Inter, system-ui, sans-serif";
-  ctx.fillText("best streak — can you beat it?", w / 2, h / 2 + 200);
+  ctx.fillText("best streak, can you beat it?", w / 2, h / 2 + 200);
   ctx.fillStyle = "#8b867f";
   ctx.font = "500 26px 'JetBrains Mono', ui-monospace, monospace";
   ctx.fillText("shivamvashisth.com/#showdown", w / 2, h - 70);

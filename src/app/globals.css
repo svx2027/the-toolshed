@@ -139,7 +139,7 @@ body::before {
 
 /* ---- scroll reveals ----
    Bulletproof: elements are VISIBLE by default. They are only "armed" (hidden, then
-   revealed on intersection) once JS adds .reveal-ready — and that is done inside a
+   revealed on intersection) once JS adds .reveal-ready, and that is done inside a
    requestAnimationFrame, which never fires in a throttled/background tab. So content
    can never be permanently hidden behind a stalled animation; the choreography is a
    pure enhancement for active tabs. Re-fires both ways (scroll down AND up). */
@@ -156,7 +156,7 @@ html.reveal-ready [data-reveal]:not(.in) {
   [data-reveal] { transition: none; }
 }
 
-/* CTA glow — invites the click; pauses for reduced-motion */
+/* CTA glow: invites the click; pauses for reduced-motion */
 @keyframes ctaGlow {
   0%, 100% { box-shadow: 0 0 0 0 rgba(109, 91, 176, 0); }
   50% { box-shadow: 0 0 26px 3px rgba(109, 91, 176, 0.45); }

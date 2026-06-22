@@ -5,7 +5,7 @@ import { useEffect } from "react";
 /**
  * Arms scroll-reveals and drives them with IntersectionObserver (both directions).
  * The arming happens inside requestAnimationFrame, which only fires in an active,
- * painting tab — so a throttled/background tab simply leaves all content visible.
+ * painting tab, so a throttled/background tab simply leaves all content visible.
  */
 export function RevealController() {
   useEffect(() => {

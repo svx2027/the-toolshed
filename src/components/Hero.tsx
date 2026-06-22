@@ -12,27 +12,23 @@ export function Hero() {
             <span className="ink-underline">You don&rsquo;t need to be a coder.</span>
           </h1>
 
-          <p className="mt-7 max-w-xl text-lg text-ink-soft">
-            <strong className="font-semibold text-ink">Code for Creators in India.</strong>{" "}
+          <p className="mt-6 font-mono text-xs uppercase tracking-[0.22em] text-ink-faint">
+            Code for creators&nbsp;·&nbsp;creatives
+          </p>
+
+          <p className="mt-4 max-w-xl text-lg text-ink-soft">
+            <strong className="font-semibold text-ink">Code for Creators India.</strong>{" "}
             I&rsquo;m a YouTube strategist who builds tiny apps with AI: no dev team, no CS degree. If you can write a{" "}
             <Jargon term="prompt">prompt</Jargon>, you can build one too. I&rsquo;ll show you how.
           </p>
 
-          {/* three doors — rule of three: Build · Download · Follow */}
+          {/* two doors: do, or stay */}
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <a
               href="#toolshed"
               className="cta-glow inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 font-medium text-paper transition-transform hover:-translate-y-0.5"
             >
               Open the Garage
-            </a>
-            <a
-              href="https://files.shivamvashisth.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-full border border-line-strong px-6 py-3 font-medium text-ink transition-colors hover:border-ink"
-            >
-              Browse the Files <span aria-hidden className="text-ink-faint">↗</span>
             </a>
             <a
               href="https://instagram.com/svx2027"

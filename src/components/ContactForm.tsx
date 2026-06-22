@@ -6,7 +6,7 @@ const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
 export function ContactForm() {
   const [email, setEmail] = useState("");
-  const [company, setCompany] = useState(""); // honeypot — real people never see this
+  const [company, setCompany] = useState(""); // honeypot: real people never see this
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
 
   const submit = async (e: React.FormEvent) => {
@@ -67,11 +67,11 @@ export function ContactForm() {
         </button>
       </form>
       <p className="mt-2 text-[0.8rem] text-ink-faint">
-        Just your email, stored on my own Supabase — never sold, never rented. Reply or DM to unsubscribe.
+        Just your email, stored on my own Supabase. Never sold, never rented. Reply or DM to unsubscribe.
       </p>
       {status === "error" && (
         <p className="mt-1 text-[0.8rem] text-acc-rose">
-          Couldn&rsquo;t save that just now — try again, or just{" "}
+          Couldn&rsquo;t save that just now. Try again, or just{" "}
           <a href="https://instagram.com/svx2027" target="_blank" rel="noopener noreferrer" className="underline">
             DM me on Instagram
           </a>

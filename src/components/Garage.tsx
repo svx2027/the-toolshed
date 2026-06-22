@@ -70,8 +70,8 @@ export function Garage() {
           A garage full of tiny apps
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-ink-soft">
-          Built in public. Live builds open in a tap. The rest are up on blocks, getting finished. New one most weeks —
-          follow{" "}
+          Built in public. Live builds open in a tap. The rest are up on blocks, getting finished. New one most weeks.
+          Follow{" "}
           <a href="https://instagram.com/svx2027" target="_blank" rel="noopener noreferrer" className="text-acc-sky underline-offset-2 hover:underline">
             @svx2027
           </a>{" "}

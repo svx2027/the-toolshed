@@ -67,21 +67,21 @@ export function Nav() {
         className="fixed inset-x-0 top-0 z-[60] h-[2px] origin-left bg-acc-lavender"
       />
 
-      {/* top bar — own translucent bg so text stays readable over any section
+      {/* top bar: own translucent bg so text stays readable over any section
           (incl. the inverted Mission band that scrolls beneath it) */}
       <header className="fixed inset-x-0 top-0 z-50 border-b border-line/60 bg-paper/80 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-5 sm:px-7">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="min-w-0 truncate font-display text-base font-semibold text-ink sm:text-lg"
-            aria-label="Code for Creators in India — back to top"
+            aria-label="Code for Creators India, back to top"
           >
-            <span className="hidden sm:inline">Code&nbsp;for&nbsp;Creators&nbsp;in&nbsp;India</span>
+            <span className="hidden sm:inline">Code&nbsp;for&nbsp;Creators&nbsp;India</span>
             <span className="sm:hidden">Code&nbsp;for&nbsp;Creators</span>
           </button>
 
           <div className="flex flex-shrink-0 items-center gap-2 sm:gap-2.5">
-            {/* Files — persistent primary destination, outside the menu */}
+            {/* Files: persistent primary destination, outside the menu */}
             <a
               href={FILES_URL}
               target="_blank"
@@ -121,7 +121,7 @@ export function Nav() {
             className="fixed inset-0 z-[55] flex flex-col bg-ink text-paper"
             aria-label="Site menu"
           >
-            {/* explicit close — top-right X */}
+            {/* explicit close: top-right X */}
             <button
               ref={closeRef}
               onClick={() => setOpen(false)}
@@ -172,7 +172,7 @@ export function Nav() {
                 <a href="mailto:hi@shivamvashisth.com" className="transition-colors hover:text-paper">
                   hi@shivamvashisth.com
                 </a>
-                <span className="text-paper/35">Code for Creators in India</span>
+                <span className="text-paper/35">Code for Creators India</span>
               </motion.div>
             </div>
           </motion.nav>

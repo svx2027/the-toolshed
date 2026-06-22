@@ -49,7 +49,7 @@ export default function Home() {
                   <>
                     Every app exports a 1080×1920 <Jargon term="png">PNG</Jargon> from one reusable{" "}
                     <Jargon term="canvas">canvas</Jargon> function. Build it once, reuse it everywhere: the card{" "}
-                    <em>is</em> the marketing.
+                    <em>is</em>{" "}the marketing.
                   </>
                 ),
                 skip: "server-side rendering. The browser draws it; nothing leaves your device.",
@@ -79,7 +79,14 @@ export default function Home() {
         </section>
 
         {/* ---------- ABOUT ---------- */}
-        <section id="about" className="relative z-10 mx-auto max-w-3xl scroll-mt-24 px-5 py-24 sm:px-7 sm:py-32">
+        <section id="about" className="relative isolate z-10 mx-auto max-w-3xl scroll-mt-24 overflow-hidden px-5 py-24 sm:px-7 sm:py-32">
+          {/* maker's mark, buried in the background */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute -bottom-4 -right-2 -z-10 select-none font-display text-[22vw] font-semibold leading-none tracking-tight text-ink/[0.045] sm:text-[13rem]"
+          >
+            svx2027
+          </span>
           <Reveal>
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-ink-faint">About</p>
             <h2 className="mt-2 font-display text-4xl font-medium tracking-tight text-ink sm:text-5xl">
@@ -90,19 +97,24 @@ export default function Home() {
             <p className="mt-6 text-lg text-ink-soft">
               By day I&rsquo;m a YouTube strategist, deep in content and data: competitive intelligence for education
               channels, transcripts, market numbers. I kept building little tools to make the grind less manual, then
-              realised creators everywhere fight the same grind. (I&rsquo;m Shivam, by the way.)
+              realised creators and creatives everywhere fight the same grind.
             </p>
           </Reveal>
           <Reveal>
             <p className="mt-5 text-ink-soft">
-              So I started Code for Creators in India: tiny apps anyone can build with AI, no dev team, no degree. I
-              learned to do this with AI doing the heavy lifting, which means the judgment of <em>what</em> to build
-              matters far more than the code. I&rsquo;m documenting the whole thing on{" "}
+              So I started Code for Creators India: tiny apps anyone can build with AI, no dev team, no degree.
+              It&rsquo;s for creators and creatives both. YouTubers, writers, musicians, designers, comics, journalists.
+              Anyone who makes and ships their own work. I learned to do this with AI doing the heavy lifting, which
+              means the judgment of <em>what</em>{" "}to build matters far more than the code. I&rsquo;m documenting the
+              whole thing on{" "}
               <a href="https://instagram.com/svx2027" target="_blank" rel="noopener noreferrer" className="text-acc-sky underline-offset-2 hover:underline">
                 Instagram
               </a>
               .
             </p>
+          </Reveal>
+          <Reveal>
+            <p className="mt-8 font-display text-2xl italic text-ink">Shivam Vashisth</p>
           </Reveal>
         </section>
 
@@ -153,8 +165,8 @@ export default function Home() {
                 <div className="border-b border-line pb-7">
                   <h3 className="font-display text-lg font-medium text-ink">Get the drop</h3>
                   <p className="mt-1 text-ink-soft">
-                    One email when a new tool goes live. Most weeks one, sometimes none. No funnel, no list rental — the
-                    same inbox I reply to.
+                    One email when a new tool goes live. Most weeks one, sometimes none. No funnel, no list rental, just
+                    the same inbox I reply to.
                   </p>
                   <ContactForm />
                 </div>

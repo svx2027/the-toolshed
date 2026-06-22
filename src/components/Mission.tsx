@@ -35,10 +35,10 @@ export function Mission() {
         <Reveal>
           <p className="mt-14 max-w-2xl text-lg leading-relaxed text-paper/75">
             Right now, someone in Sweden is building something brilliant and putting it on GitHub, free, for anyone on
-            earth to use. A creator sitting here could grow with that exact tool. They never will — not for lack of
+            earth to use. A creator sitting here could grow with that exact tool. They never will. Not for lack of
             talent, but because no one gave them the vocabulary to find it, run it, and bend it to their work. I&rsquo;m
-            not here to build your tools for you. I&rsquo;m here to hand you the words, so you teach yourself, about ten
-            times faster than guessing in the dark.
+            not here to build your tools for you. I&rsquo;m here to hand you the words, so you teach yourself, about 10x
+            faster than guessing in the dark.
           </p>
         </Reveal>
 
