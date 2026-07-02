@@ -21,8 +21,8 @@ live and verified; all 5 site versions are reachable as git tags.
 | Repo (private) | `svx2027/the-toolshed`, branch `main`, push = auto-deploy on Vercel (team `svx2028`) |
 | Live | https://shivamvashisth.com (GoDaddy DNS: apex `A @ 216.198.79.1`) |
 | Vault code / repo / live | `~/code/shivam-download-files` / `svx2027/shivam-download-files` / https://files.shivamvashisth.com |
-| Latest commit / tag | `0d199a9` / `v5-showdown-offline` (+ koi-pond + brand commits after the tag) |
-| Version history | git tags: `v1-static` → `v2-nextjs` → `v3-rule-of-three` → `v4-refinements` → `v5-showdown-offline`. `git checkout <tag>` opens any past version. Tag new releases the same way. |
+| Latest commit / tag | `913f0ac` / `v6-leverage` |
+| Version history | git tags: `v1-static` → `v2-nextjs` → `v3-rule-of-three` → `v4-refinements` → `v5-showdown-offline` → `v6-leverage`. `git checkout <tag>` opens any past version. Tag new releases the same way. |
 | Session memory | `~/.claude/projects/-Users-denzen-code/memory/the-toolshed-project.md` |
 
 ## Tech stack (main site)
