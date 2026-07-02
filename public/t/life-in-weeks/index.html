@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Life in Weeks — see your whole life as a grid, then post it</title>
+  <title>Life in Weeks: see your whole life as a grid, then post it</title>
   <meta name="description" content="Map your entire life onto a grid of weeks. One cell per week, the current week lit up, the rest still to come. Calculated privately in your browser.">
   <link rel="canonical" href="https://shivamvashisth.com/t/life-in-weeks/">
   <meta property="og:type" content="website">
@@ -66,7 +66,7 @@
   </style>
 </head>
 <body>
-  <h1 class="sr-only">Life in Weeks — visualise your whole life as a grid of weeks and share it as an image.</h1>
+  <h1 class="sr-only">Life in Weeks: visualise your whole life as a grid of weeks and share it as an image.</h1>
   <div id="nav"></div>
 
   <main class="wrap">
@@ -233,8 +233,8 @@
       var dobStr = dobEl.value;
       if (!dobStr) { showHint('Enter your date of birth above to draw your grid of weeks.'); return; }
       var s = compute(dobStr, expEl.value);
-      if (s.error === 'future') { showHint('That date is in the future — pick the day you were born.'); return; }
-      if (s.error) { showHint('That date doesn’t look right — try again.'); return; }
+      if (s.error === 'future') { showHint('That date is in the future. Pick the day you were born.'); return; }
+      if (s.error) { showHint('That date doesn’t look right. Try again.'); return; }
       showResult(s);
       if (persist) {
         try { localStorage.setItem(STORE_KEY, JSON.stringify({ dob: dobStr, exp: s.exp })); } catch (e) {}
@@ -345,7 +345,7 @@
     shareBtn.addEventListener('click', function () {
       if (!state) { TS.toast('Draw your grid first'); return; }
       var canvas = buildCard();
-      TS.shareOrDownload(canvas, 'life-in-weeks.png', 'My life in weeks — ' + TS.SITE + '/t/life-in-weeks/');
+      TS.shareOrDownload(canvas, 'life-in-weeks.png', 'My life in weeks: ' + TS.SITE + '/t/life-in-weeks/');
       if (firstExport) { firstExport = false; TS.confetti(); }
     });
 

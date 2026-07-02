@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Outlier Radar — see what's overperforming in your niche right now</title>
+  <title>Outlier Radar: see what's overperforming in your niche right now</title>
   <meta name="description" content="Rank what's overperforming in your niche right now, scored against each channel's own baseline, with a one-line read on why. Coming soon to The Toolshed.">
   <link rel="canonical" href="https://shivamvashisth.com/t/outlier-radar/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Outlier Radar — what's overperforming in your niche, ranked">
-  <meta property="og:description" content="See what's overperforming in your niche right now — ranked, with a one-line read on why.">
+  <meta property="og:title" content="Outlier Radar: what's overperforming in your niche, ranked">
+  <meta property="og:description" content="See what's overperforming in your niche right now: ranked, with a one-line read on why.">
   <meta property="og:url" content="https://shivamvashisth.com/t/outlier-radar/">
   <meta property="og:image" content="https://shivamvashisth.com/assets/og-outlier-radar.png">
   <meta name="twitter:card" content="summary_large_image">
@@ -34,7 +34,7 @@
   </style>
 </head>
 <body>
-  <h1 class="sr-only">Outlier Radar is brewing — see what's overperforming in your niche right now, ranked.</h1>
+  <h1 class="sr-only">Outlier Radar is brewing: see what's overperforming in your niche right now, ranked.</h1>
   <div id="nav"></div>
   <main class="wrap">
     <div class="brew-wrap">
@@ -47,7 +47,7 @@
         <h2 class="serif">See what's overperforming in your niche right now: ranked, with a one-line read on why.</h2>
         <p class="lead">Not the biggest channels, the biggest surprises. Outlier Radar finds videos beating their own baseline and tells you, briefly, what's working.</p>
         <ul class="brew-list">
-          <li>Scores each recent upload against its OWN channel's baseline — an outlier multiplier — plus views-per-hour velocity.</li>
+          <li>Scores each recent upload against its OWN channel's baseline, an outlier multiplier, plus views-per-hour velocity.</li>
           <li>YouTube-first via the public YouTube Data API. Instagram is best-effort and manual.</li>
           <li>Export a "biggest outlier in [niche] this week" card.</li>
           <li>A weekly digest email lands later. The math is deterministic; AI only writes the optional "why it works" line.</li>
@@ -80,7 +80,7 @@
       e.preventDefault();
       const email = emailEl.value.trim();
       if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-        note.textContent = 'That email looks off — mind checking it?';
+        note.textContent = 'That email looks off. Mind checking it?';
         emailEl.focus();
         return;
       }

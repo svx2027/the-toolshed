@@ -144,16 +144,32 @@ body::before {
    can never be permanently hidden behind a stalled animation; the choreography is a
    pure enhancement for active tabs. Re-fires both ways (scroll down AND up). */
 [data-reveal] {
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform, filter;
 }
 html.reveal-ready [data-reveal]:not(.in) {
   opacity: 0;
   transform: translateY(28px);
+  filter: blur(8px);
 }
 @media (prefers-reduced-motion: reduce) {
-  html.reveal-ready [data-reveal]:not(.in) { opacity: 1; transform: none; }
+  html.reveal-ready [data-reveal]:not(.in) { opacity: 1; transform: none; filter: none; }
   [data-reveal] { transition: none; }
+}
+
+/* audience ticker: two copies of the run, slid one run-width left, forever */
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee 36s linear infinite;
+}
+.marquee-track:hover { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
 }
 
 /* CTA glow: invites the click; pauses for reduced-motion */

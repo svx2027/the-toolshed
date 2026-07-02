@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Read Rate — find your real reading speed in 60 seconds</title>
+  <title>Read Rate: find your real reading speed in 60 seconds</title>
   <meta name="description" content="A free, honest reading-speed test. Read one passage, answer 3 questions, and get your words-per-minute with a comprehension-gated percentile. Skimming doesn't count.">
   <link rel="canonical" href="https://shivamvashisth.com/t/read-rate/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Read Rate — find your real reading speed in 60 seconds">
+  <meta property="og:title" content="Read Rate: find your real reading speed in 60 seconds">
   <meta property="og:description" content="Read one passage, answer 3 questions, get your true reading speed. Comprehension-gated so skimming can't fake it.">
   <meta property="og:url" content="https://shivamvashisth.com/t/read-rate/">
   <meta property="og:image" content="https://shivamvashisth.com/assets/og-read-rate.png">
@@ -81,14 +81,14 @@
       <div class="rr-head">
         <p class="eyebrow">Read Rate</p>
         <h2 class="serif">Find your real reading speed</h2>
-        <p class="lead" style="margin:.4rem auto 0;">One passage, three questions, sixty seconds. We only show your percentile if you actually understood what you read — no skim-scoring here.</p>
+        <p class="lead" style="margin:.4rem auto 0;">One passage, three questions, sixty seconds. We only show your percentile if you actually understood what you read. No skim-scoring here.</p>
       </div>
 
       <!-- START -->
       <section class="card pad" id="screen-start">
         <h3 class="serif">How it works</h3>
         <ol style="color:var(--ink-soft); padding-left:1.2rem; margin:.4rem 0 1.2rem;">
-          <li>Hit start and a passage appears — the timer begins instantly.</li>
+          <li>Hit start and a passage appears, and the timer begins instantly.</li>
           <li>Read at your natural pace. Tap <em>I'm done reading</em> the moment you finish.</li>
           <li>Answer three quick questions. Get 2 of 3 right and we'll show your percentile.</li>
         </ol>
@@ -113,7 +113,7 @@
       <!-- QUIZ -->
       <section class="card pad rr-hidden" id="screen-quiz">
         <h3 class="serif">Three quick questions</h3>
-        <p class="muted" style="margin-top:-.4rem;">Answer from memory — the passage is hidden now.</p>
+        <p class="muted" style="margin-top:-.4rem;">Answer from memory. The passage is hidden now.</p>
         <form id="quiz-form">
           <div id="quiz-questions"></div>
           <div class="rr-actions" style="justify-content:flex-start;">
@@ -172,7 +172,7 @@ He moved to a cottage three miles inland, close enough to see the beam sweep the
       },
       {
         title: "The seed vault",
-        text: `Deep inside a frozen mountain on a remote Arctic island sits a vault built to outlast almost anything humanity might throw at it. The Global Seed Vault was designed as a backup for the world's crop diversity — a safety copy of the seeds that feed us, tucked away in case war, disaster, or simple neglect destroys the working seed banks scattered across the planet.
+        text: `Deep inside a frozen mountain on a remote Arctic island sits a vault built to outlast almost anything humanity might throw at it. The Global Seed Vault was designed as a backup for the world's crop diversity: a safety copy of the seeds that feed us, tucked away in case war, disaster, or simple neglect destroys the working seed banks scattered across the planet.
 
 The idea is deceptively simple. Around the world, thousands of seed banks store samples of food crops, from common wheat and rice to obscure regional beans that only a handful of farmers still grow. But seed banks can fail. They lose funding, suffer power cuts, get caught in conflict, or are wiped out by floods. The vault offers each of those banks a free place to deposit a duplicate set of their most precious seeds.
 
@@ -187,7 +187,7 @@ The vault has already proved its worth. When a seed bank near a war-torn city ha
           },
           {
             q: "Who keeps ownership of the seeds stored there?",
-            options: ["The vault's government", "Nobody — they become public", "The banks that deposited them", "International researchers"],
+            options: ["The vault's government", "Nobody, they become public", "The banks that deposited them", "International researchers"],
             answer: 2
           },
           {
@@ -201,11 +201,11 @@ The vault has already proved its worth. When a seed bank near a war-torn city ha
         title: "The slow mail experiment",
         text: `In an age of instant messages, a small bookshop in a coastal town tried something deliberately old-fashioned. The owner, frustrated that customers drifted in, photographed a few covers, and bought the books cheaper online, set up a wooden desk near the window with a stack of blank postcards and a sign: "Write to your future self. We'll mail it back in one year, free."
 
-The rules were minimal. You could write anything — a worry, a goal, a question, a secret. You addressed the card to yourself, dropped it in a locked box, and the shop promised to post it exactly twelve months later. No tracking, no app, no account. Just paper, a stamp, and a year of patience.
+The rules were minimal. You could write anything: a worry, a goal, a question, a secret. You addressed the card to yourself, dropped it in a locked box, and the shop promised to post it exactly twelve months later. No tracking, no app, no account. Just paper, a stamp, and a year of patience.
 
 The owner expected a handful of takers. Instead, the desk became the busiest corner of the store. People lingered, chewing pens, deciding what to tell themselves. Some wrote resolutions; others wrote apologies they were not yet ready to send to anyone else. One regular wrote the same question every visit: "Are you happier now?"
 
-A year on, the returned cards produced unexpected scenes. Customers came back specifically to receive them, and several read their own handwriting and wept quietly by the window. A few never returned, and their cards waited in a small drawer the owner could not bring himself to throw away. The experiment sold no extra books directly, but the shop's foot traffic grew as word spread. People came for the ritual, and stayed for the shelves. Slowness, the owner concluded, was not the opposite of business — sometimes it was the whole point of it.`,
+A year on, the returned cards produced unexpected scenes. Customers came back specifically to receive them, and several read their own handwriting and wept quietly by the window. A few never returned, and their cards waited in a small drawer the owner could not bring himself to throw away. The experiment sold no extra books directly, but the shop's foot traffic grew as word spread. People came for the ritual, and stayed for the shelves. Slowness, the owner concluded, was not the opposite of business. Sometimes it was the whole point of it.`,
         questions: [
           {
             q: "What did the bookshop owner invite customers to do?",
@@ -373,7 +373,7 @@ A year on, the returned cards produced unexpected scenes. Customers came back sp
       </div>`;
 
       if (!passed) {
-        html += `<div class="rr-warn"><strong>Looks like skimming.</strong> You got ${correct} of ${current.questions.length} questions right, so we can't validate this speed — fast reading only counts if you understood it. Your raw rate is shown above, but it's unverified. Try again with a fresh passage and read for real.</div>`;
+        html += `<div class="rr-warn"><strong>Looks like skimming.</strong> You got ${correct} of ${current.questions.length} questions right, so we can't validate this speed. Fast reading only counts if you understood it. Your raw rate is shown above, but it's unverified. Try again with a fresh passage and read for real.</div>`;
       }
 
       body.innerHTML = html;
@@ -467,7 +467,7 @@ A year on, the returned cards produced unexpected scenes. Customers came back sp
     async function shareResult() {
       if (!lastResult) return;
       const canvas = buildCard();
-      const txt = `I read at ${lastResult.wpm} wpm${lastResult.passed ? ` — faster than ${lastResult.pct}% of readers` : ''}. Find your real reading speed at ${TS.SITE}/t/read-rate`;
+      const txt = `I read at ${lastResult.wpm} wpm${lastResult.passed ? `, faster than ${lastResult.pct}% of readers` : ''}. Find your real reading speed at ${TS.SITE}/t/read-rate`;
       TS.confetti();
       await TS.shareOrDownload(canvas, 'read-rate.png', txt);
     }

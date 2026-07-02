@@ -1,28 +1,54 @@
 import { Nav } from "@/components/Nav";
 import { KoiPond } from "@/components/KoiPond";
 import { Hero } from "@/components/Hero";
+import { AudienceMarquee } from "@/components/AudienceMarquee";
 import { Mission } from "@/components/Mission";
+import { Leverage } from "@/components/Leverage";
 import { Garage } from "@/components/Garage";
+import { StartHere } from "@/components/StartHere";
+import { Faq } from "@/components/Faq";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
 import { RevealController } from "@/components/RevealController";
 import { Jargon } from "@/components/Jargon";
 import { ContactForm } from "@/components/ContactForm";
+import { FAQ_ITEMS } from "@/lib/faq";
+
+// FAQPage schema: search engines get the same answers the Help section renders.
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ_ITEMS.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
 
 export default function Home() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <KoiPond />
       <RevealController />
       <Nav />
       <main>
         <Hero />
 
+        {/* ---------- WHO IT'S FOR (slow ticker) ---------- */}
+        <AudienceMarquee />
+
         {/* ---------- MISSION (featured manifesto, the site's purpose) ---------- */}
         <Mission />
 
+        {/* ---------- LEVERAGE (why it pays: the mission's money half) ---------- */}
+        <Leverage />
+
         {/* ---------- THE GARAGE ---------- */}
         <Garage />
+
+        {/* ---------- START HERE (the words, handed over) ---------- */}
+        <StartHere />
 
         {/* ---------- CASE STUDIES (already a rule-of-three) ---------- */}
         <section id="cases" className="relative z-10 mx-auto max-w-6xl px-5 py-12 sm:px-7">
@@ -150,6 +176,9 @@ export default function Home() {
             </div>
           </Reveal>
         </section>
+
+        {/* ---------- HELP (fair questions, straight answers) ---------- */}
+        <Faq />
 
         {/* ---------- CONTACT (Three ways to stick around) ---------- */}
         <section id="contact" className="relative z-10 mx-auto max-w-2xl scroll-mt-24 px-5 py-24 sm:px-7 sm:py-28">

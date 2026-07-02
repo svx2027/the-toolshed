@@ -14,7 +14,10 @@ const FILTERS: { key: Filter; label: string }[] = [
 function ToolCard({ tool }: { tool: (typeof TOOLS)[number] }) {
   const inner = (
     <>
-      <div className="flex h-12 w-12 items-center justify-center rounded-xl" style={{ background: tool.c }}>
+      <div
+        className="flex h-12 w-12 items-center justify-center rounded-xl transition-transform duration-300 ease-out group-hover:-rotate-6 group-hover:scale-110"
+        style={{ background: tool.c }}
+      >
         <svg
           viewBox="0 0 24 24"
           width="22"
@@ -41,7 +44,8 @@ function ToolCard({ tool }: { tool: (typeof TOOLS)[number] }) {
     </>
   );
 
-  const cls = "flex flex-col gap-4 rounded-3xl border border-line bg-card p-6 shadow-sm transition-all duration-200";
+  const cls =
+    "group flex h-full flex-col gap-4 rounded-3xl border border-line bg-card p-6 shadow-sm transition-all duration-200";
 
   if (tool.live) {
     return (
@@ -55,7 +59,14 @@ function ToolCard({ tool }: { tool: (typeof TOOLS)[number] }) {
       </a>
     );
   }
-  return <div className={`${cls} opacity-90`}>{inner}</div>;
+  return (
+    <div className={`${cls} opacity-90`}>
+      {inner}
+      <a href="#contact" className="-mt-2 text-sm text-acc-sky underline-offset-2 hover:underline">
+        Get an email when it ships ↓
+      </a>
+    </div>
+  );
 }
 
 export function Garage() {
@@ -101,11 +112,13 @@ export function Garage() {
         ))}
       </div>
 
-      <Reveal className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {shown.map((t) => (
-          <ToolCard key={t.slug} tool={t} />
+      <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {shown.map((t, i) => (
+          <Reveal key={t.slug} delay={i * 0.05} className="h-full">
+            <ToolCard tool={t} />
+          </Reveal>
         ))}
-      </Reveal>
+      </div>
     </section>
   );
 }

@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Year in Emoji — sum up your year in twelve emoji and twelve words</title>
-<meta name="description" content="Give every month of your year one emoji and a few words, then export a share-ready card. Saved on your device, year by year — nothing leaves your browser.">
+<title>Year in Emoji: sum up your year in twelve emoji and twelve words</title>
+<meta name="description" content="Give every month of your year one emoji and a few words, then export a share-ready card. Saved on your device, year by year. Nothing leaves your browser.">
 <link rel="canonical" href="https://shivamvashisth.com/t/year-in-emoji/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Year in Emoji — The Toolshed">
+<meta property="og:title" content="Year in Emoji · The Toolshed">
 <meta property="og:description" content="Sum up your year in twelve emoji and twelve words, then post the card.">
 <meta property="og:url" content="https://shivamvashisth.com/t/year-in-emoji/">
 <meta property="og:image" content="https://shivamvashisth.com/assets/og-year-in-emoji.png">
@@ -17,14 +17,14 @@
 <link rel="stylesheet" href="/assets/brand.css">
 </head>
 <body>
-<h1 class="sr-only">Year in Emoji — sum up your year in twelve emoji and twelve words</h1>
+<h1 class="sr-only">Year in Emoji: sum up your year in twelve emoji and twelve words</h1>
 
 <div id="nav"></div>
 
 <header class="wrap" style="padding-top:48px">
   <p class="eyebrow">Year in Emoji</p>
   <h2 style="margin-top:0">Twelve months, twelve emoji.</h2>
-  <p class="lead">Pick one emoji and a few words for each month. It builds into a card you can post. Everything stays on this device — pick a year and it remembers.</p>
+  <p class="lead">Pick one emoji and a few words for each month. It builds into a card you can post. Everything stays on this device. Pick a year and it remembers.</p>
 
   <div class="row" style="align-items:flex-end;gap:14px;margin-top:18px">
     <div class="field" style="margin:0">
@@ -43,7 +43,7 @@
   <div class="layout">
     <!-- ===== editor ===== -->
     <div class="card pad">
-      <p class="muted" style="margin:0 0 16px;font-size:.9rem" id="active-hint" aria-live="polite">Tap a month, then tap an emoji above — or type your own.</p>
+      <p class="muted" style="margin:0 0 16px;font-size:.9rem" id="active-hint" aria-live="polite">Tap a month, then tap an emoji above, or type your own.</p>
       <div id="months" class="months"></div>
     </div>
 
@@ -181,7 +181,7 @@
     monthsEl.querySelectorAll('.month-row').forEach(r => {
       r.classList.toggle('active', Number(r.dataset.idx) === activeMonth);
     });
-    hintEl.textContent = 'Editing ' + MONTHS[activeMonth] + ' — tap an emoji above to fill it.';
+    hintEl.textContent = 'Editing ' + MONTHS[activeMonth] + ': tap an emoji above to fill it.';
   }
 
   /* ---------- quick-pick ---------- */
@@ -220,7 +220,7 @@
         ctx.font = `600 150px ${TS.SERIF}`;
         ctx.fillText(String(curYear), padX, 300);
 
-        // 12 lines, one per month — empties still render the month label
+        // 12 lines, one per month; empties still render the month label
         const top = 420, bottom = h - 220;
         const rowH = (bottom - top) / 12;          // fixed slot per month -> no overflow
         const emojiX = padX;
@@ -270,7 +270,7 @@
   document.getElementById('download').addEventListener('click', async () => {
     const card = buildCardCanvas();
     await TS.shareOrDownload(card, `year-in-emoji-${curYear}.png`,
-      `My ${curYear} in twelve emoji — made at ${TS.SITE}/t/year-in-emoji/`);
+      `My ${curYear} in twelve emoji, made at ${TS.SITE}/t/year-in-emoji/`);
     TS.confetti();
   });
 

@@ -16,7 +16,9 @@ const PRIMARY: Item[] = [
 ];
 // Secondary links live in the small meta row, not as giant choices.
 const SECONDARY: Item[] = [
+  { label: "Start here", href: "#start" },
   { label: "About", href: "#about" },
+  { label: "Help", href: "#faq" },
   { label: "Contact", href: "#contact" },
   { label: "Instagram", href: "https://instagram.com/svx2027", external: true },
 ];

@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sealed — write a letter to your future self, delivered on the date you choose</title>
-  <meta name="description" content="Write a letter to your future self and have it emailed to you on the date you pick. Only the seal is ever shareable — never the contents. Coming soon to The Toolshed.">
+  <title>Sealed: write a letter to your future self, delivered on the date you choose</title>
+  <meta name="description" content="Write a letter to your future self and have it emailed to you on the date you pick. Only the seal is ever shareable, never the contents. Coming soon to The Toolshed.">
   <link rel="canonical" href="https://shivamvashisth.com/t/sealed/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Sealed — a letter to your future self">
+  <meta property="og:title" content="Sealed: a letter to your future self">
   <meta property="og:description" content="Write a letter to your future self, delivered on the date you choose.">
   <meta property="og:url" content="https://shivamvashisth.com/t/sealed/">
   <meta property="og:image" content="https://shivamvashisth.com/assets/og-sealed.png">
@@ -34,7 +34,7 @@
   </style>
 </head>
 <body>
-  <h1 class="sr-only">Sealed is brewing — write a letter to your future self, delivered on the date you choose.</h1>
+  <h1 class="sr-only">Sealed is brewing: write a letter to your future self, delivered on the date you choose.</h1>
   <div id="nav"></div>
   <main class="wrap">
     <div class="brew-wrap">
@@ -48,7 +48,7 @@
         <p class="lead">Say something to the version of you reading this a year from now. We hold it, sealed, until the day arrives.</p>
         <ul class="brew-list">
           <li>Write it, pick an unlock date, and we email it to you then.</li>
-          <li>Only the seal — "sealed until &lt;date&gt;" — is ever shareable. The contents never are.</li>
+          <li>Only the seal, "sealed until &lt;date&gt;", is ever shareable. The contents never are.</li>
           <li>It needs a small backend for the scheduled email, so it opens after the client-only tools.</li>
         </ul>
         <form class="capture" id="subForm" novalidate>
@@ -79,7 +79,7 @@
       e.preventDefault();
       const email = emailEl.value.trim();
       if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-        note.textContent = 'That email looks off — mind checking it?';
+        note.textContent = 'That email looks off. Mind checking it?';
         emailEl.focus();
         return;
       }

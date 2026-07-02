@@ -1,4 +1,5 @@
 import { Jargon } from "./Jargon";
+import { Reveal } from "./Reveal";
 import { Showdown } from "./Showdown";
 
 export function Hero() {
@@ -6,48 +7,61 @@ export function Hero() {
     <header id="top" className="relative z-10 mx-auto max-w-6xl px-5 pt-28 pb-10 sm:px-7 sm:pt-32">
       <div className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
         <div>
-          <p className="font-mono text-xs uppercase tracking-[0.18em] text-ink-faint">Hi, I&rsquo;m Shivam</p>
+          <Reveal>
+            <p className="font-mono text-xs uppercase tracking-[0.18em] text-ink-faint">Hi, I&rsquo;m Shivam</p>
+          </Reveal>
 
-          <h1 className="mt-3 font-display text-5xl font-medium leading-[1.04] tracking-tight text-ink sm:text-6xl lg:text-7xl">
-            <span className="ink-underline">You don&rsquo;t need to be a coder.</span>
-          </h1>
+          <Reveal delay={0.06}>
+            <h1 className="mt-3 font-display text-5xl font-medium leading-[1.04] tracking-tight text-ink sm:text-6xl lg:text-7xl">
+              <span className="ink-underline">You don&rsquo;t need to be a coder.</span>
+            </h1>
+          </Reveal>
 
-          <p className="mt-6 font-mono text-xs uppercase tracking-[0.22em] text-ink-faint">
-            Code for creatives&nbsp;·&nbsp;creators
-          </p>
+          <Reveal delay={0.12}>
+            <p className="mt-6 font-mono text-xs uppercase tracking-[0.22em] text-ink-faint">
+              Code for creatives&nbsp;·&nbsp;creators
+            </p>
+          </Reveal>
 
-          <p className="mt-4 max-w-xl text-lg text-ink-soft">
-            <strong className="font-semibold text-ink">Code for Creatives India.</strong>{" "}
-            I&rsquo;m a YouTube strategist who builds tiny apps with AI: no dev team, no CS degree. If you can write a{" "}
-            <Jargon term="prompt">prompt</Jargon>, you can build one too. I&rsquo;ll show you how.
-          </p>
+          <Reveal delay={0.16}>
+            <p className="mt-4 max-w-xl text-lg text-ink-soft">
+              <strong className="font-semibold text-ink">Code for Creatives India.</strong>{" "}
+              I&rsquo;m a YouTube strategist who builds tiny apps with AI: no dev team, no CS degree. If you can write a{" "}
+              <Jargon term="prompt">prompt</Jargon>, you can build one too. Build it once, and it works while you
+              sleep. That is <a href="#leverage" className="text-acc-sky underline-offset-2 hover:underline">leverage</a>.
+            </p>
+          </Reveal>
 
           {/* two doors: do, or stay */}
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <a
-              href="#toolshed"
-              className="cta-glow inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 font-medium text-paper transition-transform hover:-translate-y-0.5"
-            >
-              Open the Garage
-            </a>
-            <a
-              href="https://instagram.com/svx2027"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-full border border-line-strong px-6 py-3 font-medium text-ink transition-colors hover:border-ink"
-            >
-              Follow the build <span aria-hidden className="text-ink-faint">↗</span>
-            </a>
-          </div>
+          <Reveal delay={0.22}>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <a
+                href="#toolshed"
+                className="cta-glow inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 font-medium text-paper transition-transform hover:-translate-y-0.5 active:translate-y-0"
+              >
+                Open the Garage
+              </a>
+              <a
+                href="https://instagram.com/svx2027"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-full border border-line-strong px-6 py-3 font-medium text-ink transition-colors hover:border-ink"
+              >
+                Follow the build <span aria-hidden className="text-ink-faint">↗</span>
+              </a>
+            </div>
+          </Reveal>
 
-          <p className="mt-5 text-[0.82rem] text-ink-faint">
-            Tip: tap any underlined word (like <Jargon term="prompt">prompt</Jargon>) for plain English.
-          </p>
+          <Reveal delay={0.28}>
+            <p className="mt-5 text-[0.82rem] text-ink-faint">
+              Tip: tap any underlined word (like <Jargon term="prompt">prompt</Jargon>) for plain English.
+            </p>
+          </Reveal>
         </div>
 
-        <div>
+        <Reveal delay={0.18}>
           <Showdown />
-        </div>
+        </Reveal>
       </div>
 
       <p className="mt-16 text-center font-mono text-sm text-ink-faint">↓ scroll to the mission</p>

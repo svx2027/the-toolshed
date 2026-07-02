@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://shivamvashisth.com"),
   title: "Code for Creatives India: you don't need to be a coder. Build tiny apps with AI.",
   description:
-    "Code for Creatives India. A YouTube strategist building tiny apps with AI, and handing creatives and creators the words to build their own. No dev team, no CS degree.",
+    "Code for Creatives India. Tiny apps are leverage: build one with AI and it works while you sleep. Free tools, a starter prompt, and the words creatives and creators need to build their own. No dev team, no CS degree.",
   alternates: { canonical: "/" },
   icons: { icon: "/assets/favicon.svg" },
   openGraph: {

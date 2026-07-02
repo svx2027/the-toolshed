@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Aligned — see how in sync you and someone else really are</title>
+  <title>Aligned: see how in sync you and someone else really are</title>
   <meta name="description" content="A 10-question either/or quiz for couples and friends. Answer, send the link, and find out your alignment percentage and the thing you clash most on.">
   <link rel="canonical" href="https://shivamvashisth.com/t/aligned/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Aligned — how in sync are you two, really?">
+  <meta property="og:title" content="Aligned: how in sync are you two, really?">
   <meta property="og:description" content="Answer 10 quick questions, send the link, and reveal your alignment score with someone you love.">
   <meta property="og:url" content="https://shivamvashisth.com/t/aligned/">
   <meta property="og:image" content="https://shivamvashisth.com/assets/og-aligned.png">
@@ -125,7 +125,7 @@
         emoji: '💞',
         sub: 'Money, mess, plans & the small stuff.',
         questions: [
-          { topic: 'Date night', kind: 'either', prompt: 'The ideal Friday night is…', a: 'Out — plans, people, somewhere new', b: 'In — couch, takeout, no pants' },
+          { topic: 'Date night', kind: 'either', prompt: 'The ideal Friday night is…', a: 'Out: plans, people, somewhere new', b: 'In: couch, takeout, no pants' },
           { topic: 'Money', kind: 'scale', prompt: '"We should save aggressively, even if it means skipping fun stuff now."' },
           { topic: 'Tidiness', kind: 'scale', prompt: '"A messy home genuinely stresses me out."' },
           { topic: 'Planning', kind: 'either', prompt: 'Holidays are best when they are…', a: 'Planned to the hour', b: 'Figured out as we go' },
@@ -147,7 +147,7 @@
           { topic: 'Plans', kind: 'either', prompt: 'The better kind of hangout is…', a: 'Booked weeks ahead', b: 'Spontaneous, same-day' },
           { topic: 'Splitting bills', kind: 'either', prompt: 'When the bill lands, we should…', a: 'Split it evenly, no maths', b: 'Pay for exactly what we ordered' },
           { topic: 'Nights out', kind: 'either', prompt: 'A great night out ends…', a: 'When the sun comes up', b: 'Home by midnight, thanks' },
-          { topic: 'Honesty', kind: 'scale', prompt: '"Tell me bluntly if I am making a mistake — even if it stings."' },
+          { topic: 'Honesty', kind: 'scale', prompt: '"Tell me bluntly if I am making a mistake, even if it stings."' },
           { topic: 'Adventure', kind: 'scale', prompt: '"I will say yes to almost any last-minute trip."' },
           { topic: 'Hosting', kind: 'either', prompt: 'For a get-together I would rather…', a: 'Host at mine', b: 'Go to someone else’s' },
           { topic: 'Replies', kind: 'scale', prompt: '"Leaving a text on read for a day is totally fine."' },
@@ -193,7 +193,7 @@
         <div class="a-hero">
           <p class="eyebrow">A 10-question vibe check</p>
           <h2 class="serif" style="font-size: clamp(1.8rem,7vw,2.4rem); margin:.2rem 0 .5rem;">How aligned are you two?</h2>
-          <p class="lead" style="margin: 0 auto;">Pick a deck, answer ten quick questions, then send the link to the other person. They answer too — and you both get the score.</p>
+          <p class="lead" style="margin: 0 auto;">Pick a deck, answer ten quick questions, then send the link to the other person. They answer too, and you both get the score.</p>
         </div>
         <div class="a-decks">
           ${Object.entries(DECKS).map(([k, d]) => `
@@ -302,14 +302,14 @@
         <div class="a-hero">
           <p class="eyebrow">${esc(d.name)} deck ${d.emoji}</p>
           <h2 class="serif" style="font-size: clamp(1.6rem,6vw,2.1rem); margin:.2rem 0 .6rem;">Locked in${state.name ? ', ' + esc(state.name) : ''}. ✅</h2>
-          <p class="lead" style="margin:0 auto;">Now send this link to the other person. They answer the same ten — without seeing your answers — and you both get the result.</p>
+          <p class="lead" style="margin:0 auto;">Now send this link to the other person. They answer the same ten, without seeing your answers, and you both get the result.</p>
         </div>
         <div class="link-box" id="lnk">${esc(url)}</div>
         <div class="a-actions">
           <button class="btn" id="copy">Copy the link</button>
           <button class="btn ghost" id="restart">Start over</button>
         </div>
-        <p class="muted center" style="margin-top:1rem; font-size:.85rem;">Tip: your answers are tucked into the link only — nothing is stored anywhere.</p>`;
+        <p class="muted center" style="margin-top:1rem; font-size:.85rem;">Tip: your answers are tucked into the link only. Nothing is stored anywhere.</p>`;
       app.querySelector('#copy').addEventListener('click', () => TS.copyLink(url));
       app.querySelector('#restart').addEventListener('click', () => { history.replaceState(null, '', location.pathname); resetAndStart(); });
     }
@@ -349,9 +349,9 @@
       const aName = partner.name || 'Person A';
       const bName = state.name || 'You';
       const blurb = res.pct >= 85 ? 'Practically the same brain. 🧠' :
-        res.pct >= 65 ? 'Strongly in sync — with spice in the gaps.' :
+        res.pct >= 65 ? 'Strongly in sync, with spice in the gaps.' :
           res.pct >= 45 ? 'A healthy mix of same and different.' :
-            res.pct >= 25 ? 'Opposites — which is its own kind of fun.' :
+            res.pct >= 25 ? 'Opposites, which is its own kind of fun.' :
               'Wildly different wiring. Never a dull moment.';
 
       const clashHtml = res.hasClash ? `
@@ -505,7 +505,7 @@
         <div class="a-hero">
           <p class="eyebrow">${esc(d.name)} deck ${d.emoji}</p>
           <h2 class="serif" style="font-size: clamp(1.7rem,6.5vw,2.3rem); margin:.2rem 0 .6rem;">${who} wants to know how aligned you two are.</h2>
-          <p class="lead" style="margin:0 auto;">Answer the same ten questions — you won’t see their answers until you’re done. Then you’ll both get the score.</p>
+          <p class="lead" style="margin:0 auto;">Answer the same ten questions. You won’t see their answers until you’re done. Then you’ll both get the score.</p>
         </div>
         <div class="field" style="margin-top:1.3rem;">
           <label for="bnm">Your first name <span class="muted">(optional)</span></label>
