@@ -11,9 +11,13 @@ const nextConfig: NextConfig = {
     ];
   },
   // Speakable short links for the SVX2027 prompt-drop series: /svx01 → drop 01, etc.
+  // Plus typo-catchers for versions people retype from memory after a reel.
   async redirects() {
     return [
       { source: "/svx01", destination: "/svx2027-tastemaxxing-01/", permanent: false },
+      { source: "/tastemaxxing", destination: "/svx2027-tastemaxxing-01/", permanent: false },
+      { source: "/svx-tastemaxxing01", destination: "/svx2027-tastemaxxing-01/", permanent: false },
+      { source: "/svx-tastemaxing01", destination: "/svx2027-tastemaxxing-01/", permanent: false },
     ];
   },
 };

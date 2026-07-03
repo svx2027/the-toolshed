@@ -37,7 +37,7 @@ export async function POST(request: Request) {
   // reject anything that isn't a small JSON body
   if (!request.headers.get("content-type")?.includes("application/json")) return json(400, { ok: false });
 
-  let data: { email?: unknown; company?: unknown };
+  let data: { email?: unknown; company?: unknown; source?: unknown };
   try {
     const raw = await request.text();
     if (raw.length > 2000) return json(400, { ok: false });
@@ -51,6 +51,11 @@ export async function POST(request: Request) {
 
   const email = typeof data.email === "string" ? data.email.trim().toLowerCase() : "";
   if (!email || email.length > 254 || !EMAIL_RE.test(email)) return json(400, { ok: false });
+
+  // which page the signup came from ("home", "drop-01", …) — strict allowlist shape,
+  // so the column stays clean and useful for segmenting sends later
+  const source =
+    typeof data.source === "string" && /^[a-z0-9-]{1,32}$/.test(data.source) ? data.source : "home";
 
   // coarse abuse limit on a hashed IP (never store the raw IP next to the email)
   const ip = (request.headers.get("x-forwarded-for") || "").split(",")[0].trim() || "unknown";
@@ -66,7 +71,7 @@ export async function POST(request: Request) {
         "content-type": "application/json",
         Prefer: "return=minimal",
       },
-      body: JSON.stringify({ email, source: "home" }),
+      body: JSON.stringify({ email, source }),
     });
     // 201 = inserted; 409 = already subscribed → both are "success" to the user
     // (uniform response = no email-enumeration oracle).

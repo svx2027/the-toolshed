@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import Link from "next/link";
 import { CopyButton, ShareLinkButton } from "./CopyButton";
+import { SubscribeBox } from "./SubscribeBox";
 
 // Drop 01 of the SVX2027 prompt series. Prompts live as .md files in /public/prompts so the
 // download links and the copy buttons always serve the exact same bytes.
@@ -174,6 +175,8 @@ export default function TasteMaxxing01() {
           </pre>
         </details>
       </section>
+
+      <SubscribeBox />
 
       <footer className="border-t border-line pt-6 text-sm text-ink-faint">
         <p>
