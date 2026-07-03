@@ -10,6 +10,12 @@ const nextConfig: NextConfig = {
       { source: "/t/:slug/", destination: "/t/:slug/index.html" },
     ];
   },
+  // Speakable short links for the SVX2027 prompt-drop series: /svx01 → drop 01, etc.
+  async redirects() {
+    return [
+      { source: "/svx01", destination: "/svx2027-tastemaxxing-01/", permanent: false },
+    ];
+  },
 };
 
 export default nextConfig;
