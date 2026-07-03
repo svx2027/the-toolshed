@@ -126,7 +126,11 @@ body::before {
   background-size: 0% 2px;
   transition: background-size 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.kinetic-link:hover { background-size: 100% 2px; }
+.kinetic-link:hover,
+.group:hover .kinetic-link,
+.group:focus-visible .kinetic-link {
+  background-size: 100% 2px;
+}
 
 /* hero headline hand-drawn underline */
 .ink-underline {

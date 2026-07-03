@@ -163,7 +163,7 @@
     const year = new Date().getFullYear();
     return `<footer class="foot"><div class="wrap">
       <span>Made in a garage, with AI, by one creator who replies to DMs.</span>
-      <span>© ${year} Code for Creatives India · <a href="/">The Garage</a> · <a href="https://instagram.com/svx2027" target="_blank" rel="noopener">@svx2027</a> · <a href="mailto:hi@shivamvashisth.com">hi@shivamvashisth.com</a></span>
+      <span>© ${year} Code for Creatives India · <a href="/">The Garage</a> · <a href="https://instagram.com/svx2027" target="_blank" rel="noopener">@svx2027</a> · <a href="mailto:vashisthshivam00@gmail.com">vashisthshivam00@gmail.com</a></span>
     </div></footer>`;
   };
 

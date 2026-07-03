@@ -17,6 +17,7 @@ const PRIMARY: Item[] = [
 // Secondary links live in the small meta row, not as giant choices.
 const SECONDARY: Item[] = [
   { label: "Start here", href: "#start" },
+  { label: "Free resources", href: "#resources" },
   { label: "About", href: "#about" },
   { label: "Help", href: "#faq" },
   { label: "Contact", href: "#contact" },
@@ -171,8 +172,8 @@ export function Nav() {
                     {s.external && <span aria-hidden> ↗</span>}
                   </button>
                 ))}
-                <a href="mailto:hi@shivamvashisth.com" className="transition-colors hover:text-paper">
-                  hi@shivamvashisth.com
+                <a href="mailto:vashisthshivam00@gmail.com" className="transition-colors hover:text-paper">
+                  vashisthshivam00@gmail.com
                 </a>
                 <span className="text-paper/35">Code for Creatives India</span>
               </motion.div>

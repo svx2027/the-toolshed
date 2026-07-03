@@ -33,15 +33,3 @@ export const ICONS = {
   wave: '<path d="M3 12c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/><path d="M3 17c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/>',
 } as const;
 
-export interface NavSection {
-  id: string;
-  label: string;
-}
-
-export const NAV_SECTIONS: NavSection[] = [
-  { id: "top", label: "Top" },
-  { id: "toolshed", label: "The Garage" },
-  { id: "mission", label: "The Mission" },
-  { id: "about", label: "About" },
-  { id: "contact", label: "Contact" },
-];

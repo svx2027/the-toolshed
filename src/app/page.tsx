@@ -7,6 +7,7 @@ import { Leverage } from "@/components/Leverage";
 import { Garage } from "@/components/Garage";
 import { StartHere } from "@/components/StartHere";
 import { Faq } from "@/components/Faq";
+import { ResourceIndex } from "@/components/ResourceIndex";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
 import { RevealController } from "@/components/RevealController";
@@ -179,6 +180,9 @@ export default function Home() {
 
         {/* ---------- HELP (fair questions, straight answers) ---------- */}
         <Faq />
+
+        {/* ---------- FREE RESOURCES (the drop index: every IG link lives here too) ---------- */}
+        <ResourceIndex />
 
         {/* ---------- CONTACT (Three ways to stick around) ---------- */}
         <section id="contact" className="relative z-10 mx-auto max-w-2xl scroll-mt-24 px-5 py-24 sm:px-7 sm:py-28">

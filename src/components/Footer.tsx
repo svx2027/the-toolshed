@@ -24,6 +24,10 @@ export function Footer() {
               Help
             </a>
             <span aria-hidden>·</span>
+            <a href="#resources" className="text-ink-soft transition-colors hover:text-ink">
+              Free resources
+            </a>
+            <span aria-hidden>·</span>
             <a href="https://files.shivamvashisth.com" target="_blank" rel="noopener noreferrer" className="text-ink-soft transition-colors hover:text-ink">
               Files ↗
             </a>
@@ -32,8 +36,8 @@ export function Footer() {
               @svx2027
             </a>
             <span aria-hidden>·</span>
-            <a href="mailto:hi@shivamvashisth.com" className="text-ink-soft transition-colors hover:text-ink">
-              hi@shivamvashisth.com
+            <a href="mailto:vashisthshivam00@gmail.com" className="text-ink-soft transition-colors hover:text-ink">
+              vashisthshivam00@gmail.com
             </a>
           </span>
         </div>
