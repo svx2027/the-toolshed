@@ -77,6 +77,42 @@ export default function TasteMaxxing01() {
         </div>
       </section>
 
+      {/* Before you start — the human setup, kept off the prompt so the paste is pure instructions */}
+      <section className="mb-10">
+        <p className="mb-2 font-mono text-xs uppercase tracking-widest text-ink-faint">
+          Before you paste · about 5 minutes, once
+        </p>
+        <h2 className="font-display text-2xl font-semibold text-ink">Three small things</h2>
+        <div className="mt-5 space-y-4">
+          <div className="rounded-2xl border border-line bg-card p-5">
+            <h3 className="font-display text-lg font-medium text-ink">1 · Get Claude Code</h3>
+            <p className="mt-1 text-sm leading-relaxed text-ink-soft">
+              Sign up at{" "}
+              <a className="text-acc-sky underline-offset-2 hover:underline" href="https://claude.ai" target="_blank" rel="noopener noreferrer">claude.ai</a>{" "}
+              on a paid plan (Pro or Max), then download{" "}
+              <a className="text-acc-sky underline-offset-2 hover:underline" href="https://claude.com/claude-code" target="_blank" rel="noopener noreferrer">Claude Code</a>{" "}
+              and sign in. On Windows, if it asks for &ldquo;Git for Windows&rdquo;, install that too and keep clicking Next.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-line bg-card p-5">
+            <h3 className="font-display text-lg font-medium text-ink">2 · Connect Instagram (the magic ingredient)</h3>
+            <p className="mt-1 text-sm leading-relaxed text-ink-soft">
+              Open <strong className="text-ink">Google Chrome</strong>, log in at instagram.com, and install the{" "}
+              <strong className="text-ink">Claude in Chrome</strong> extension (publisher must say Anthropic). It only ever
+              reads your saved reels, and you watch it work. No extension on your plan? Paste anyway; Claude has two other
+              easy ways in.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-line bg-card p-5">
+            <h3 className="font-display text-lg font-medium text-ink">3 · Paste &amp; go</h3>
+            <p className="mt-1 text-sm leading-relaxed text-ink-soft">
+              Start a new chat in Claude Code, hit the copy button below, paste, and press Enter. Answer one question,
+              then everything runs on its own. You approve each step; your Instagram stays 100% read-only.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Prompt 01 */}
       <section className="mb-10 rounded-2xl border border-line bg-card p-6 shadow-sm sm:p-8">
         <p className="mb-2 font-mono text-xs uppercase tracking-widest text-acc-mint">
@@ -104,8 +140,8 @@ export default function TasteMaxxing01() {
           </a>
         </div>
         <p className="mt-4 text-xs text-ink-faint">
-          Copy the whole thing, intro included. It&apos;s designed to be pasted wholesale into a
-          new Claude Code chat.
+          One tap copies the whole prompt. It&apos;s pure instructions, nothing to trim — paste it
+          straight into a new Claude Code chat.
         </p>
         <details className="mt-5">
           <summary className="cursor-pointer text-sm font-medium text-acc-sky">
@@ -122,10 +158,10 @@ export default function TasteMaxxing01() {
         <h2 className="font-display text-xl font-semibold text-ink">How it works</h2>
         <ol className="mt-4 space-y-3 text-sm leading-relaxed text-ink-soft">
           <li>
-            <strong className="text-ink">1 · Set up, then paste.</strong> The prompt file starts
-            with a three-part checklist: Claude Code (claude.com/claude-code, paid Claude plan),
-            the Claude in Chrome extension (two minutes), then paste. Skip something? Claude
-            catches it and walks you through two other ways in.
+            <strong className="text-ink">1 · Set up, then paste.</strong> Do the three small
+            things above (Claude Code, the Chrome extension), then copy the prompt and paste it
+            into a new Claude Code chat. Missed a step? Claude catches it and walks you through two
+            other ways in.
           </li>
           <li>
             <strong className="text-ink">2 · Answer one question.</strong>{" "}&ldquo;What do you
@@ -154,7 +190,8 @@ export default function TasteMaxxing01() {
             @svx2027
           </a>{" "}
           and favorites get run live on the next stream. You don&apos;t need Fable to run the
-          discovery itself; any Claude works.
+          discovery itself; any Claude works — open Claude (app, web, or Code), paste, answer one
+          question.
         </p>
         <div className="mt-6 flex flex-wrap items-center gap-3">
           <CopyButton text={fableDiscovery} label="Copy the bonus prompt" />

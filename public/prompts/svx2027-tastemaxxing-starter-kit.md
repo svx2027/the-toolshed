@@ -1,47 +1,6 @@
-# SVX2027 TasteMaxxing — Starter Kit
+# TasteMaxxing — build a taste engine from saved Instagram reels
 
-**by Shivam Vashisth · [@svx2027](https://www.instagram.com/svx2027) · [shivamvashisth.com](https://shivamvashisth.com)**
-
-You've saved hundreds of reels. Be honest — when did you last open that folder?
-
-Your saved reels are the most accurate record of your taste that exists. Nobody curated it for you; you built it on pure instinct, one double-tap at a time. **TasteMaxxing turns it into something you can actually use.** Paste this file into Claude Code, answer one question, and watch your saved reels become a **content brain**: one Excel file where every reel is a row with its key image frames, transcript, audio, engagement numbers, and an AI note on why it works and how *you* could recreate it. Then, if you want it — a one-page profile of your taste, and fresh content ideas in your style.
-
-You don't need to know anything technical. If you can copy, paste, and click "Allow", you are fully qualified. I burned the hours and the tokens figuring this out on 1,000+ of my own saved reels — this file carries everything I learned, so your run just works.
-
-*(Got this from my webpage? The Copy button already grabbed the whole file — just paste. Reading a downloaded file full of symbols and hashtags? Right-click it → Open With → TextEdit on Mac or Notepad on Windows, click inside, press Cmd+A then Cmd+C — Ctrl+A / Ctrl+C on Windows — and you've copied it all.)*
-
-## Before you start — three small parts, then you're off
-
-**Part 1 — Get Claude (you may already have this)**
-1. Create an account at **claude.ai** and make sure you're on a paid plan (Pro or Max).
-2. Download **Claude Code** from **claude.com/claude-code** and install it. On Windows: if the page shows a command instead of a download button, follow its Windows instructions — and if it mentions "Git for Windows", install that too and just keep clicking Next; every default is fine.
-3. Open Claude Code — on Mac it's in Applications (search "Claude" in Spotlight), on Windows it's in the Start menu. If you installed the command-line version instead: open the Terminal app, type `claude`, press Enter — that window IS the chat. Sign in with the same account. Part 1 done! 🎉
-
-**Part 2 — Connect your Instagram (the magic ingredient)**
-1. Open **Google Chrome** (yes, Chrome specifically) and log in at **instagram.com**. Keep that tab open.
-2. Install the **Claude in Chrome** extension — get it from the Chrome Web Store and make sure the publisher says **Anthropic** (accept no lookalikes; claude.ai/chrome takes you to the real one). Sign in to it. Genuinely a two-minute job.
-3. Chrome will warn that the extension can "read and change" data on websites — that's Chrome's standard wording for **any** extension that can see pages. In this project it only ever *reads* (that's exactly how Claude will see your saved reels), and you'll literally watch it work.
-
-**Can't get the extension, or your plan doesn't offer it?** No stress at all — skip straight to Part 3 and paste anyway. Claude has two other easy ways in and will walk you through them personally.
-
-**Part 3 — Launch 🚀**
-1. In Claude Code, start a new chat (in the app it may be called a new session). If it asks "Do you trust the files in this folder?", choose Yes — press Enter in the terminal version. Claude will build the real project folder for you.
-2. Paste this **ENTIRE file** into the chat — top to bottom, intro included. If Claude Code looks like a plain text window rather than a shiny app, that's right and normal: click inside it, paste, done.
-3. Press Enter. That's the last hard thing you'll do today.
-
-**A few honest things, so nothing surprises you:**
-- **You will see every single action Claude takes**, and it asks your permission before touching anything on your computer. When a permission box appears, read the one-line description and press Allow. Nothing is hidden — that's the whole design.
-- **Your Instagram stays 100% read-only.** Claude never likes, follows, comments, posts, saves, or changes anything. It only looks at what you already saved.
-- During setup your computer may show its own official popups — Apple or Windows installing a standard tool, sometimes asking for **your computer's login password**. That's the normal Apple/Windows step for installing anything; you type it yourself and Claude never sees it. Claude will warn you *before* each popup appears and tell you exactly which button to press.
-- If Claude ever stops with a **"usage limit"** message: nothing is lost. Come back at the time shown and type `continue` in the same chat. Closed the app in the meantime? Reopen Claude Code, pick this same conversation from your recent chats (or open the `ig-taste-engine` folder it created), and type `continue` — Claude keeps a progress file there, so it picks up exactly where it stopped.
-
-Most people watch their first vault open **within the hour** — a brand-new computer can add a one-time 20–40 minute tools install at the start (Claude will tell you before it happens). When it opens, come tell me — **[@svx2027](https://www.instagram.com/svx2027)**. I want to see it. 💪
-
----
-
-# ⬇️ CLAUDE — YOUR INSTRUCTIONS START HERE ⬇️
-
-Everything in this file is for you, including the welcome note above (the user pastes the whole file — never ask them to trim or re-paste). You are building this user's personal **taste engine** — they know it as **TasteMaxxing**, a kit by Shivam Vashisth (@svx2027) — from their saved Instagram reels. Assume they are a **complete beginner**: no terminal experience, easily worried by error text and permission dialogs, and here because a creator they follow told them this would be amazing. Your job is to make it amazing.
+You are building this user's personal **taste engine** from their saved Instagram reels — a kit they know as **TasteMaxxing**. This whole file is your instructions; there is no preamble to skip. Assume they are a **complete beginner**: no terminal experience, easily worried by error text and permission dialogs, and here because a creator they follow told them this would be amazing. Your job is to make it amazing.
 
 ## Deliverables (in the project folder you create)
 1. **`master.csv`** — one flat row per saved reel, all collections, machine-readable.
@@ -85,7 +44,7 @@ Close with one warm line of credit: this kit is **TasteMaxxing by Shivam (@svx20
 Check silently; offer routes in this order, and pre-narrate failure as a normal branch, never a dead end.
 
 1. **Offer the extension** (it's the best experience). Exactly three instructions: 1) open Chrome and log in at instagram.com, 2) install "Claude in Chrome" from the Chrome Web Store — publisher must say Anthropic, 3) come back and say `ready`. Add the escape hatch up front: *"if the extension isn't offered on your plan or won't sign in, no problem at all — say `no extension` and we start another route today."*
-   **If they say they already installed it** (they did Part 2), never repeat the install — troubleshoot instead, one chunk of three: 1) make sure Chrome is actually open with the Instagram tab showing, 2) click the Claude icon in Chrome's toolbar and check it's signed in to the same account as Claude Code, 3) say `ready` and I'll look again. Still nothing? One last try: quit Chrome completely and reopen it (restart Claude Code too if needed), then `ready`. If their plan doesn't include the extension, they can't install it, or that one retry still fails, move down the ladder without drama — and say the extension door stays open, so we can switch back the moment it connects.
+   **If they say the extension is already installed**, never repeat the install — troubleshoot instead, one chunk of three: 1) make sure Chrome is actually open with the Instagram tab showing, 2) click the Claude icon in Chrome's toolbar and check it's signed in to the same account as Claude Code, 3) say `ready` and I'll look again. Still nothing? One last try: quit Chrome completely and reopen it (restart Claude Code too if needed), then `ready`. If their plan doesn't include the extension, they can't install it, or that one retry still fails, move down the ladder without drama — and say the extension door stays open, so we can switch back the moment it connects.
 2. **The hybrid path (recommended fallback).** Two things at once: (a) they request their Instagram data export now — it arrives in hours, and the pipeline continues from it later; (b) meanwhile they paste 5–10 reel links so the pilot happens **today**. How to get a link from their phone to this chat (give them exactly this, it's the non-obvious part): open a saved reel → tap the three dots (or the share arrow) → **Copy link** → send it to yourself (WhatsApp, email, or Notes) → open that on this computer and paste here. A few at a time is fine; you dedupe.
    **The moment this route is chosen**, create the project folder + PROGRESS.md immediately (before any waiting), and print a 3-step "tomorrow card" in chat: 1) open Claude Code, 2) pick this same conversation from recent chats — or open the `ig-taste-engine` folder if it's gone, 3) type `my export is ready`. Write the same card into PROGRESS.md, with re-pasting the kit file as the stated backup.
    **Export recipe** (give in chunks of ≤3 steps, wait between chunks — and preface it with: *"Instagram renames these screens now and then; the choices to look for are Saved, All time, JSON, Download to device."*): Instagram app → Settings → **Accounts Center** → Your information and permissions → **Download your information** (sometimes "Export your information") → Request download / Create export → pick the account → **"Some of your information"** → tick **Saved** (under Your activity) → **Download to device** (not Transfer) → Date range: **All time** → Format: **JSON** (not HTML — the #1 trap) → Create files / Start export. Pre-narrate both security moments: Instagram may ask for their Instagram password when requesting, and **will ask them to log in and re-enter it when they download the ZIP on this computer** — that's Meta's standard check for data exports, not something going wrong. The ZIP must be saved on this computer; then they say `my export is ready` — even tomorrow, even in a new chat. Note for you: the export is a flat list of links with no collection names — scope by recency/count instead.
@@ -180,4 +139,4 @@ Aggregate the taste labels (weighted toward rows they tagged `Liked?=Yes`): top 
 
 ---
 
-*SVX2027 TasteMaxxing — by Shivam Vashisth. If this blew your mind, the follow is free: [@svx2027](https://www.instagram.com/svx2027).*
+*This is **TasteMaxxing**, a free kit by Shivam Vashisth (@svx2027). Everything you need is already in this file — shivamvashisth.com/svx01 just has the same walkthrough as a web page, plus future drops. If it helped, the follow's free.*

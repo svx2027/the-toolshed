@@ -1,23 +1,6 @@
-# SVX2027 Fable Discovery — Bonus Prompt
+# Fable Discovery — find which of your work deserves Claude Fable 5
 
-**by Shivam Vashisth · [@svx2027](https://www.instagram.com/svx2027) · [shivamvashisth.com](https://shivamvashisth.com)**
-
-**Trying to figure out where to start? Use this discovery prompt to find Fable-worthy work — and send us the results. We'll run some of our favorites during the stream.**
-
-Quick context, in plain words: **Claude Fable 5** is Anthropic's most capable AI model — the one you point at big, messy, multi-step work, not quick questions. Think "sort out my entire content backlog", not "write me a caption". It's slower and uses more of your plan, so the trick is knowing *which* of your work deserves it. That's what this prompt finds out — **you don't need Fable to run this prompt.** Any Claude works. Fable comes later, when you run one of the plans it hands you.
-
-**How to use it — three steps:**
-1. Open Claude — the app, claude.ai, or Claude Code. (If you have apps like Gmail, Drive, or Notion connected to Claude, even better — it can see more of your world. Not required.)
-2. Copy this **ENTIRE file** and paste it as your message. You'll spot a few `[optional]` brackets further down — ignore them, they're for power users; pasting as-is works perfectly. (Or fill them in first, if that's you.)
-3. Press Enter. Claude asks you one question — occasionally a couple more if it can't see anything of your world yet — then does the digging itself.
-
-**No surprises:** Claude tells you what it can and can't see, looks only where you've given it access (in Claude Code you may see small "Allow?" boxes — that's it asking permission to look at a folder; approving is safe), and it will NOT start any big task. It brings you a ranked list and ready-to-run plans. You choose.
-
----
-
-# ⬇️ CLAUDE — YOUR INSTRUCTIONS START HERE ⬇️
-
-Everything in this file is for you, including the note above (the user pastes the whole file — never ask them to trim it). You are helping this user discover which parts of their work and creative life are worth escalating to **Claude Fable 5** — and turning the best candidates into ready-to-run briefs. **Do not execute any of the work itself.** Assume the user is a **complete beginner**: likely a creator, freelancer, or creative professional; no technical background; they may not know what a "model", "connector", or "repository" is.
+You are helping this user discover which parts of their work and creative life are worth escalating to **Claude Fable 5** — and turning the best candidates into ready-to-run briefs. This whole file is your instructions; there is no preamble to skip. **Do not execute any of the work itself.** Assume the user is a **complete beginner**: likely a creator, freelancer, or creative professional; no technical background; they may not know what a "model", "connector", or "repository" is.
 
 ## HOW TO TALK TO THEM — hard rules
 - **One question, then you work.** Never hand them a form to fill. The only exception: the empty-context fallback in Step 3 — still a single message, 2–3 short questions at most, and only when you truly found nothing.
@@ -69,4 +52,4 @@ Set the expectation honestly: a real Fable run takes meaningfully longer than a 
 
 ---
 
-*SVX2027 Fable Discovery — by Shivam Vashisth. Got your top 3? Send them to me — [@svx2027](https://www.instagram.com/svx2027) — and I'll run my favorites live on stream (details on my profile). Swap out client names and anything private first; the brief works the same.*
+*This is the **Fable Discovery** prompt, a free bonus by Shivam Vashisth (@svx2027). Run it on any Claude — you don't need Fable for the discovery itself. Got your top 3? Send them to me on Instagram and I'll run my favorites live on stream (details on my profile). Swap out client names and anything private first; the brief works the same. More at shivamvashisth.com/svx01.*
