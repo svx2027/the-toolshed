@@ -21,8 +21,9 @@ live and verified; all 5 site versions are reachable as git tags.
 | Repo (private) | `svx2027/the-toolshed`, branch `main`, push = auto-deploy on Vercel (team `svx2028`) |
 | Live | https://shivamvashisth.com (GoDaddy DNS: apex `A @ 216.198.79.1`) |
 | Vault code / repo / live | `~/code/shivam-download-files` / `svx2027/shivam-download-files` / https://files.shivamvashisth.com |
-| Latest commit / tag | `913f0ac` / `v6-leverage` |
-| Version history | git tags: `v1-static` → `v2-nextjs` → `v3-rule-of-three` → `v4-refinements` → `v5-showdown-offline` → `v6-leverage`. `git checkout <tag>` opens any past version. Tag new releases the same way. |
+| Latest commit / tag | `f103c42` / `v10-instructions-first` |
+| Version history | git tags: `v1-static` → `v2-nextjs` → `v3-rule-of-three` → `v4-refinements` → `v5-showdown-offline` → `v6-leverage` → `v7-tastemaxxing-drop01` → `v8-drop01-email-capture` → `v9-resource-index` → `v10-instructions-first`. `git checkout <tag>` opens any past version. Tag new releases the same way. |
+| SVX prompt drops (v7–v10) | `/svx2027-tastemaxxing-01/` page (route in `src/app/`, prompts served byte-identical from `public/prompts/*.md`, copy buttons with in-app-browser fallback). `src/lib/resources.ts` = single source of truth feeding the homepage "Free resources" index (`#resources`), ItemList JSON-LD, sitemap, and the short-link redirects (`/svx01` + typo aliases) in `next.config.ts`. Payloads are instructions-first: human setup lives on the page ("Three small things"), never inside the .md. Subscribe box posts `source:"drop-01"` to `/api/subscribe/` (Supabase `subscribers`, insert-only RLS). Site email = vashisthshivam00@gmail.com (3 places: Nav, Footer, `public/assets/shared.js`) until a branded mailbox exists. Vercel Web Analytics wired in `src/app/layout.tsx` — owner must enable it in the Vercel dashboard Analytics tab. OPEN: Trust section still says "No auto-DM." while owner runs SuperProfile AutoDM — needs a wording decision. |
 | Session memory | `~/.claude/projects/-Users-denzen-code/memory/the-toolshed-project.md` |
 
 ## Tech stack (main site)
