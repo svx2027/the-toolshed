@@ -4,8 +4,25 @@ import { useState } from "react";
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
-/** Optional email capture for the drop series — same backend as the homepage form, tagged source: "drop-01". */
-export function SubscribeBox() {
+/**
+ * Optional email capture, same backend as the homepage form. Defaults render the
+ * drop-01 copy; any page can pass its own copy and a `source` tag for segmenting.
+ */
+export function SubscribeBox({
+  source = "drop-01",
+  kicker = "Drop 02 is coming",
+  title = "Want the next one delivered straight to your inbox?",
+  blurb = "Just leave your email here. One email per drop, nothing else, and everything above works whether you do or not.",
+  cta = "Send me drop 02",
+  success = "Locked in. Drop 02 lands in your inbox the day it ships ✓",
+}: {
+  source?: string;
+  kicker?: string;
+  title?: string;
+  blurb?: string;
+  cta?: string;
+  success?: string;
+}) {
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState(""); // honeypot: real people never see this
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
@@ -19,7 +36,7 @@ export function SubscribeBox() {
       const res = await fetch("/api/subscribe/", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email: v, company, source: "drop-01" }),
+        body: JSON.stringify({ email: v, company, source }),
       });
       setStatus(res.ok ? "done" : "error");
       if (res.ok) setEmail("");
@@ -31,18 +48,17 @@ export function SubscribeBox() {
   return (
     <section className="mb-12 rounded-2xl bg-mint/50 p-6 sm:p-8 dark:bg-card dark:border dark:border-line">
       <p className="mb-2 font-mono text-xs uppercase tracking-widest text-acc-mint">
-        Drop 02 is coming
+        {kicker}
       </p>
       <h2 className="font-display text-2xl font-semibold text-ink">
-        Want the next one delivered straight to your inbox?
+        {title}
       </h2>
       <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-        Just leave your email here. One email per drop, nothing else, and everything above works
-        whether you do or not.
+        {blurb}
       </p>
       {status === "done" ? (
         <p className="mt-4 text-sm font-medium text-acc-mint">
-          Locked in. Drop 02 lands in your inbox the day it ships ✓
+          {success}
         </p>
       ) : (
         <div className="mt-4">
@@ -72,7 +88,7 @@ export function SubscribeBox() {
               disabled={status === "sending"}
               className="shrink-0 rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-transform hover:-translate-y-0.5 disabled:opacity-60"
             >
-              {status === "sending" ? "Saving…" : "Send me drop 02"}
+              {status === "sending" ? "Saving…" : cta}
             </button>
           </form>
           <p className="mt-2 text-[0.8rem] text-ink-faint">

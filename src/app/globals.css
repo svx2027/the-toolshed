@@ -30,6 +30,10 @@
   --wash-3: rgba(223, 240, 230, 0.80);
   --wash-4: rgba(220, 234, 245, 0.82);
   --grain: 0.04;
+
+  /* CTA glow color + alpha, theme-tuned so the halo reads on light paper AND dark paper */
+  --glow-rgb: 109 91 176;
+  --glow-a: 0.32;
 }
 
 .dark {
@@ -52,6 +56,9 @@
   --wash-3: rgba(70, 150, 120, 0.13);
   --wash-4: rgba(80, 130, 180, 0.14);
   --grain: 0.05;
+
+  --glow-rgb: 185 171 232;
+  --glow-a: 0.45;
 }
 
 /* Expose the brand to Tailwind utilities: text-ink, bg-card, border-line, font-display, etc. */
@@ -176,14 +183,68 @@ html.reveal-ready [data-reveal]:not(.in) {
   .marquee-track { animation: none; }
 }
 
-/* CTA glow: invites the click; pauses for reduced-motion */
+/* CTA glow: invites the click in both themes (soft halo + breathing ring).
+   --glow-rgb and --glow-a flip with the theme so the halo reads on light paper
+   AND dark paper. Hover locks the glow on (no pause flicker); reduced-motion off. */
 @keyframes ctaGlow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(109, 91, 176, 0); }
-  50% { box-shadow: 0 0 26px 3px rgba(109, 91, 176, 0.45); }
+  0%, 100% {
+    box-shadow:
+      0 0 0 0 rgb(var(--glow-rgb) / 0),
+      0 0 0 0 rgb(var(--glow-rgb) / 0);
+  }
+  50% {
+    box-shadow:
+      0 0 30px 5px rgb(var(--glow-rgb) / var(--glow-a)),
+      0 0 0 6px rgb(var(--glow-rgb) / 0.14);
+  }
 }
-.cta-glow { animation: ctaGlow 2.6s ease-in-out infinite; }
-.cta-glow:hover { animation-play-state: paused; }
-@media (prefers-reduced-motion: reduce) { .cta-glow { animation: none; } }
+/* Always-on: the single main CTA on a surface (drop-page copy buttons, hero). */
+.cta-glow { animation: ctaGlow 3.2s ease-in-out infinite; }
+.cta-glow:hover,
+.cta-glow-card:hover {
+  animation: none;
+  box-shadow:
+    0 0 22px 3px rgb(var(--glow-rgb) / var(--glow-a)),
+    0 0 0 5px rgb(var(--glow-rgb) / 0.16);
+}
+/* Card CTA: a calm resting ring; it only breathes while its card is in view, so
+   five cards never pulse at once. No-JS visitors still get the resting ring. */
+.cta-glow-card {
+  box-shadow: 0 0 0 4px rgb(var(--glow-rgb) / 0.10);
+  transition: box-shadow 0.5s ease;
+}
+html.reveal-ready .creator-card.in .cta-glow-card {
+  animation: ctaGlow 3.2s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cta-glow,
+  .cta-glow-card,
+  html.reveal-ready .creator-card.in .cta-glow-card { animation: none; }
+}
+
+/* creator cards: gentle lift with a tinted shadow; image warms into full color */
+.creator-card {
+  transition:
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.5s ease;
+}
+.creator-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--line-strong);
+  box-shadow: 0 18px 44px -18px rgb(var(--glow-rgb) / 0.35);
+}
+.creator-card .creator-photo {
+  filter: saturate(0.9);
+  transition: filter 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.creator-card:hover .creator-photo {
+  filter: saturate(1.05);
+  transform: scale(1.02);
+}
+@media (prefers-reduced-motion: reduce) {
+  .creator-card, .creator-card:hover { transform: none; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

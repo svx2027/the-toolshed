@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import Link from "next/link";
 import { CopyButton, ShareLinkButton, TrackedDownload } from "./CopyButton";
-import { SubscribeBox } from "./SubscribeBox";
+import { SubscribeBox } from "@/components/SubscribeBox";
 
 // Drop 01 of the SVX2027 prompt series. Prompts live as .md files in /public/prompts so the
 // download links and the copy buttons always serve the exact same bytes.
@@ -21,6 +21,7 @@ export const metadata: Metadata = {
     description:
       "Your saved reels are the best record of your taste that exists. One prompt turns them into a content brain.",
     url: "/svx2027-tastemaxxing-01/",
+    images: ["/assets/og-home.png"],
   },
 };
 
@@ -141,7 +142,7 @@ export default function TasteMaxxing01() {
           </TrackedDownload>
         </div>
         <p className="mt-4 text-xs text-ink-faint">
-          One tap copies the whole prompt. It&apos;s pure instructions, nothing to trim — paste it
+          One tap copies the whole prompt. It&apos;s pure instructions, nothing to trim, so paste it
           straight into a new Claude Code chat.
         </p>
         <details className="mt-5">
@@ -191,7 +192,7 @@ export default function TasteMaxxing01() {
             @svx2027
           </a>{" "}
           and favorites get run live on the next stream. You don&apos;t need Fable to run the
-          discovery itself; any Claude works — open Claude (app, web, or Code), paste, answer one
+          discovery itself; any Claude works, so open Claude (app, web, or Code), paste, answer one
           question.
         </p>
         <div className="mt-6 flex flex-wrap items-center gap-3">

@@ -45,7 +45,7 @@ export function CopyButton({ text, label, event }: { text: string; label: string
     <button
       type="button"
       onClick={copy}
-      className="inline-flex items-center justify-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-transform hover:-translate-y-0.5 focus-visible:outline-2"
+      className="cta-glow inline-flex items-center justify-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-transform hover:-translate-y-0.5 focus-visible:outline-2"
       aria-live="polite"
     >
       {state === "copied"
