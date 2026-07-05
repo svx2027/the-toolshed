@@ -60,9 +60,9 @@ export const CREATORS: Creator[] = [
       "Becky ran YouTube strategy for Ali Abdaal, then went all in on AI. She is the clearest proof that you do not need to be an engineer: she builds Claude Code kits for people who have never touched a terminal. If the whole idea still feels like it is only for coders, start with her. It is not, and she shows you exactly why.",
     bestWork: {
       kind: "Read",
-      title: "her site and free Web Dev Kit",
-      url: "https://beckyisj.com/",
-      note: "A Claude Code starter built for people who have never coded.",
+      title: "The New Poverty Line Is $100",
+      url: "https://beckyisj.substack.com/p/the-new-poverty-line-is-100",
+      note: "Her essay on why paid AI access is the line that matters now.",
     },
   },
   {
