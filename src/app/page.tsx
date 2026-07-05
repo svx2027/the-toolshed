@@ -91,7 +91,7 @@ export default function Home() {
                     people can play with zero <Jargon term="backend">backend</Jargon>.
                   </>
                 ),
-                skip: "tracking. The only thing I ever store is an email you hand me on purpose.",
+                skip: "creepy tracking. I count anonymous page views and prompt copies, no cookies, no profiles, no selling. The only personal thing I store is an email you hand me on purpose.",
               },
             ].map((c, i) => (
               <Reveal key={c.h} delay={i * 0.06}>
@@ -158,13 +158,13 @@ export default function Home() {
               <div className="mx-auto mt-5 flex max-w-md flex-wrap items-center justify-center gap-x-3 gap-y-1 font-mono text-xs uppercase tracking-[0.14em] text-ink-soft">
                 <span>No funnel.</span>
                 <span aria-hidden className="text-ink-faint">·</span>
-                <span>No auto-DM.</span>
-                <span aria-hidden className="text-ink-faint">·</span>
                 <span>No growth hack.</span>
+                <span aria-hidden className="text-ink-faint">·</span>
+                <span>No bot pretending to be me.</span>
               </div>
               <p className="mx-auto mt-4 max-w-md text-ink-soft">
-                Ask me anything on Instagram and I answer it myself. In a feed full of automation, that is the whole
-                trust pitch.
+                One robot sends you the free link when you comment. That is the only automation here. Every real reply,
+                every actual conversation, is me by hand. In a feed full of fake, that is the whole trust pitch.
               </p>
               <a
                 href="https://instagram.com/svx2027"

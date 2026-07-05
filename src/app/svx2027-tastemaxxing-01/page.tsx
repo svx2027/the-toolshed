@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import Link from "next/link";
-import { CopyButton, ShareLinkButton } from "./CopyButton";
+import { CopyButton, ShareLinkButton, TrackedDownload } from "./CopyButton";
 import { SubscribeBox } from "./SubscribeBox";
 
 // Drop 01 of the SVX2027 prompt series. Prompts live as .md files in /public/prompts so the
@@ -130,14 +130,15 @@ export default function TasteMaxxing01() {
           <li>• Your Instagram stays 100% read-only. Nothing is liked, posted, or changed.</li>
         </ul>
         <div className="mt-6 flex flex-wrap items-center gap-3" id="download-fallback">
-          <CopyButton text={tastemaxxing} label="Copy the full prompt" />
-          <a
+          <CopyButton text={tastemaxxing} label="Copy the full prompt" event="copy_starter" />
+          <TrackedDownload
             href="/prompts/svx2027-tastemaxxing-starter-kit.md"
             download="SVX2027-TasteMaxxing-Starter-Kit.md"
+            event="download_starter"
             className="inline-flex items-center rounded-full border border-line-strong px-5 py-2.5 text-sm font-medium text-ink transition-transform hover:-translate-y-0.5"
           >
             Download .md
-          </a>
+          </TrackedDownload>
         </div>
         <p className="mt-4 text-xs text-ink-faint">
           One tap copies the whole prompt. It&apos;s pure instructions, nothing to trim — paste it
@@ -194,14 +195,15 @@ export default function TasteMaxxing01() {
           question.
         </p>
         <div className="mt-6 flex flex-wrap items-center gap-3">
-          <CopyButton text={fableDiscovery} label="Copy the bonus prompt" />
-          <a
+          <CopyButton text={fableDiscovery} label="Copy the bonus prompt" event="copy_fable" />
+          <TrackedDownload
             href="/prompts/svx2027-fable-discovery.md"
             download="SVX2027-Fable-Discovery.md"
+            event="download_fable"
             className="inline-flex items-center rounded-full border border-line-strong px-5 py-2.5 text-sm font-medium text-ink transition-transform hover:-translate-y-0.5"
           >
             Download .md
-          </a>
+          </TrackedDownload>
         </div>
         <details className="mt-5">
           <summary className="cursor-pointer text-sm font-medium text-acc-sky">

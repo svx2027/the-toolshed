@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { track } from "@/lib/track";
 
 /**
  * Clipboard write that survives restrictive embeds (notably Instagram's in-app browser):
@@ -30,11 +31,12 @@ async function copyText(text: string): Promise<boolean> {
 }
 
 /** Copies the full prompt text (the whole file, welcome note included) so the paste is always valid. */
-export function CopyButton({ text, label }: { text: string; label: string }) {
+export function CopyButton({ text, label, event }: { text: string; label: string; event?: string }) {
   const [state, setState] = useState<"idle" | "copied" | "failed">("idle");
 
   async function copy() {
     const ok = await copyText(text);
+    if (ok && event) track(event); // count the activation, never block the copy
     setState(ok ? "copied" : "failed");
     setTimeout(() => setState("idle"), 5000);
   }
@@ -55,6 +57,27 @@ export function CopyButton({ text, label }: { text: string; label: string }) {
   );
 }
 
+/** A download link that also counts the download as an anonymous event. */
+export function TrackedDownload({
+  href,
+  download,
+  event,
+  className,
+  children,
+}: {
+  href: string;
+  download: string;
+  event: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <a href={href} download={download} onClick={() => track(event)} className={className}>
+      {children}
+    </a>
+  );
+}
+
 /** For phone visitors: this workflow runs on a computer, so let them send the page to themselves. */
 export function ShareLinkButton() {
   const [state, setState] = useState<"idle" | "copied" | "failed">("idle");
@@ -70,6 +93,7 @@ export function ShareLinkButton() {
       }
     }
     const ok = await copyText(url);
+    if (ok) track("share_link");
     setState(ok ? "copied" : "failed");
     setTimeout(() => setState("idle"), 7000);
   }
