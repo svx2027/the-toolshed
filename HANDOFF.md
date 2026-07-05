@@ -21,10 +21,45 @@ live and verified; all 5 site versions are reachable as git tags.
 | Repo (private) | `svx2027/the-toolshed`, branch `main`, push = auto-deploy on Vercel (team `svx2028`) |
 | Live | https://shivamvashisth.com (GoDaddy DNS: apex `A @ 216.198.79.1`) |
 | Vault code / repo / live | `~/code/shivam-download-files` / `svx2027/shivam-download-files` / https://files.shivamvashisth.com |
-| Latest commit / tag | `f103c42` / `v10-instructions-first` |
-| Version history | git tags: `v1-static` → `v2-nextjs` → `v3-rule-of-three` → `v4-refinements` → `v5-showdown-offline` → `v6-leverage` → `v7-tastemaxxing-drop01` → `v8-drop01-email-capture` → `v9-resource-index` → `v10-instructions-first`. `git checkout <tag>` opens any past version. Tag new releases the same way. |
-| SVX prompt drops (v7–v10) | `/svx2027-tastemaxxing-01/` page (route in `src/app/`, prompts served byte-identical from `public/prompts/*.md`, copy buttons with in-app-browser fallback). `src/lib/resources.ts` = single source of truth feeding the homepage "Free resources" index (`#resources`), ItemList JSON-LD, sitemap, and the short-link redirects (`/svx01` + typo aliases) in `next.config.ts`. Payloads are instructions-first: human setup lives on the page ("Three small things"), never inside the .md. Subscribe box posts `source:"drop-01"` to `/api/subscribe/` (Supabase `subscribers`, insert-only RLS). Site email = vashisthshivam00@gmail.com (3 places: Nav, Footer, `public/assets/shared.js`) until a branded mailbox exists. Vercel Web Analytics wired in `src/app/layout.tsx` — owner must enable it in the Vercel dashboard Analytics tab. OPEN: Trust section still says "No auto-DM." while owner runs SuperProfile AutoDM — needs a wording decision. |
+| Latest commit / tag | `ec58d33` / `v11-copy-counter` |
+| Version history | git tags: `v1-static` → `v2-nextjs` → `v3-rule-of-three` → `v4-refinements` → `v5-showdown-offline` → `v6-leverage` → `v7-tastemaxxing-drop01` → `v8-drop01-email-capture` → `v9-resource-index` → `v10-instructions-first` → `v11-copy-counter`. `git checkout <tag>` opens any past version. Tag new releases the same way. |
+| SVX prompt drops (v7–v11) | **Full brief: `/Users/denzen/code/personal/instagram-competitive-analysis/SVX2027_SERIES_HANDOFF.md`.** `/svx2027-tastemaxxing-01/` page (route in `src/app/`, prompts served byte-identical from `public/prompts/*.md`, copy buttons with in-app-browser execCommand fallback). `src/lib/resources.ts` = single source of truth → homepage "Free resources" index (`#resources`) + ItemList JSON-LD + sitemap + short-link/typo redirects (`/svx01`) in `next.config.ts`. Payloads instructions-first: human setup lives on the page, never in the .md. Email capture → `/api/subscribe/` (Supabase `subscribers`, `source` col). **Copy counter → `/api/event/` (Supabase `events`, insert-only RLS, table CREATED 2026-07-04); client `src/lib/track.ts` beacons via sendBeacon — MUST use trailing slash `/api/event/` or the 308 drops the POST.** Vercel Web Analytics = ENABLED + working (its script loads from an obfuscated `/<hash>/script.js`; check `window.va`, don't grep for "insights"). Site email = vashisthshivam00@gmail.com (Nav, Footer, `public/assets/shared.js`) until Zoho mailbox exists. Honesty fixes shipped: Trust "No bot pretending to be me" (was false "No auto-DM"), Build Notes anonymous-counts-only. |
+| SVX open items | Google Search Console (not set up), Zoho email hi@ (blocked on account creation — owner must create), purge `subscribers` test rows `test-drop01-*@shivamvashisth.com`. GA4 deliberately NOT used. See the series handoff §7. |
 | Session memory | `~/.claude/projects/-Users-denzen-code/memory/the-toolshed-project.md` |
+
+## Creator shelf (/creators/)
+Public page listing the creators Shivam learns AI from, so he can drop ONE link in
+an Instagram comment reply. Per creator: photo (or monogram fallback), social chips
+with inline SVG icons, his review, and one "best work" CTA.
+- **Single source of truth:** `src/lib/creators.ts` (the `CREATORS` array + `Creator`
+  type). A build-time `validateCreators()` at the bottom FAILS `npm run build` on:
+  duplicate/non-kebab slug, zero socials, an em-dash or "ten times" in any copy field,
+  a placeholder host (bare `substack.com`/`example.com`), or fewer than 2 creators.
+- **Photos:** drop a square file at `public/creators/<slug>.jpg` (lowercase; `.jpg`
+  beats `.jpeg`/`.png`/`.webp` in the lookup order). `fs.existsSync` picks it up at
+  build; no file = a pastel monogram tile. 640x640 min, EXIF stripped, ≤150KB. NOTE:
+  Vercel builds on Linux (case-sensitive) — keep slug and filename lowercase-identical.
+  CSP allows only local + ytimg images, so photos MUST be self-hosted (never hotlink).
+- **Page title count is computed** from `CREATORS.length` ("The 5 creators…"); adding
+  one updates the title, JSON-LD ItemList, and sitemap automatically.
+- **Tracking:** each best-work CTA fires `creator_best_<slug>` via `TrackedLink`
+  (`src/components/TrackedLink.tsx`) → `/api/event/`. The event route allows that
+  name via a regex (`/^creator_best_[a-z0-9-]{1,32}$/`), so new creators need NO route
+  edit. Social chips are deliberately untracked (anti-funnel).
+- **Redirects:** `/mentors` and `/people` → `/creators/` (in `next.config.ts`).
+- **Reviews are Shivam's voice, not fabricated creator quotes.** They sit under a
+  "Why it made my list" label. Never put words in a creator's mouth; the sameAs JSON-LD
+  only lists confirmed handles.
+- **Add-a-creator runbook:** copy the commented template at the bottom of `creators.ts`,
+  fill it with his words, (optional) add the photo, `npm run build`, check both themes,
+  commit + tag `v<next>-creator-<slug>`, push.
+
+## Glow CTAs (both themes)
+`--glow-rgb` + `--glow-a` in `globals.css` flip per theme (lavender halo, brighter in
+dark). `.cta-glow` = always-on breathing (drop-page copy buttons, homepage hero
+`Hero.tsx`). `.cta-glow-card` = a calm resting ring that only breathes while its
+`.creator-card.in` (so 5 cards never pulse at once; no-JS visitors keep the ring).
+Hover locks the glow on; reduced-motion kills all of it.
 
 ## Tech stack (main site)
 Next.js 16.2.9 (App Router, Turbopack) · React 19 · TypeScript · Tailwind v4

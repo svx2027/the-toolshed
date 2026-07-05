@@ -25,9 +25,12 @@ const SUPABASE_ANON_KEY =
   process.env.SUPABASE_ANON_KEY || "sb_publishable_NXzN8VbbzWPsBpzY66svgg_aOiCz5pS";
 const IP_SALT = process.env.SUBSCRIBE_SALT || "toolshed-subscribe-v1";
 
-// Only these event names are ever recorded — an allowlist keeps the table clean
-// and stops the endpoint being used as an open write sink.
+// Only these event names are ever recorded: a fixed allowlist plus one pattern
+// for the creator shelf (creator_best_<slug>), so adding a creator never needs an
+// edit here. Keeps the table clean and stops the endpoint being an open write sink.
 const ALLOWED = new Set(["copy_starter", "copy_fable", "download_starter", "download_fable", "share_link"]);
+const ALLOWED_PATTERN = /^creator_best_[a-z0-9-]{1,32}$/;
+const isAllowed = (name: string) => ALLOWED.has(name) || ALLOWED_PATTERN.test(name);
 
 // best-effort in-memory throttle (per warm instance): hashedIP -> timestamps
 const hits = new Map<string, number[]>();
@@ -61,7 +64,7 @@ export async function POST(request: Request) {
   }
 
   const name = typeof data.name === "string" ? data.name : "";
-  if (!ALLOWED.has(name)) return json(400, { ok: false });
+  if (!isAllowed(name)) return json(400, { ok: false });
 
   // page path only, strict shape, capped — never a full URL with query/PII
   const page =
