@@ -159,9 +159,10 @@ function CreatorCard({ creator, index }: { creator: Creator; index: number }) {
       data-reveal
       className="creator-card relative rounded-3xl border border-line bg-card p-6 shadow-sm sm:p-8"
     >
-      {/* the big index number, clipped to its own corner so it never trims the card's glow */}
+      {/* the index number: a fully-visible accent numeral in the top-right corner,
+          kept inside a clip so it never bleeds past the card's rounded edge */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-3xl" aria-hidden>
-        <span className="absolute -top-7 right-1 select-none font-display text-[7rem] font-semibold leading-none text-ink opacity-[0.05] dark:opacity-[0.09]">
+        <span className="absolute right-5 top-4 select-none font-display text-[3.25rem] font-bold leading-none tabular-nums text-ink opacity-40 dark:opacity-[0.34] sm:text-[4rem]">
           {nn}
         </span>
       </div>
@@ -221,7 +222,7 @@ function CreatorCard({ creator, index }: { creator: Creator; index: number }) {
         className={`relative mt-6 border-l-2 pl-4 text-[0.95rem] leading-relaxed text-ink-soft ${a.quote}`}
       >
         {creator.review}
-        <footer className="mt-2 font-display text-sm text-ink-faint">Why it made my list</footer>
+        <footer className="mt-2 font-display text-sm italic text-ink-soft">Why it made my list</footer>
       </blockquote>
 
       <div className="relative mt-6">
@@ -233,8 +234,8 @@ function CreatorCard({ creator, index }: { creator: Creator; index: number }) {
         >
           {kind} this first →
         </TrackedLink>
-        <p className="mt-3 text-xs leading-relaxed text-ink-faint">
-          <span className="text-ink-soft">{title}.</span> {note}
+        <p className="mt-3 text-sm leading-relaxed text-ink-soft">
+          <span className="font-medium text-ink">{title}.</span> {note}
         </p>
       </div>
     </article>
