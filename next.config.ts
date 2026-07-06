@@ -14,18 +14,15 @@ const nextConfig: NextConfig = {
   // Speakable short links + typo-catchers for the SVX2027 prompt-drop series,
   // derived from the same list that renders the homepage index (src/lib/resources.ts).
   async redirects() {
-    return [
-      // Speakable aliases for the creator shelf
-      { source: "/mentors", destination: "/creators/", permanent: false },
-      { source: "/people", destination: "/creators/", permanent: false },
-      ...RESOURCES.filter((r) => r.status === "live").flatMap((r) =>
-        [r.short, ...r.aliases].map((source) => ({
-          source,
-          destination: r.href,
-          permanent: false,
-        })),
-      ),
-    ];
+    // Speakable short links + typo/alias catchers, all derived from the live
+    // RESOURCES entries (e.g. /svx02, /mentors, /people all point at /creators/).
+    return RESOURCES.filter((r) => r.status === "live").flatMap((r) =>
+      [r.short, ...r.aliases].map((source) => ({
+        source,
+        destination: r.href,
+        permanent: false,
+      })),
+    );
   },
 };
 

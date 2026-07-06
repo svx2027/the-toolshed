@@ -34,6 +34,17 @@ export const RESOURCES: Resource[] = [
   },
   {
     code: "SVX02",
+    href: "/creators/",
+    short: "/svx02",
+    aliases: ["/mentors", "/people"],
+    title: "The Shortlist",
+    oneLiner:
+      "The creators who gave me the words to build with AI, and the one thing from each of them to start with.",
+    dated: "July 2026",
+    status: "live",
+  },
+  {
+    code: "SVX03",
     href: "",
     short: "",
     aliases: [],

@@ -10,11 +10,11 @@ const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
  */
 export function SubscribeBox({
   source = "drop-01",
-  kicker = "Drop 02 is coming",
+  kicker = "The next drop is coming",
   title = "Want the next one delivered straight to your inbox?",
   blurb = "Just leave your email here. One email per drop, nothing else, and everything above works whether you do or not.",
-  cta = "Send me drop 02",
-  success = "Locked in. Drop 02 lands in your inbox the day it ships ✓",
+  cta = "Send me the next drop",
+  success = "Locked in. The next drop lands in your inbox the day it ships ✓",
 }: {
   source?: string;
   kicker?: string;
