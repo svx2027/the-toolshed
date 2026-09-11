@@ -18,6 +18,7 @@ const PRIMARY: Item[] = [
 const SECONDARY: Item[] = [
   { label: "Start here", href: "#start" },
   { label: "Free resources", href: "#resources" },
+  { label: "Case studies", href: "/case-studies/" },
   { label: "About", href: "#about" },
   { label: "Help", href: "#faq" },
   { label: "Contact", href: "#contact" },
@@ -54,6 +55,12 @@ export function Nav() {
       return;
     }
     setOpen(false);
+    if (item.href.startsWith("/")) {
+      window.setTimeout(() => {
+        window.location.href = item.href;
+      }, 240);
+      return;
+    }
     const id = item.href.replace(/^#/, "");
     window.setTimeout(() => {
       if (id === "top") window.scrollTo({ top: 0, behavior: "smooth" });

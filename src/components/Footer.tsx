@@ -28,6 +28,10 @@ export function Footer() {
               Free resources
             </a>
             <span aria-hidden>·</span>
+            <a href="/case-studies/" className="text-ink-soft transition-colors hover:text-ink">
+              Case studies
+            </a>
+            <span aria-hidden>·</span>
             <a href="https://files.shivamvashisth.com" target="_blank" rel="noopener noreferrer" className="text-ink-soft transition-colors hover:text-ink">
               Files ↗
             </a>
