@@ -168,6 +168,60 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Title clustering falls back to a deterministic local method whenever the optional model call is unavailable, so the signal never depends on an external API staying up.",
     ],
   },
+  {
+    slug: "verify-before-deliver",
+    title: "Nothing gets pasted into the tracker until two passes agree",
+    dek: "A YouTube channel tracker that refuses to hand over a single row until a second, separately-written pass of its own pipeline reaches the same answer from a fresh fetch.",
+    repoName: "yt-mastersheet-kit",
+    repoUrl: "https://github.com/svx2027/yt-mastersheet-kit",
+    dated: "September 2026",
+    readMinutes: 4,
+    stats: [
+      { value: "4", label: "gated phases: discover, verify, format, QA note" },
+      { value: "2", label: "independently written code paths that must agree before anything ships" },
+      { value: "33", label: "tests, including one pinned to a midnight timezone boundary" },
+    ],
+    sections: [
+      {
+        heading: "A shared tracker sheet has no undo",
+        body: [
+          "A team tracker sheet is a shared source of truth: once a row is pasted in, other people build schedules and payouts on top of it. A wrong date or a video filed under the wrong category doesn't fail loudly, it just quietly corrupts whatever depends on that row until someone happens to notice.",
+          "The brief was a tool that turns a channel's recent uploads into paste-ready rows for that sheet, correctly categorized and dated, without becoming one more thing a person has to double-check by hand every time it runs.",
+        ],
+      },
+      {
+        heading: "Never trust a pipeline's own opinion of itself",
+        body: [
+          "The categorization and dating logic runs once to build the rows, then a second module re-derives the same date, duration, and category for every row from scratch, with its own fresh fetches, deliberately never importing the first module's functions. If it did, agreement would only prove a function got called twice, not that the logic is right.",
+          "The formatting step that actually produces the paste-ready rows refuses to run at all unless that second pass reports a clean PASS. That's a few lines of code, not a step someone has to remember to run before trusting the output.",
+        ],
+      },
+      {
+        heading: "The rules came from real classification mistakes",
+        body: [
+          "A livestream is dated by the moment it actually went live, never by its publish time, because a live's publish time is often a placeholder posted hours or days earlier, and dating by it can put a Thursday session on Wednesday's row. Shorts and long-form videos, by contrast, are dated by publish time; a premiere is never treated as a livestream, and that distinction comes from the platform's own isLiveContent flag, never a guess based on timing.",
+          "A livestream long enough to be a marathon session gets split into one row per person named in its title, minutes divided evenly, and if the title names nobody, the row is kept whole and flagged for a human rather than guessed at. When no name can be identified at all, the cell gets a configured placeholder, never left blank and never invented.",
+        ],
+      },
+      {
+        heading: "A fetch failure is not a silent drop",
+        body: [
+          "Bulk fetching against a real platform means some pages fail to load. Every failed fetch is retried once, and if it still can't be read, it's recorded as an explicit exclusion rather than disappearing; the pipeline's own coverage check requires that everything it touched is either placed in a row or accounted for as an exclusion, with the two totals required to balance before anything is called done.",
+        ],
+      },
+      {
+        heading: "What actually shipped",
+        body: [
+          "The four-phase pipeline runs end to end against a fully fictional demo vertical shipped in the repo, and 33 pure-function tests pin the categorization rules above, including the exact midnight boundary where a one-second difference in absolute time has to flip which calendar day a video is dated on.",
+        ],
+      },
+    ],
+    honestScope: [
+      "A live run against a real public channel hasn't landed in this repo yet; today it's proven by its test suite and a fictional demo vertical, not yet by a committed real-world sample output.",
+      "Marathon-session splitting reads only the title and description, never a thumbnail, so it can miss a name that's spoken but never written down.",
+      "Timezone handling today is a fixed offset for one timezone, not a general per-channel timezone lookup.",
+    ],
+  },
   // ── Template: copy this block above, fill it in, save ──────────────────
   // {
   //   slug: "case-slug",
