@@ -6,6 +6,10 @@ Personal site and a shed of tiny, share-first web tools, live at
 Built by a YouTube strategist who ships automation: the site is both a portfolio
 and a lab for small tools that people actually share.
 
+![The life-in-weeks tool, showing a drawn grid of 1,474 weeks lived out of an 80-year life](public/assets/screenshots/life-in-weeks.png)
+
+`life-in-weeks`, one of the static share-first tools below, drawing a grid from a date of birth.
+
 ## Stack
 
 - Next.js 16 (App Router) + React 19 + TypeScript
