@@ -126,7 +126,12 @@ export default function Home() {
             <p className="mt-6 text-lg text-ink-soft">
               By day I&rsquo;m a YouTube strategist, deep in content and data: competitive intelligence for education
               channels, transcripts, market numbers. I kept building little tools to make the grind less manual, then
-              realised creatives and creators everywhere fight the same grind.
+              realised creatives and creators everywhere fight the same grind. The strategy work and its results are
+              at{" "}
+              <a href="https://yt.shivamvashisth.com" target="_blank" rel="noopener noreferrer" className="text-acc-sky underline-offset-2 hover:underline">
+                yt.shivamvashisth.com
+              </a>
+              .
             </p>
           </Reveal>
           <Reveal>
