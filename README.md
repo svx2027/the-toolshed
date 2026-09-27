@@ -47,6 +47,16 @@ npm install
 npm run dev
 ```
 
+## Build check
+
+![build](https://github.com/svx2027/the-toolshed/actions/workflows/build.yml/badge.svg)
+
+CI runs `npm ci && npm run build` (Next.js's own production build, including
+the full TypeScript check) on every push and PR. It's a build/type-check
+smoke test, not a test suite: there's no `tests/` directory here yet, so this
+only proves the site still compiles and every route still generates, not that
+any specific page behaves correctly.
+
 ## Design notes
 
 Security choices are documented inline where they live (see the subscribe
