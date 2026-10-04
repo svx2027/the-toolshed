@@ -62,3 +62,11 @@ any specific page behaves correctly.
 Security choices are documented inline where they live (see the subscribe
 route). The Supabase key in the fallback is a publishable anon key by design:
 row-level security allows INSERT only, so it cannot read anything.
+
+## Related tools
+
+- [shivam-download-files](https://github.com/svx2027/shivam-download-files):
+  the other live web product — a Spotlight-style public file vault with
+  Postgres full-text + typo-tolerant search and signed-URL downloads.
+
+Full index of all public repos: [github.com/svx2027](https://github.com/svx2027).
