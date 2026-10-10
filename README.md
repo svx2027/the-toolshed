@@ -40,6 +40,29 @@ and a lab for small tools that people actually share.
   Supabase with a honeypot field, hashed-IP rate limiting, uniform responses to
   avoid email enumeration, and no service-role key anywhere.
 
+### Two more tools, in use
+
+<table>
+<tr>
+<td width="50%">
+
+![The read-rate tool's result screen: 292 words per minute, Fast, faster than 78% of readers, 3/3 comprehension, 58.0s](public/assets/screenshots/read-rate.png)
+
+`read-rate` after a real run: passage read, quiz answered, comprehension-gated
+result shown.
+
+</td>
+<td width="50%">
+
+![The year-in-emoji tool: twelve months each with an emoji and a caption on the left, the matching share card rendering live on the right](public/assets/screenshots/year-in-emoji.png)
+
+`year-in-emoji` mid-edit: the month editor on the left builds the share card
+live on the right.
+
+</td>
+</tr>
+</table>
+
 ## Run locally
 
 ```bash
