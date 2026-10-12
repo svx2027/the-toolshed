@@ -222,6 +222,62 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Timezone handling today is a fixed offset for one timezone, not a general per-channel timezone lookup.",
     ],
   },
+  {
+    slug: "prove-it-without-the-password",
+    title: "Proving a bulk update worked without ever asking for the password",
+    dek: "A batch rewrite of titles, descriptions, and tags across a whole YouTube playlist, authorized by the channel owner without handing over their login, and proven after the fact by reading the platform back, not by trusting the script's own log.",
+    repoName: "yt-bulk-metadata-kit",
+    repoUrl: "https://github.com/svx2027/yt-bulk-metadata-kit",
+    dated: "October 2026",
+    readMinutes: 4,
+    stats: [
+      { value: "6", label: "scripts, each safe to re-run on its own" },
+      { value: "3", label: "metadata fields the YouTube API wipes on a write, with no warning" },
+      { value: "13", label: "tests covering the retry and idempotency logic" },
+    ],
+    sections: [
+      {
+        heading: "The owner should never have to hand over the keys",
+        body: [
+          "Retitling, re-tagging, and commenting across a whole playlist by hand in YouTube Studio has no audit trail, and it usually means the channel owner either does it themselves or gives someone else their login to do it for them. Neither is good: the first doesn't scale past a handful of videos, and the second means handing over full control of the channel just to change some titles.",
+          "The fix is OAuth, not a password and not a headless browser pretending to be the owner. The owner clicks through Google's own consent screen once, a token comes back scoped to what the app asked for, and the person running the scripts never sees or needs a login at all.",
+        ],
+      },
+      {
+        heading: "The API will quietly erase fields you didn't touch",
+        body: [
+          "The YouTube Data API's video-update call takes the entire metadata snippet, not a per-field patch. Send only the new title, description, and tags, and the API happily wipes the category, default language, and default audio language along with it, with no error and no warning.",
+          "The fix has to run before the first write, not after: a snapshot script reads and saves every field that matters, including the three nobody meant to touch, so the update script can carry them forward on every single request. Skipping that one step is how a simple retitle quietly breaks a video's language metadata.",
+        ],
+      },
+      {
+        heading: "Idempotent by design, so a crash costs nothing",
+        body: [
+          "A run against dozens of videos can die at any point: a rate limit, a dropped connection, a closed laptop lid. Every script that writes reads its own log first, builds the set of videos it already finished, and skips them, so the same command is always safe to run again from wherever it stopped.",
+          "That same design has one sharp edge, disclosed rather than hidden: a title update builds the new title from whatever the video's live title already is, not from an original stored anywhere. If the log gets corrupted mid-run and a video gets reprocessed, the suffix gets appended a second time, and a third on the next bad re-run. The fix isn't clever code, it's telling the person running it to check the log file is intact before trusting a re-run.",
+        ],
+      },
+      {
+        heading: "Proof that isn't the script's own opinion of itself",
+        body: [
+          "A verification step exists specifically for the case where the person running the update doesn't have, and shouldn't need, Studio access to the channel being changed. It re-fetches every video's current state straight from the API and prints a report, rather than reading back whatever the update script logged about itself.",
+          "That distinction matters more than it sounds: a log only proves a script believed it succeeded. A fresh read from the same source YouTube itself serves is the only way to hand a channel owner proof of what actually changed, without asking them to go look for themselves.",
+        ],
+      },
+      {
+        heading: "What actually shipped",
+        body: [
+          "Six scripts cover the whole arc: one-time OAuth authorization, a pre-write snapshot, the bulk title and description and tag update, a paced comment post across every video, a live-state verification report, and a snapshot-based revert. Comment pacing in particular is a deliberate 8 to 15 second randomized delay between posts, sized from what actually trips YouTube's spam filter, not a guess.",
+        ],
+      },
+    ],
+    honestScope: [
+      "No sample run is included: this kit talks to a real channel's videos through an owner's own OAuth token, and there is no keyless, no-side-effects way to demonstrate that against a channel that isn't yours. The scripts and their tests are the artifact to read.",
+      "Revert restores metadata, never comments. YouTube's API has no bulk delete for comments, so an undo is only ever partial by platform design, and the README says so rather than implying a full undo exists.",
+      "The API cannot pin a comment. That stays a manual, one-video-at-a-time click in Studio no matter what this kit automates.",
+      "A comment can report success at the API layer and still get silently removed minutes later by YouTube's own spam filter; nothing here can detect that after the fact.",
+    ],
+  },
   // ── Template: copy this block above, fill it in, save ──────────────────
   // {
   //   slug: "case-slug",
