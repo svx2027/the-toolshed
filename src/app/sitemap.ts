@@ -20,6 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly" as const,
       priority: 0.6,
     })),
+    { url: `${BASE}/how-this-portfolio-builds-itself/`, changeFrequency: "yearly" as const, priority: 0.6 },
     ...TOOLS.filter((t) => t.live).map((t) => ({
       url: `${BASE}/t/${t.slug}/`,
       changeFrequency: "monthly" as const,

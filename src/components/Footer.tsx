@@ -32,6 +32,10 @@ export function Footer() {
               Case studies
             </a>
             <span aria-hidden>·</span>
+            <a href="/how-this-portfolio-builds-itself/" className="text-ink-soft transition-colors hover:text-ink">
+              How it&apos;s built
+            </a>
+            <span aria-hidden>·</span>
             <a href="https://yt.shivamvashisth.com" target="_blank" rel="noopener noreferrer" className="text-ink-soft transition-colors hover:text-ink">
               YouTube strategy ↗
             </a>

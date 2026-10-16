@@ -19,6 +19,7 @@ const SECONDARY: Item[] = [
   { label: "Start here", href: "#start" },
   { label: "Free resources", href: "#resources" },
   { label: "Case studies", href: "/case-studies/" },
+  { label: "How it's built", href: "/how-this-portfolio-builds-itself/" },
   { label: "About", href: "#about" },
   { label: "Help", href: "#faq" },
   { label: "Contact", href: "#contact" },
