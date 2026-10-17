@@ -86,6 +86,19 @@ Security choices are documented inline where they live (see the subscribe
 route). The Supabase key in the fallback is a publishable anon key by design:
 row-level security allows INSERT only, so it cannot read anything.
 
+## Honest scope
+
+- CI is a build/type-check smoke test, not a test suite (see Build check
+  above) — there's no `tests/` directory, so a route can compile clean and
+  still render wrong content.
+- `comment-goldmine` and `outlier-radar` are listed as brewing because
+  they're genuinely not live yet, not placeholders left in by mistake.
+- One maintainer, one Vercel environment: no staging deploy, no uptime
+  monitoring beyond Vercel Analytics.
+- The subscribe flow is honeypot-gated and rate-limited by hashed IP, not
+  behind a CAPTCHA — it slows down casual abuse, not a motivated one with
+  many IPs.
+
 ## Related tools
 
 - [shivam-download-files](https://github.com/svx2027/shivam-download-files):
