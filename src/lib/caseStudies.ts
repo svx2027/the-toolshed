@@ -278,6 +278,63 @@ export const CASE_STUDIES: CaseStudy[] = [
       "A comment can report success at the API layer and still get silently removed minutes later by YouTube's own spam filter; nothing here can detect that after the fact.",
     ],
   },
+  {
+    slug: "a-clean-transcript-is-not-proof",
+    title: "A transcript that reads clean is not proof the audio is",
+    dek: "A pipeline that turns a long bilingual livestream into short-clip candidates found that forcing a transcription model into one language doesn't make it fail on the other, it quietly translates over it, which is why every candidate clip gets re-checked before an editor ever sees it.",
+    repoName: "livestream-clip-cutter",
+    repoUrl: "https://github.com/svx2027/livestream-clip-cutter",
+    dated: "October 2026",
+    readMinutes: 5,
+    stats: [
+      { value: "13", label: "tests pinning the exact calculations an editor's clip depends on" },
+      { value: "2", label: "independent transcription passes a window must clear before it's trusted" },
+      { value: "0", label: "API keys or secrets needed anywhere in the pipeline" },
+    ],
+    sections: [
+      {
+        heading: "Finding the moments worth cutting is the easy part",
+        body: [
+          "A 60 to 90 minute bilingual livestream Q&A usually has a handful of moments worth turning into a standalone vertical clip: a sharp answer to a chat question, a strong teaching moment that stands on its own. Scrubbing the timeline by hand to find them is slow but straightforward.",
+          "The harder problem showed up once clips were being chosen from a transcript instead of by ear: on a bilingual stream, a clip that reads perfectly clean in the transcript can still have a stretch of the other language sitting in the actual audio, and the transcript gives no hint that it's there.",
+        ],
+      },
+      {
+        heading: "The finding that mattered: a forced-language transcript can't certify the audio",
+        body: [
+          "Forcing a speech-to-text model to transcribe in one language doesn't make it fail, or flag, or leave a gap where the speaker actually switched languages. It translates that stretch into plausible text in the forced language, or drops it outright, and the transcript comes back fluent and internally consistent the whole way through, even over audio that code-switches.",
+          "That means a clip whose only quality gate is 'does the transcript read clean' can still ship with untranslated audio in the other language, with nothing in the text that approved the clip pointing at it. A transcript being clean in one language is not evidence that the audio is, and that gap is the reason this pipeline runs a second, independent check per clip rather than trusting the first transcript alone.",
+        ],
+      },
+      {
+        heading: "Two fixes that looked reasonable and weren't",
+        body: [
+          "The first instinct was a full-file pass with the language forced the other way on a fast model, to see what came back. Over a long recording a fast model forced into the wrong language degrades into repetition loops far more often than it produces anything useful, and it also transliterates genuinely in-language speech into the other script instead of leaving it alone, so even a same-script heuristic can't separate the two cases reliably.",
+          "The second instinct was to save model-load time by handing every candidate window to one transcription-tool invocation as a batch of files. At least one popular CLI tool silently writes only the last file's output, saved under every input file's name, so every window except the last one ends up holding a copy of a different clip's transcript, and nothing about the run looks like it failed.",
+        ],
+      },
+      {
+        heading: "What actually works: re-read the window, not the file, with the full model",
+        body: [
+          "The fix that held up: re-transcribe only the candidate window, not the whole recording, with the secondary language forced, using the same full-quality model as the primary pass rather than a faster one. A single window is short enough that the full model doesn't cost meaningfully more time, and it doesn't hallucinate loops the way the fast model does over a full file.",
+          "Reading the result still takes judgment, not just a script. A loanword, or the primary language merely spelled out in the secondary script, still means the audio is the primary language; real grammar in the secondary language, actual verb forms and sentence structure rather than a borrowed noun sitting inside a primary-language sentence, means the speaker genuinely switched, and the window gets flagged for the editor to trim.",
+        ],
+      },
+      {
+        heading: "What actually shipped",
+        body: [
+          "A seven-step script pipeline runs from a keyless audio-only download through word-level transcription to the per-window language re-check, with every candidate clip required to land between 20 and 60 seconds and snap to an exact word boundary before it reaches an editor. Deciding which moments are worth a clip in the first place is deliberately left out of the automation: that judgment call stays with a human, or a closely supervised model, not a heuristic.",
+          "13 tests cover the pipeline's file-free, credential-free logic, the timestamp formatting, the exact-window text extraction with its padding and overlap-fallback behavior, and the script-ratio detector behind the secondary-language flag, because those are exactly the calculations that decide what text an editor sees and whether a window gets flagged for hidden audio in the other language.",
+        ],
+      },
+    ],
+    honestScope: [
+      "Apple Silicon only: the local transcription model needs Metal, so this pipeline doesn't run as-is on Linux or an Intel Mac, and a slower CPU fallback isn't wired up yet.",
+      "This produces clip data, not video: nothing here renders, trims, or exports an actual clip file. The output is exact timestamps and verified text for an editor, or a downstream tool, to cut from.",
+      "Tuned for one bilingual pair. The language-check scripts assume a primary and secondary language and a specific script to detect; a different language pair needs its own script-detection rule.",
+      "A passing per-window check still means 'clean, pending a human listen,' not 'verified beyond review': word-level timestamps drift by roughly a second, and whether a moment flows as a complete clip is still a judgment call no script makes.",
+    ],
+  },
   // ── Template: copy this block above, fill it in, save ──────────────────
   // {
   //   slug: "case-slug",
