@@ -123,8 +123,8 @@
         </div>
 
         <div class="share-row" id="shareRow" hidden>
-          <button type="button" class="btn" id="shareBtn">Share this card</button>
-          <button type="button" class="btn ghost" id="downloadBtn">Download PNG</button>
+          <button type="button" class="btn" id="shareBtn" disabled>Share this card</button>
+          <button type="button" class="btn ghost" id="downloadBtn" disabled>Download PNG</button>
           <button type="button" class="btn ghost" id="linkBtn">Copy link to this tool</button>
         </div>
       </div>
@@ -207,6 +207,7 @@
 
     function showResult(s) {
       state = s;
+      shareBtn.disabled = false; downloadBtn.disabled = false;
       var left = s.total - s.lived;
       readoutBig.textContent = fmt(s.lived) + ' weeks lived · ' + fmt(left) + ' weeks left';
       readoutSub.textContent = s.percent.toFixed(1) + '% of an ' + s.exp + '-year life';
@@ -221,6 +222,7 @@
 
     function showHint(msg) {
       state = null;
+      shareBtn.disabled = true; downloadBtn.disabled = true;
       readout.hidden = true;
       legend.hidden = true;
       gridwrap.hidden = true;
@@ -312,7 +314,7 @@
 
         if (!isNow && !isLived) {
           ctx.lineWidth = Math.max(1, cell * 0.05);
-          ctx.strokeStyle = '#e3ddd3';
+          ctx.strokeStyle = '#D7D8DD';
           ctx.stroke();
         }
       }

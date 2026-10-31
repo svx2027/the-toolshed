@@ -4,9 +4,10 @@
 
   /* ---------- palette (mirrors brand.css) ---------- */
   TS.colors = {
-    paper: '#FCFCFA', ink: '#1C1B1A', inkSoft: '#56524d', inkFaint: '#8b867f',
+    paper: '#F5F5F1', ink: '#111216', inkSoft: '#3F4150', inkFaint: '#5E6170', line: '#D7D8DD',
+    acc: '#1F2FE0', strap: '#FFD60A', win: '#0E8F5A', lose: '#B5123A',
     lavender: '#E6E0F2', peach: '#F8E2D4', mint: '#DFF0E6', sky: '#DCEAF5',
-    accSky: '#2f6fae', accMint: '#2f8f63', accPeach: '#c2693a', accLavender: '#6d5bb0', accRose: '#c25274'
+    accSky: '#1F2FE0', accMint: '#0E8F5A', accPeach: '#B07400', accLavender: '#1F2FE0', accRose: '#B5123A'
   };
 
   /* ---------- toast ---------- */
@@ -32,26 +33,17 @@
   };
 
   // soft pastel-rainbow wash for share cards
+  // share-card background: paper, a yellow strap along the top, a hairline frame (the site's look)
   TS.washBackground = function (ctx, w, h) {
     ctx.fillStyle = TS.colors.paper;
     ctx.fillRect(0, 0, w, h);
-    const blooms = [
-      [w * 0.12, h * 0.08, 'rgba(230,224,242,0.9)'],
-      [w * 0.92, h * 0.12, 'rgba(248,226,212,0.85)'],
-      [w * 0.85, h * 0.9, 'rgba(223,240,230,0.85)'],
-      [w * 0.1, h * 0.92, 'rgba(220,234,245,0.88)']
-    ];
-    blooms.forEach(([cx, cy, col]) => {
-      const r = Math.max(w, h) * 0.6;
-      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-      g.addColorStop(0, col);
-      g.addColorStop(1, 'rgba(252,252,250,0)');
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, w, h);
-    });
+    ctx.fillStyle = TS.colors.strap;
+    ctx.fillRect(0, 0, w, Math.round(h * 0.014));
+    ctx.strokeStyle = TS.colors.line;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(Math.round(w * 0.045), Math.round(h * 0.045), Math.round(w * 0.91), Math.round(h * 0.91));
   };
 
-  // wrap text into lines that fit maxWidth; returns array of lines
   TS.wrapText = function (ctx, text, maxWidth) {
     const words = String(text).split(/\s+/);
     const lines = [];
@@ -76,9 +68,10 @@
     return px;
   };
 
-  TS.SERIF = "Fraunces, Georgia, serif";
-  TS.SANS = "Inter, -apple-system, system-ui, sans-serif";
-  TS.MONO = "'JetBrains Mono', ui-monospace, Menlo, monospace";
+  TS.SERIF = "'Big Shoulders', 'Arial Narrow', Impact, sans-serif";   // the display face (name kept for the pages)
+  TS.DISPLAY = TS.SERIF;
+  TS.SANS = "'Anek Latin', 'Segoe UI', system-ui, sans-serif";
+  TS.MONO = "'Sometype Mono', ui-monospace, Menlo, monospace";
   TS.SITE = "shivamvashisth.com";
 
   // small site watermark bottom-centre
@@ -86,7 +79,7 @@
     ctx.save();
     ctx.textAlign = 'center';
     ctx.fillStyle = TS.colors.inkFaint;
-    ctx.font = `500 26px ${TS.MONO}`;
+    ctx.font = `400 26px ${TS.MONO}`;
     ctx.fillText(label || TS.SITE, w / 2, h - 70);
     ctx.restore();
   };
@@ -139,7 +132,7 @@
     c.width = innerWidth; c.height = innerHeight;
     document.body.appendChild(c);
     const ctx = c.getContext('2d');
-    const cols = ['#6d5bb0', '#c2693a', '#2f8f63', '#2f6fae', '#c25274'];
+    const cols = ['#FFD60A', '#1F2FE0', '#111216', '#0E8F5A', '#B5123A'];
     const N = 120, parts = [];
     for (let i = 0; i < N; i++) parts.push({
       x: innerWidth / 2 + (Math.random() - .5) * 200, y: innerHeight / 3,
@@ -159,19 +152,47 @@
   };
 
   /* ---------- shared footer injector ---------- */
+  // every live tool, in Garage order, so a page can point at the next one
+  TS.TOOLS = [
+    ['life-in-weeks', 'Life in Weeks', 'See your whole life as a grid of weeks, then post it.'],
+    ['read-rate', 'Read Rate', 'Find your real reading speed in 60 seconds.'],
+    ['year-in-emoji', 'Year in Emoji', 'Sum up your year in twelve emoji and twelve words.'],
+    ['aligned', 'Aligned', 'See how aligned you and someone else really are.'],
+    ['drift', 'Drift', 'A one-button calm game. Hop, and let the thoughts pass.']
+  ];
+  TS.currentSlug = function () {
+    var m = location.pathname.match(/\/t\/([a-z0-9-]+)/);
+    return m ? m[1] : '';
+  };
+  // "Try another tool": the next live tool after this one, so nobody dead-ends at the bottom
+  TS.nextTool = function () {
+    var slug = TS.currentSlug();
+    var i = -1;
+    for (var k = 0; k < TS.TOOLS.length; k++) if (TS.TOOLS[k][0] === slug) i = k;
+    var t = TS.TOOLS[(i + 1) % TS.TOOLS.length];
+    return `<div class="next-tool"><div class="wrap">
+      <div><p class="eyebrow">Try another tool</p><div class="next-name">${t[1]}</div><p class="next-desc">${t[2]}</p></div>
+      <a class="btn ghost" href="/t/${t[0]}/">Open ${t[1]} →</a>
+    </div></div>`;
+  };
+
   TS.footer = function () {
     const year = new Date().getFullYear();
-    return `<footer class="foot"><div class="wrap">
+    return TS.nextTool() + `<footer class="foot"><div class="wrap">
       <span>Made in a garage, with AI, by one creator who replies to DMs.</span>
-      <span>© ${year} Code for Creatives India · <a href="/">The Garage</a> · <a href="https://instagram.com/svx2027" target="_blank" rel="noopener">@svx2027</a> · <a href="mailto:vashisthshivam00@gmail.com">vashisthshivam00@gmail.com</a></span>
+      <span class="foot-meta">© ${year} Code for Creatives India · <a href="/">The Garage</a> · <a href="/#work">Work with me</a> · <a href="https://instagram.com/svx2027" target="_blank" rel="noopener">@svx2027</a> · <a href="mailto:vashisthshivam00@gmail.com">vashisthshivam00@gmail.com</a></span>
     </div></footer>`;
   };
 
-  // standard back-to-Garage bar for tool pages
-  TS.toolnav = function () {
+  // the strip at the top of every tool: back to the Garage, the tool's name, more tools, and the theme toggle
+  TS.toolnav = function (name) {
+    var slug = TS.currentSlug(), label = name || '';
+    if (!label) for (var k = 0; k < TS.TOOLS.length; k++) if (TS.TOOLS[k][0] === slug) label = TS.TOOLS[k][1];
+    if (!label) label = (document.title.split(':')[0] || '').trim();
     return `<nav class="toolnav"><div class="wrap">
       <a class="back" href="/">← The Garage</a>
-      <a class="back" href="/#toolshed">more tools</a>
+      <span class="tool-name">${label}</span>
+      <span class="right"><a class="back more" href="/#toolshed">All tools</a></span>
     </div></nav>`;
   };
 
@@ -240,7 +261,7 @@
     try { localStorage.setItem('ts_theme', t); } catch (e) {}
     var btns = document.querySelectorAll('.theme-toggle');
     for (var i = 0; i < btns.length; i++) {
-      btns[i].innerHTML = t === 'dark' ? SUN : MOON;
+      btns[i].textContent = t === 'dark' ? 'Light' : 'Dark';
       btns[i].setAttribute('aria-label', t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
       btns[i].setAttribute('title', t === 'dark' ? 'Light mode' : 'Dark mode');
     }
@@ -253,7 +274,7 @@
       var sys = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
       document.documentElement.setAttribute('data-theme', stored || sys);
     }
-    var host = document.querySelector('.nav .links') || document.querySelector('.toolnav .wrap');
+    var host = document.querySelector('.nav .links') || document.querySelector('.toolnav .right') || document.querySelector('.toolnav .wrap');
     if (host && !host.querySelector('.theme-toggle')) {
       var btn = document.createElement('button');
       btn.type = 'button';
@@ -266,7 +287,10 @@
 
   window.TS = TS;
 
-  function TS_init() { TS.initTheme(); TS.initJargon(); }
+  function TS_init() {
+    TS.initTheme(); TS.initJargon();
+    try { if (document.fonts) { document.fonts.load('900 40px "Big Shoulders"'); document.fonts.load('600 20px "Anek Latin"'); document.fonts.load('400 20px "Sometype Mono"'); } } catch (e) {}
+  }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', TS_init);
   else TS_init();
 })();
