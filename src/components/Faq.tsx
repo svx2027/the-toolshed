@@ -1,81 +1,52 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { FAQ_ITEMS } from "@/lib/faq";
-import { Reveal } from "./Reveal";
 
 export function Faq() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="relative z-10 mx-auto max-w-3xl scroll-mt-24 px-5 py-24 sm:px-7 sm:py-28">
-      <Reveal className="text-center">
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-ink-faint">Help</p>
-        <h2 className="mt-2 font-display text-4xl font-medium tracking-tight text-ink sm:text-5xl">
-          Fair questions
-        </h2>
-      </Reveal>
+    <section id="faq" className="scroll-mt-28 border-b border-line">
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+        <p className="t-kicker">Help</p>
+        <h2 className="t-h2 mt-4 text-[clamp(40px,6.5vw,80px)] text-ink">Fair questions</h2>
 
-      <Reveal delay={0.05}>
-        <div className="mt-10 divide-y divide-line rounded-3xl border border-line bg-card shadow-sm">
+        <div className="mt-8 max-w-3xl border-t border-line">
           {FAQ_ITEMS.map((item, i) => {
             const isOpen = open === i;
             return (
-              <div key={item.q}>
+              <div key={item.q} className="border-b border-line">
                 <button
                   type="button"
                   onClick={() => setOpen(isOpen ? null : i)}
                   aria-expanded={isOpen}
                   aria-controls={`faq-a-${i}`}
-                  className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left sm:px-8"
+                  className="flex w-full items-start justify-between gap-4 py-4 text-left"
                 >
-                  <span className="font-display text-lg font-medium text-ink">{item.q}</span>
-                  <motion.span
-                    aria-hidden
-                    animate={{ rotate: isOpen ? 45 : 0 }}
-                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="relative block h-4 w-4 shrink-0 text-ink-faint"
-                  >
-                    <span className="absolute left-0 top-[7px] block h-[2px] w-4 bg-current" />
-                    <span className="absolute left-[7px] top-0 block h-4 w-[2px] bg-current" />
-                  </motion.span>
+                  <span className="text-[17px] font-semibold text-ink">{item.q}</span>
+                  <span aria-hidden className="t-num shrink-0 text-[22px] text-ink-faint">
+                    {isOpen ? "–" : "+"}
+                  </span>
                 </button>
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      id={`faq-a-${i}`}
-                      key="body"
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                      className="overflow-hidden"
-                    >
-                      <p className="px-6 pb-6 text-ink-soft sm:px-8">{item.a}</p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {isOpen && (
+                  <div id={`faq-a-${i}`}>
+                    <p className="pb-5 text-[16px] leading-relaxed text-ink-soft">{item.a}</p>
+                  </div>
+                )}
               </div>
             );
           })}
         </div>
-      </Reveal>
 
-      <Reveal delay={0.1}>
-        <p className="mt-6 text-center text-sm text-ink-faint">
+        <p className="mt-6 text-[15px] text-ink-faint">
           Something else on your mind?{" "}
-          <a
-            href="https://instagram.com/svx2027"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-acc-sky underline-offset-2 hover:underline"
-          >
+          <a href="https://instagram.com/svx2027" target="_blank" rel="noopener noreferrer" className="text-acc underline underline-offset-4">
             DM me
           </a>{" "}
           and ask.
         </p>
-      </Reveal>
+      </div>
     </section>
   );
 }

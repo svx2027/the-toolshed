@@ -1,6 +1,5 @@
 "use client";
 
-import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -28,8 +27,6 @@ const SECONDARY: Item[] = [
 
 export function Nav() {
   const [open, setOpen] = useState(false);
-  const { scrollYProgress } = useScroll();
-  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.3 });
   const toggleRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
@@ -40,7 +37,7 @@ export function Nav() {
     document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
-    const t = window.setTimeout(() => closeRef.current?.focus(), 80);
+    const t = window.setTimeout(() => closeRef.current?.focus(), 40);
     return () => {
       document.body.style.overflow = prev;
       window.removeEventListener("keydown", onKey);
@@ -57,47 +54,35 @@ export function Nav() {
     }
     setOpen(false);
     if (item.href.startsWith("/")) {
-      window.setTimeout(() => {
-        window.location.href = item.href;
-      }, 240);
+      window.location.href = item.href;
       return;
     }
     const id = item.href.replace(/^#/, "");
-    window.setTimeout(() => {
-      if (id === "top") window.scrollTo({ top: 0, behavior: "smooth" });
-      else document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 240);
+    if (id === "top") window.scrollTo({ top: 0, behavior: "smooth" });
+    else document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
   return (
     <>
-      {/* hairline scroll-progress line */}
-      <motion.div
-        aria-hidden
-        style={{ scaleX: progress }}
-        className="fixed inset-x-0 top-0 z-[60] h-[2px] origin-left bg-acc-lavender"
-      />
-
-      {/* top bar: own translucent bg so text stays readable over any section
-          (incl. the inverted Mission band that scrolls beneath it) */}
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-line/60 bg-paper/80 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-5 sm:px-7">
+      {/* top bar */}
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-paper">
+        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="min-w-0 truncate font-display text-base font-semibold text-ink sm:text-lg"
+            className="t-h3 min-w-0 truncate text-[20px] text-ink"
             aria-label="Code for Creatives India, back to top"
           >
             <span className="hidden sm:inline">Code&nbsp;for&nbsp;Creatives&nbsp;India</span>
             <span className="sm:hidden">Code&nbsp;for&nbsp;Creatives</span>
           </button>
 
-          <div className="flex flex-shrink-0 items-center gap-2 sm:gap-2.5">
+          <div className="flex flex-shrink-0 items-center gap-2">
             {/* Files: persistent primary destination, outside the menu */}
             <a
               href={FILES_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 rounded-full border border-line-strong px-3 py-2 text-sm font-medium text-ink transition-colors hover:border-ink sm:px-4"
+              className="btn-ghost !py-2 !text-[13px]"
             >
               Files
               <span aria-hidden className="text-ink-faint">↗</span>
@@ -108,9 +93,9 @@ export function Nav() {
               onClick={() => setOpen((v) => !v)}
               aria-expanded={open}
               aria-label={open ? "Close menu" : "Open menu"}
-              className="group inline-flex items-center gap-2.5 rounded-full border border-line-strong px-3 py-2 text-sm font-medium text-ink transition-colors hover:border-ink sm:px-4"
+              className="btn !py-2 !text-[13px]"
             >
-              <span className="hidden font-mono text-xs uppercase tracking-[0.18em] sm:inline">Index</span>
+              <span className="font-mono text-[12px] uppercase tracking-[0.08em]">Index</span>
               <span className="relative block h-3 w-4" aria-hidden>
                 <span className="absolute left-0 top-0.5 block h-[2px] w-4 bg-current" />
                 <span className="absolute left-0 top-[9px] block h-[2px] w-4 bg-current" />
@@ -120,75 +105,52 @@ export function Nav() {
         </div>
       </header>
 
-      {/* full-screen overlay takeover */}
-      <AnimatePresence>
-        {open && (
-          <motion.nav
-            key="overlay"
-            initial={{ clipPath: "inset(0 0 100% 0)" }}
-            animate={{ clipPath: "inset(0 0 0% 0)" }}
-            exit={{ clipPath: "inset(0 0 100% 0)" }}
-            transition={{ duration: 0.6, ease: [0.83, 0, 0.17, 1] }}
-            className="fixed inset-0 z-[55] flex flex-col bg-ink text-paper"
-            aria-label="Site menu"
+      {/* the Index: a full sheet in ink, same three doors, same small row */}
+      {open && (
+        <nav className="fixed inset-0 z-[55] flex flex-col overflow-y-auto bg-ink text-paper" aria-label="Site menu">
+          <button
+            ref={closeRef}
+            onClick={() => setOpen(false)}
+            aria-label="Close menu"
+            className="absolute right-4 top-3 z-10 inline-flex h-10 w-10 items-center justify-center border border-paper/30 text-paper hover:border-paper sm:right-6"
           >
-            {/* explicit close: top-right X */}
-            <button
-              ref={closeRef}
-              onClick={() => setOpen(false)}
-              aria-label="Close menu"
-              className="absolute right-5 top-5 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full border border-paper/25 text-paper transition-colors hover:border-paper focus-visible:outline focus-visible:outline-2 focus-visible:outline-paper sm:right-7"
-            >
-              <span className="relative block h-4 w-4" aria-hidden>
-                <span className="absolute left-0 top-1.5 block h-[2px] w-4 rotate-45 bg-current" />
-                <span className="absolute left-0 top-1.5 block h-[2px] w-4 -rotate-45 bg-current" />
-              </span>
-            </button>
+            <span className="relative block h-4 w-4" aria-hidden>
+              <span className="absolute left-0 top-1.5 block h-[2px] w-4 rotate-45 bg-current" />
+              <span className="absolute left-0 top-1.5 block h-[2px] w-4 -rotate-45 bg-current" />
+            </span>
+          </button>
 
-            <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-5 sm:px-7">
-              <p className="mb-8 font-mono text-xs uppercase tracking-[0.3em] text-paper/50">The index</p>
-              <ul className="space-y-1 sm:space-y-2">
-                {PRIMARY.map((item, i) => (
-                  <motion.li
-                    key={item.label}
-                    initial={{ opacity: 0, y: 36 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 20 }}
-                    transition={{ duration: 0.5, delay: 0.12 + i * 0.07, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <button onClick={() => go(item)} className="group flex w-full items-baseline gap-4 py-1.5 text-left sm:gap-7">
-                      <span className="font-mono text-sm text-paper/40 sm:text-base">{item.n}</span>
-                      <span className="kinetic-link font-display text-[2.8rem] font-medium leading-[1.04] tracking-tight sm:text-[4.8rem]">
-                        {item.label}
-                        {item.external && <span className="align-super text-[0.38em] text-paper/50"> ↗</span>}
-                      </span>
-                    </button>
-                  </motion.li>
-                ))}
-              </ul>
-
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ delay: 0.5 }}
-                className="mt-12 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-xs uppercase tracking-[0.16em] text-paper/55"
-              >
-                {SECONDARY.map((s) => (
-                  <button key={s.label} onClick={() => go(s)} className="transition-colors hover:text-paper">
-                    {s.label}
-                    {s.external && <span aria-hidden> ↗</span>}
+          <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-20 sm:px-6">
+            <p className="t-kicker mb-8 !text-paper/50">The index</p>
+            <ul className="divide-y divide-paper/15 border-y border-paper/15">
+              {PRIMARY.map((item) => (
+                <li key={item.label}>
+                  <button onClick={() => go(item)} className="flex w-full items-baseline gap-5 py-4 text-left sm:gap-8">
+                    <span className="font-mono text-sm text-paper/40 sm:text-base">{item.n}</span>
+                    <span className="t-display text-[clamp(44px,9vw,110px)] hover:text-strap">
+                      {item.label}
+                      {item.external && <span className="align-super text-[0.38em] text-paper/50"> ↗</span>}
+                    </span>
                   </button>
-                ))}
-                <a href="mailto:vashisthshivam00@gmail.com" className="transition-colors hover:text-paper">
-                  vashisthshivam00@gmail.com
-                </a>
-                <span className="text-paper/35">Code for Creatives India</span>
-              </motion.div>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-10 flex flex-wrap items-center gap-x-5 gap-y-3 font-mono text-[12px] uppercase tracking-[0.08em] text-paper/60">
+              {SECONDARY.map((s) => (
+                <button key={s.label} onClick={() => go(s)} className="hover:text-paper">
+                  {s.label}
+                  {s.external && <span aria-hidden> ↗</span>}
+                </button>
+              ))}
+              <a href="mailto:vashisthshivam00@gmail.com" className="hover:text-paper">
+                vashisthshivam00@gmail.com
+              </a>
+              <span className="text-paper/35">Code for Creatives India</span>
             </div>
-          </motion.nav>
-        )}
-      </AnimatePresence>
+          </div>
+        </nav>
+      )}
     </>
   );
 }

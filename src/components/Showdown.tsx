@@ -6,6 +6,24 @@ import { PAIRS_URL, NICHE_LABEL, shuffle, thumb, fmtViews, fmtX, type Pair, type
 type Side = "left" | "right";
 type Picked = { side: Side; win: boolean } | null;
 
+/* Pointer tilt: the card leans toward the cursor while it hovers (pointer devices only, see .tilt in globals.css). */
+function tiltMove(e: React.PointerEvent<HTMLElement>) {
+  if (e.pointerType !== "mouse") return;
+  const el = e.currentTarget;
+  const r = el.getBoundingClientRect();
+  const px = (e.clientX - r.left) / r.width - 0.5;
+  const py = (e.clientY - r.top) / r.height - 0.5;
+  el.classList.remove("is-resting");
+  el.style.setProperty("--ry", `${(px * 10).toFixed(2)}deg`);
+  el.style.setProperty("--rx", `${(-py * 10).toFixed(2)}deg`);
+}
+function tiltLeave(e: React.PointerEvent<HTMLElement>) {
+  const el = e.currentTarget;
+  el.classList.add("is-resting");
+  el.style.setProperty("--ry", "0deg");
+  el.style.setProperty("--rx", "0deg");
+}
+
 export function Showdown() {
   const [pairs, setPairs] = useState<Pair[]>([]);
   const [qi, setQi] = useState(0);
@@ -38,9 +56,7 @@ export function Showdown() {
   }, []);
 
   if (!pairs.length) {
-    return (
-      <div className="min-h-[360px] animate-pulse rounded-3xl border border-line bg-card/60" aria-label="Loading the game" />
-    );
+    return <div className="min-h-[420px] border border-line bg-card" aria-label="Loading the game" />;
   }
 
   const pair = pairs[qi % pairs.length];
@@ -77,23 +93,21 @@ export function Showdown() {
   };
 
   return (
-    <div className="rounded-3xl border border-line bg-card p-5 shadow-xl sm:p-6">
-      <div className="mb-3 flex items-center justify-between">
-        <strong className="font-display text-lg font-semibold text-ink">Thumbnail Showdown</strong>
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-line-strong px-3 py-1 text-xs text-ink-soft">
-          streak <span className="font-mono text-ink">{streak}</span>
+    <div id="showdown" className="border border-line bg-card p-4 sm:p-5">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <strong className="t-h3 text-[22px] text-ink">Thumbnail Showdown</strong>
+        <span className="font-mono text-[12px] uppercase tracking-[0.08em] text-ink-faint">
+          streak <span className="text-ink">{streak}</span>
         </span>
       </div>
-      <p className="mb-3 text-[0.92rem] text-ink-soft">
+      <p className="mb-3 text-[15px] text-ink-soft">
         Two videos from the same niche. Which one over-performed its channel more? Tap one.
       </p>
 
-      <div className="mb-2.5">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-ink/5 px-2.5 py-1 font-mono text-[0.66rem] uppercase tracking-[0.12em] text-ink-soft">
-          <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-acc-lavender" />
-          same niche · {NICHE_LABEL[pair.n] ?? "Picks"}
-        </span>
-      </div>
+      <p className="t-kicker mb-3">
+        <i aria-hidden className="mr-2 inline-block h-2 w-2 rounded-full bg-acc align-[1px]" />
+        same niche: {NICHE_LABEL[pair.n] ?? "Picks"}
+      </p>
 
       <div className="grid grid-cols-2 gap-3">
         {(["left", "right"] as Side[]).map((side) => {
@@ -106,8 +120,10 @@ export function Showdown() {
               key={side}
               onClick={() => pick(side)}
               disabled={!!picked}
-              className={`overflow-hidden rounded-2xl border-2 bg-card text-left transition-all duration-150 ${
-                isWin ? "border-acc-mint" : isLose ? "border-line opacity-50" : "border-line hover:-translate-y-0.5 hover:border-line-strong hover:shadow-lg"
+              onPointerMove={picked ? undefined : tiltMove}
+              onPointerLeave={tiltLeave}
+              className={`tilt overflow-hidden border bg-card text-left ${
+                isWin ? "border-win" : isLose ? "border-line opacity-50" : "border-line hover:border-ink"
               }`}
             >
               <div className="bg-line">
@@ -130,14 +146,18 @@ export function Showdown() {
               </div>
               <div className="px-2.5 py-2">
                 <div
-                  className="font-display font-semibold leading-[1.25] text-ink [overflow-wrap:anywhere]"
-                  style={{ fontSize: "clamp(0.72rem,2.4vw,0.84rem)", minHeight: "2.5em" }}
+                  className="font-semibold leading-[1.25] text-ink [overflow-wrap:anywhere]"
+                  style={{ fontSize: "clamp(0.72rem,2.4vw,0.86rem)", minHeight: "2.5em" }}
                 >
                   {it.t}
                 </div>
-                <div className="mt-1.5 flex items-center justify-between gap-1.5 text-[0.72rem] text-ink-faint">
+                <div className="mt-1.5 flex items-end justify-between gap-1.5 text-[12px] text-ink-faint">
                   <span className="truncate">{it.ch}</span>
-                  {picked && <span className="whitespace-nowrap font-mono font-semibold text-ink">{fmtX(it.x)}</span>}
+                  {picked && (
+                    <span className={`t-num whitespace-nowrap text-[26px] ${isWin ? "text-win" : "text-lose"}`}>
+                      {fmtX(it.x).replace("outlier ", "")}
+                    </span>
+                  )}
                 </div>
               </div>
             </button>
@@ -151,22 +171,19 @@ export function Showdown() {
         <img src={thumb(nextPair.b.id)} alt="" width={1} height={1} loading="eager" />
       </div>
 
-      <div className="mt-3 min-h-[22px] text-[0.9rem] font-medium">
-        {result && <span className={result.good ? "text-acc-mint" : "text-acc-rose"}>{result.text}</span>}
+      <div className="mt-3 min-h-[22px] text-[15px] font-medium">
+        {result && <span className={result.good ? "text-win" : "text-lose"}>{result.text}</span>}
       </div>
 
       <div className="mt-3 flex items-center justify-between">
-        <span className="font-mono text-[0.8rem] text-ink-faint">best {best}</span>
-        <button
-          onClick={() => shareStreak(best)}
-          className="rounded-full border border-line-strong px-4 py-2 text-sm text-ink transition-colors hover:border-ink"
-        >
+        <span className="font-mono text-[12px] uppercase tracking-[0.08em] text-ink-faint">best {best}</span>
+        <button onClick={() => shareStreak(best)} className="btn-ghost !py-2 !text-[13px]">
           Share my streak
         </button>
       </div>
 
-      <p className="mt-3 text-[0.78rem] text-ink-faint">
-        “Breakout” = how far a video beat its own channel&rsquo;s average (via vidIQ). Real thumbnails fight dirty.
+      <p className="mt-3 text-[12px] text-ink-faint">
+        &ldquo;Breakout&rdquo; = how far a video beat its own channel&rsquo;s average (via vidIQ). Real thumbnails fight dirty.
       </p>
     </div>
   );
@@ -188,42 +205,49 @@ function schedulePrefetch(pairs: Pair[]) {
   else window.setTimeout(send, 2000);
 }
 
-/* ---- self-contained share card + confetti (light wash, matches the site's share cards) ---- */
+/* ---- self-contained share card + confetti (paper, ink, one yellow strap: the site's look) ---- */
+function siteFont(varName: string, fallback: string): string {
+  try {
+    const v = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+    return v || fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 async function shareStreak(best: number) {
   const w = 1080, h = 1080;
   const c = document.createElement("canvas");
   c.width = w; c.height = h;
   const ctx = c.getContext("2d");
   if (!ctx) return;
+  const display = siteFont("--font-display", "Impact, sans-serif");
+  const body = siteFont("--font-sans", "system-ui, sans-serif");
+  const mono = siteFont("--font-mono", "ui-monospace, monospace");
 
-  ctx.fillStyle = "#FCFCFA";
+  ctx.fillStyle = "#F5F5F1";
   ctx.fillRect(0, 0, w, h);
-  const blooms: [number, number, string][] = [
-    [w * 0.12, h * 0.08, "rgba(230,224,242,0.9)"],
-    [w * 0.92, h * 0.12, "rgba(248,226,212,0.85)"],
-    [w * 0.85, h * 0.9, "rgba(223,240,230,0.85)"],
-    [w * 0.1, h * 0.92, "rgba(220,234,245,0.88)"],
-  ];
-  for (const [cx, cy, col] of blooms) {
-    const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w, h) * 0.6);
-    g.addColorStop(0, col);
-    g.addColorStop(1, "rgba(252,252,250,0)");
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, w, h);
-  }
+  // yellow strap, top
+  ctx.fillStyle = "#FFD60A";
+  ctx.fillRect(90, 120, 900, 92);
+  ctx.fillStyle = "#111216";
+  ctx.textAlign = "left";
+  ctx.textBaseline = "middle";
+  ctx.font = `900 54px ${display}`;
+  ctx.fillText("THUMBNAIL SHOWDOWN", 118, 168);
+  // the number
   ctx.textAlign = "center";
-  ctx.fillStyle = "#8b867f";
-  ctx.font = "500 30px 'JetBrains Mono', ui-monospace, monospace";
-  ctx.fillText("THUMBNAIL SHOWDOWN", w / 2, 180);
-  ctx.fillStyle = "#1C1B1A";
-  ctx.font = "600 280px Fraunces, Georgia, serif";
-  ctx.fillText(String(best), w / 2, h / 2 + 90);
-  ctx.fillStyle = "#56524d";
-  ctx.font = "500 46px Inter, system-ui, sans-serif";
-  ctx.fillText("best streak, can you beat it?", w / 2, h / 2 + 200);
-  ctx.fillStyle = "#8b867f";
-  ctx.font = "500 26px 'JetBrains Mono', ui-monospace, monospace";
-  ctx.fillText("shivamvashisth.com/#showdown", w / 2, h - 70);
+  ctx.font = `900 420px ${display}`;
+  ctx.fillText(String(best), w / 2, h / 2 + 40);
+  ctx.fillStyle = "#3F4150";
+  ctx.font = `500 44px ${body}`;
+  ctx.fillText("best streak, can you beat it?", w / 2, h / 2 + 300);
+  // hairline + url
+  ctx.fillStyle = "#D7D8DD";
+  ctx.fillRect(90, h - 150, 900, 2);
+  ctx.fillStyle = "#5E6170";
+  ctx.font = `400 28px ${mono}`;
+  ctx.fillText("shivamvashisth.com/#showdown", w / 2, h - 90);
 
   const blob = await new Promise<Blob | null>((res) => c.toBlob(res, "image/png", 0.95));
   if (!blob) return;
@@ -255,7 +279,7 @@ function confetti() {
   document.body.appendChild(c);
   const ctx = c.getContext("2d");
   if (!ctx) { c.remove(); return; }
-  const cols = ["#6d5bb0", "#c2693a", "#2f8f63", "#2f6fae", "#c25274"];
+  const cols = ["#FFD60A", "#1F2FE0", "#111216", "#0E8F5A", "#B5123A"];
   const parts = Array.from({ length: 120 }, (_, i) => ({
     x: innerWidth / 2 + (Math.random() - 0.5) * 200,
     y: innerHeight / 3,

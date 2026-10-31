@@ -1,9 +1,8 @@
 import Link from "next/link";
-import { Reveal } from "./Reveal";
 import { RESOURCES } from "@/lib/resources";
 
 /**
- * "Free resources" — the editorial index of every prompt drop shared on
+ * "Free resources": the editorial index of every prompt drop shared on
  * Instagram, so the site itself is a complete map: no reel, no DM, no
  * comment-keyword needed to find any of it.
  */
@@ -23,83 +22,50 @@ export function ResourceIndex() {
     })),
   };
 
-  return (
-    <section id="resources" className="relative z-10 mx-auto max-w-3xl scroll-mt-24 px-5 py-24 sm:px-7 sm:py-28">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <Reveal>
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-ink-faint">Free resources</p>
-        <h2 className="mt-2 font-display text-4xl font-medium tracking-tight text-ink sm:text-5xl">
-          Every drop, in one place
-        </h2>
-      </Reveal>
-      <Reveal delay={0.05}>
-        <p className="mt-5 max-w-xl text-ink-soft">
-          The links I share on Instagram live here too. No hunting through comments, no keyword to
-          remember. Each one is yours, follower or not.
-        </p>
-      </Reveal>
+  const Row = ({ r }: { r: (typeof RESOURCES)[number] }) => (
+    <span className="grid gap-x-6 gap-y-1 sm:grid-cols-[88px_1fr_auto] sm:items-baseline">
+      <span className="font-mono text-[12px] text-ink-faint">{r.code}</span>
+      <span>
+        <span className="block">
+          <span className="t-h3 text-[24px] text-ink">{r.title}</span>
+          <span className="ml-3 font-mono text-[11px] uppercase tracking-[0.08em] text-ink-faint">
+            {r.status === "brewing" && <span aria-hidden className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full border border-acc-peach align-[1px]" />}
+            {r.dated}
+          </span>
+        </span>
+        <span className="mt-1 block max-w-2xl text-[15px] text-ink-soft">{r.oneLiner}</span>
+      </span>
+      {r.status === "live" && <span aria-hidden className="hidden text-ink sm:block">→</span>}
+    </span>
+  );
 
-      <ul className="mt-12 list-none border-t border-line">
-        {RESOURCES.map((r, i) =>
-          r.status === "live" ? (
-            <li key={r.code}>
-              <Reveal delay={0.05 + Math.min(i, 4) * 0.06}>
-                <Link
-                href={r.href}
-                className="group flex items-baseline gap-4 border-b border-line py-7 sm:gap-7"
-              >
-                <span className="w-14 shrink-0 font-mono text-sm tracking-wide text-acc-lavender">
-                  {r.code}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="flex items-baseline justify-between gap-4">
-                    <span className="kinetic-link font-display text-2xl font-medium tracking-tight text-ink sm:text-3xl">
-                      {r.title}
-                    </span>
-                    <span className="hidden shrink-0 font-mono text-xs uppercase tracking-[0.16em] text-ink-faint sm:inline">
-                      {r.dated}
-                    </span>
-                  </span>
-                  <span className="mt-2 block max-w-[60ch] text-sm leading-relaxed text-ink-soft">
-                    {r.oneLiner}
-                  </span>
-                </span>
-                <span
-                  aria-hidden
-                  className="shrink-0 text-ink-faint transition-[color,transform] duration-300 ease-out group-hover:translate-x-1 group-hover:text-ink"
-                >
-                  →
-                </span>
+  return (
+    <section id="resources" className="scroll-mt-28 border-b border-line">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+        <p className="t-kicker">Free resources</p>
+        <h2 className="t-h2 mt-4 text-[clamp(40px,6.5vw,80px)] text-ink">Every drop, in one place</h2>
+        <p className="mt-5 max-w-2xl text-[17px] text-ink-soft">
+          The links I share on Instagram live here too. No hunting through comments, no keyword to remember. Each one is
+          yours, follower or not.
+        </p>
+
+        <ul className="mt-8 border-t border-line">
+          {RESOURCES.map((r) => (
+            <li key={r.code} className="border-b border-line">
+              {r.status === "live" ? (
+                <Link href={r.href} className="block py-5 hover:bg-card">
+                  <Row r={r} />
                 </Link>
-              </Reveal>
+              ) : (
+                <div className="block py-5 opacity-80">
+                  <Row r={r} />
+                </div>
+              )}
             </li>
-          ) : (
-            <li key={r.code}>
-              <Reveal delay={0.05 + Math.min(i, 4) * 0.06}>
-                <div className="flex items-baseline gap-4 border-b border-line py-7 sm:gap-7">
-                <span className="w-14 shrink-0 font-mono text-sm tracking-wide text-ink-faint/70">
-                  {r.code}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="flex items-baseline justify-between gap-4">
-                    <span className="font-display text-2xl font-medium tracking-tight text-ink-faint sm:text-3xl">
-                      {r.title}
-                    </span>
-                    <span className="inline-flex shrink-0 items-center gap-1.5 font-mono text-xs uppercase tracking-[0.16em] text-acc-peach">
-                      <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-acc-peach" />
-                      {r.dated}
-                    </span>
-                  </span>
-                  <span className="mt-2 block max-w-[60ch] text-sm leading-relaxed text-ink-faint">
-                    {r.oneLiner}
-                  </span>
-                </span>
-              </div>
-              </Reveal>
-            </li>
-          ),
-        )}
-      </ul>
+          ))}
+        </ul>
+      </div>
     </section>
   );
 }

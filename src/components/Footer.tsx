@@ -1,56 +1,43 @@
 export function Footer() {
+  const links = [
+    { label: "Help", href: "#faq" },
+    { label: "Free resources", href: "#resources" },
+    { label: "Case studies", href: "/case-studies/" },
+    { label: "How it's built", href: "/how-this-portfolio-builds-itself/" },
+    { label: "YouTube strategy ↗", href: "https://yt.shivamvashisth.com", external: true },
+    { label: "Files ↗", href: "https://files.shivamvashisth.com", external: true },
+    { label: "@svx2027", href: "https://instagram.com/svx2027", external: true },
+    { label: "vashisthshivam00@gmail.com", href: "mailto:vashisthshivam00@gmail.com" },
+  ];
   return (
-    <footer className="relative z-10 border-t border-line pt-14 pb-10">
-      <div className="mx-auto max-w-6xl px-5 sm:px-7">
-        {/* the maker's mark, full width, quiet */}
-        <p
-          aria-hidden
-          className="select-none text-center font-display text-[clamp(2.2rem,7.5vw,5.5rem)] font-semibold leading-none tracking-tight text-ink/[0.08]"
-        >
+    <footer className="border-t border-line">
+      <div className="mx-auto max-w-6xl px-4 pb-8 pt-14 sm:px-6">
+        {/* the maker's mark, full width */}
+        <p aria-hidden className="t-display select-none text-[clamp(44px,9.5vw,128px)] text-ink">
           Code for Creatives India
         </p>
 
-        <div className="mt-10 flex flex-wrap items-center justify-between gap-4 text-sm text-ink-faint">
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6 text-[14px] text-ink-faint">
           <span>Made in a garage, with AI, by one creator who replies to DMs.</span>
-          <a href="#top" className="rounded-full border border-line-strong px-4 py-2 text-ink-soft transition-colors hover:border-ink hover:text-ink">
+          <a href="#top" className="btn-ghost !py-2 !text-[13px]">
             Back to top ↑
           </a>
         </div>
 
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-line pt-6 text-sm text-ink-faint">
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-t border-line pt-6 font-mono text-[12px] text-ink-faint">
           <span>© {new Date().getFullYear()} Code for Creatives India</span>
-          <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
-            <a href="#faq" className="text-ink-soft transition-colors hover:text-ink">
-              Help
-            </a>
-            <span aria-hidden>·</span>
-            <a href="#resources" className="text-ink-soft transition-colors hover:text-ink">
-              Free resources
-            </a>
-            <span aria-hidden>·</span>
-            <a href="/case-studies/" className="text-ink-soft transition-colors hover:text-ink">
-              Case studies
-            </a>
-            <span aria-hidden>·</span>
-            <a href="/how-this-portfolio-builds-itself/" className="text-ink-soft transition-colors hover:text-ink">
-              How it&apos;s built
-            </a>
-            <span aria-hidden>·</span>
-            <a href="https://yt.shivamvashisth.com" target="_blank" rel="noopener noreferrer" className="text-ink-soft transition-colors hover:text-ink">
-              YouTube strategy ↗
-            </a>
-            <span aria-hidden>·</span>
-            <a href="https://files.shivamvashisth.com" target="_blank" rel="noopener noreferrer" className="text-ink-soft transition-colors hover:text-ink">
-              Files ↗
-            </a>
-            <span aria-hidden>·</span>
-            <a href="https://instagram.com/svx2027" target="_blank" rel="noopener noreferrer" className="text-ink-soft transition-colors hover:text-ink">
-              @svx2027
-            </a>
-            <span aria-hidden>·</span>
-            <a href="mailto:vashisthshivam00@gmail.com" className="text-ink-soft transition-colors hover:text-ink">
-              vashisthshivam00@gmail.com
-            </a>
+          <span className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            {links.map((l) => (
+              <a
+                key={l.label}
+                href={l.href}
+                target={l.external ? "_blank" : undefined}
+                rel={l.external ? "noopener noreferrer" : undefined}
+                className="text-ink-soft hover:text-ink"
+              >
+                {l.label}
+              </a>
+            ))}
           </span>
         </div>
       </div>

@@ -29,15 +29,15 @@ export function ContactForm() {
 
   if (status === "done") {
     return (
-      <p className="mt-3 text-sm text-acc-mint">
+      <p className="mt-4 border-l-2 border-win pl-3 text-[15px] text-ink">
         Locked in. I&rsquo;ll email you the day the next tool ships.
       </p>
     );
   }
 
   return (
-    <div className="mt-2">
-      <form onSubmit={submit} className="flex max-w-md flex-nowrap gap-2.5">
+    <div className="mt-4">
+      <form onSubmit={submit} className="flex flex-col gap-2 sm:flex-row">
         {/* honeypot: visually hidden, off-screen, not focusable */}
         <input
           type="text"
@@ -47,7 +47,7 @@ export function ContactForm() {
           aria-hidden="true"
           value={company}
           onChange={(e) => setCompany(e.target.value)}
-          className="pointer-events-none absolute left-[-9999px] h-0 w-0 opacity-0"
+          className="absolute -left-[9999px] h-0 w-0 opacity-0"
         />
         <input
           type="email"
@@ -56,23 +56,19 @@ export function ContactForm() {
           placeholder="you@email.com"
           aria-label="Your email"
           required
-          className="w-full rounded-[10px] border border-line-strong bg-card px-3.5 py-2.5 text-ink outline-none transition-shadow focus:border-acc-sky focus:ring-2 focus:ring-acc-sky/20"
+          className="field"
         />
-        <button
-          type="submit"
-          disabled={status === "sending"}
-          className="shrink-0 rounded-full bg-ink px-5 py-2.5 font-medium text-paper transition-transform hover:-translate-y-0.5 disabled:opacity-60"
-        >
+        <button type="submit" disabled={status === "sending"} className="btn justify-center whitespace-nowrap">
           {status === "sending" ? "Sending…" : "Email me new tools"}
         </button>
       </form>
-      <p className="mt-2 text-[0.8rem] text-ink-faint">
+      <p className="mt-2 text-[13px] text-ink-faint">
         Just your email, stored on my own Supabase. Never sold, never rented. Reply or DM to unsubscribe.
       </p>
       {status === "error" && (
-        <p className="mt-1 text-[0.8rem] text-acc-rose">
+        <p className="mt-2 text-[14px] text-lose">
           Couldn&rsquo;t save that just now. Try again, or just{" "}
-          <a href="https://instagram.com/svx2027" target="_blank" rel="noopener noreferrer" className="underline">
+          <a href="https://instagram.com/svx2027" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">
             DM me on Instagram
           </a>
           .

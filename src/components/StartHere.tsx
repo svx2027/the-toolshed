@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Reveal } from "./Reveal";
 
 // The mission promises words. This is where they get handed over, verbatim and copyable.
 const STARTER_PROMPT = `You are my patient coding teacher. I am a creative person with zero coding experience.
@@ -54,59 +53,44 @@ export function StartHere() {
   };
 
   return (
-    <section id="start" className="relative z-10 mx-auto max-w-5xl scroll-mt-24 px-5 py-24 sm:px-7 sm:py-32">
-      <Reveal className="text-center">
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-ink-faint">Start here</p>
-        <h2 className="mx-auto mt-2 max-w-2xl font-display text-4xl font-medium tracking-tight text-ink sm:text-5xl">
-          Your first words
-        </h2>
-        <p className="mx-auto mt-4 max-w-xl text-ink-soft">
+    <section id="start" className="scroll-mt-28 border-b border-line">
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+        <p className="t-kicker">Start here</p>
+        <h2 className="t-h2 mt-4 text-[clamp(40px,6.5vw,80px)] text-ink">Your first words</h2>
+        <p className="mt-5 max-w-2xl text-[17px] text-ink-soft">
           The mission says I hand you the words. Here they are. Three steps, no sign-up, tonight if you like.
         </p>
-      </Reveal>
 
-      <div className="mt-12 grid gap-8 sm:grid-cols-3">
-        {STEPS.map((s, i) => (
-          <Reveal key={s.k} delay={i * 0.08}>
-            <div className="border-t border-line-strong pt-5">
-              <span className="font-mono text-sm text-ink-faint">{s.k}</span>
-              <h3 className="mt-2 font-display text-xl font-medium text-ink">{s.h}</h3>
-              <p className="mt-2 text-sm text-ink-soft">{s.body}</p>
+        <div className="mt-10 grid gap-px border border-line bg-line sm:grid-cols-3">
+          {STEPS.map((s) => (
+            <div key={s.k} className="bg-card p-6">
+              <span className="font-mono text-[12px] text-ink-faint">{s.k}</span>
+              <h3 className="t-h3 mt-3 text-[26px] text-ink">{s.h}</h3>
+              <p className="mt-2 text-[15px] text-ink-soft">{s.body}</p>
             </div>
-          </Reveal>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      <Reveal delay={0.1}>
-        <div className="mt-12 overflow-hidden rounded-3xl border border-line bg-card shadow-sm">
-          <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-3.5 sm:px-6">
-            <div className="flex items-center gap-3">
-              <span aria-hidden className="flex gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-acc-rose/70" />
-                <span className="h-2.5 w-2.5 rounded-full bg-acc-peach/70" />
-                <span className="h-2.5 w-2.5 rounded-full bg-acc-mint/70" />
-              </span>
-              <span className="font-mono text-xs uppercase tracking-[0.16em] text-ink-faint">The starter prompt</span>
-            </div>
+        <div className="mt-10 border border-line bg-card">
+          <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-3">
+            <span className="font-mono text-[12px] uppercase tracking-[0.08em] text-ink-faint">The starter prompt</span>
             <button
               type="button"
               onClick={copy}
-              className={`shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium transition-all active:scale-95 ${
-                copied ? "bg-acc-mint text-white" : "bg-ink text-paper hover:-translate-y-0.5"
-              }`}
+              className={copied ? "btn !bg-win !text-white" : "btn"}
               aria-live="polite"
             >
               {copied ? "Copied. Go build." : "Copy the prompt"}
             </button>
           </div>
-          <pre className="max-h-[22rem] overflow-auto whitespace-pre-wrap px-5 py-5 font-mono text-[0.85rem] leading-relaxed text-ink-soft sm:px-6">
+          <pre className="overflow-x-auto whitespace-pre-wrap px-4 py-5 font-mono text-[14px] leading-relaxed text-ink">
             {STARTER_PROMPT}
           </pre>
         </div>
-        <p className="mt-3 text-center text-sm text-ink-faint">
+        <p className="mt-4 text-[14px] text-ink-faint">
           Swap the bracketed line for your own idea. That one sentence is the only part you have to write.
         </p>
-      </Reveal>
+      </div>
     </section>
   );
 }

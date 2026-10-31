@@ -5,14 +5,24 @@ This is **Shivam Vashisth's** two-property personal web project. Shivam is a You
 strategist who builds with AI, NOT an engineer: explain everything in plain English,
 define jargon, work in small verifiable steps. **(1) shivamvashisth.com** = the main
 site, brand **"Code for Creatives India"** (creatives · creators, creatives-primary):
-a **Next.js 16 + React 19 + TypeScript + Tailwind v4 + Framer Motion 12** app with a
-full-screen "Index" overlay nav, a featured Mission manifesto band, a hero
+a **Next.js 16 + React 19 + TypeScript + Tailwind v4 + React Three Fiber** app (v12 Outlier TV look, see below) with an
+"Index" sheet nav, a chapter rail, a featured Mission manifesto band, a hero
 **Thumbnail Showdown** game (164 baked same-niche pairs, plays offline via a service
-worker), a real Supabase-backed email capture, and a koi-pond lantern background that
-self-dismisses after ~16s. The 8 tiny tools ("the Garage") are still plain static HTML
+worker), a real Supabase-backed email capture, and one 3D figure in the hero. The 8 tiny tools ("the Garage") are still plain static HTML
 in `public/t/<slug>/`. **(2) files.shivamvashisth.com** = a Spotlight-style file vault
 (separate repo `svx2027/shivam-download-files`, same stack + Supabase). Everything is
 live and verified; all 5 site versions are reachable as git tags.
+
+## v12: Outlier TV redesign (31 Oct 2026)
+Visual redesign only. Every section, link, feature and line of copy stayed. What changed:
+- Look: a broadcast rundown sheet. Paper and ink, hairlines, one accent (blue in light, yellow in dark), one yellow name strap. Tokens in `src/app/globals.css` (`:root` light, `.dark` dark; old names like `acc-sky` are aliases so inner pages compile).
+- Fonts via `next/font/google` in `src/app/layout.tsx`: Big Shoulders (display, `opsz` axis), Anek Latin (body), Sometype Mono (marks). Classes `.t-display .t-h2 .t-h3 .t-kicker .t-num`.
+- `ChapterRail.tsx`: sticky chapter bar under the top bar; segments fill with the scroll; phone shows bars plus the current chapter name. It replaced the Framer scroll-progress line.
+- 3D: `OutlierField.tsx` (React Three Fiber + drei, 28 bars, one at 14.2x) behind `OutlierFigure.tsx`, which loads it on idle only when WebGL exists and data saver is off, and shows the same bars as an SVG otherwise. Data in `src/lib/outlier.ts`. One entrance rise, then still until dragged.
+- Motion, the whole list: score numbers after a tap (unchanged), the chapter bar fill, the Showdown card tilt toward the mouse (`.tilt`, pointer devices only), confetti on share (unchanged). Framer Motion, the koi pond, the audience ticker, scroll reveals and the glow CTAs are gone. `Reveal.tsx` is now a plain wrapper.
+- Nav: same Index (three doors plus the small row), now a plain ink sheet with no clip animation. Theme toggle reads Light/Dark.
+- Stack otherwise unchanged: Next.js 16, React 19, TypeScript, Tailwind v4, Vercel, Supabase forms, service worker, Vercel Analytics.
+- Tool pages in `public/t/` still carry the old `assets/brand.css` look (Fraunces, pastels). Restyling them is the next job.
 
 ## Where things live
 | Thing | Location |
@@ -63,7 +73,7 @@ Hover locks the glow on; reduced-motion kills all of it.
 
 ## Tech stack (main site)
 Next.js 16.2.9 (App Router, Turbopack) · React 19 · TypeScript · Tailwind v4
-(CSS `@theme` in `src/app/globals.css`, **no tailwind.config**) · Framer Motion 12.
+(CSS `@theme` in `src/app/globals.css`, **no tailwind.config**) · React Three Fiber 9 + drei 10 for the one 3D figure. No Framer Motion since v12.
 Dark mode = `.dark` class + `data-theme` attr on `<html>`, anti-FOUC inline script,
 shared localStorage key `ts_theme` (tools use the same key). `vercel.json` pins
 `framework: nextjs` and holds the strict security headers/CSP. Next 16 gotcha: check
@@ -118,7 +128,7 @@ shared localStorage key `ts_theme` (tools use the same key). `vercel.json` pins
 ## Current state & open items
 Live and verified (light + dark, desktop + mobile): brand, Index nav (X close),
 persistent Files pill, Mission band, 2-door hero, same-niche offline Showdown,
-email capture storing to Supabase, koi-pond auto-dismissing at ~16s.
+email capture storing to Supabase, the 3D outlier figure loading on idle.
 **Open items:** (1) the 8 static tool pages still have the old (pre-Next) look —
 restyling them to match is the natural next step; (2) vault demo rows may still be
 seeded — Shivam uploads real PDFs at files.shivamvashisth.com/admin, then ask to

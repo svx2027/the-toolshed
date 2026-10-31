@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
+import { Big_Shoulders, Anek_Latin, Sometype_Mono } from "next/font/google";
 import "./globals.css";
 import { Pwa } from "@/components/Pwa";
 import { Analytics } from "@vercel/analytics/next";
 
-const fraunces = Fraunces({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-fraunces", display: "swap" });
-const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-inter", display: "swap" });
-const jetbrains = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-jetbrains", display: "swap" });
+// Three faces, all bundled at build and served from this domain (no live Google Fonts request, no layout race).
+// Big Shoulders: Chicago street-sign condensed, for headlines. Anek Latin: Ek Type (Mumbai), for everything you read.
+// Sometype Mono: chapter marks, codes and numbers.
+const display = Big_Shoulders({ subsets: ["latin"], weight: "variable", axes: ["opsz"], variable: "--font-display-face", display: "swap" });
+const body = Anek_Latin({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-body-face", display: "swap" });
+const mono = Sometype_Mono({ subsets: ["latin"], weight: ["400", "600"], variable: "--font-mono-face", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://shivamvashisth.com"),
@@ -51,7 +54,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${fraunces.variable} ${inter.variable} ${jetbrains.variable} antialiased`}
+      className={`${display.variable} ${body.variable} ${mono.variable} antialiased`}
     >
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
