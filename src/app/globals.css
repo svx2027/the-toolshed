@@ -106,7 +106,8 @@ body {
 
 :focus-visible { outline: 3px solid var(--strap); outline-offset: 2px; }
 
-/* ---- type ---- */
+/* ---- type and controls live in the components layer, so a Tailwind utility (hidden, !py-2) still wins ---- */
+@layer components {
 .t-display {
   font-family: var(--font-display);
   font-variation-settings: "opsz" 72;
@@ -209,6 +210,7 @@ body {
 }
 .field::placeholder { color: var(--ink-faint); }
 .field:focus { border-color: var(--ink); outline: none; }
+}
 
 /* ---- showdown cards: a pointer tilt (the one CSS 3D touch), with no transition while the pointer moves ---- */
 .tilt { transform-style: preserve-3d; transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); }

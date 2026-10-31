@@ -46,6 +46,10 @@ export function shuffle<T>(arr: readonly T[], rng: () => number = Math.random): 
   return a;
 }
 
+// Baked titles carry a few HTML entities from the source feed; show the real characters.
+export const titleText = (t: string): string =>
+  t.replace(/&amp;/g, "&").replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+
 export const fmtX = (x: number): string =>
   "outlier " + (x >= 10 ? Math.round(x) : x.toFixed(1)) + "x";
 

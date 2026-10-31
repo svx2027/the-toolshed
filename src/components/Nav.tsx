@@ -15,6 +15,7 @@ const PRIMARY: Item[] = [
 ];
 // Secondary links live in the small meta row, not as giant choices.
 const SECONDARY: Item[] = [
+  { label: "Work with me", href: "#work" },
   { label: "Start here", href: "#start" },
   { label: "Free resources", href: "#resources" },
   { label: "Case studies", href: "/case-studies/" },
@@ -77,25 +78,19 @@ export function Nav() {
           </button>
 
           <div className="flex flex-shrink-0 items-center gap-2">
-            {/* Files: persistent primary destination, outside the menu */}
-            <a
-              href={FILES_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-ghost !py-2 !text-[13px]"
-            >
-              Files
-              <span aria-hidden className="text-ink-faint">↗</span>
+            {/* the one primary door in the bar; Files lives in the Index (03) and the footer */}
+            <a href="#work" className="btn !py-2 !text-[13px]">
+              Work with me
             </a>
-            <ThemeToggle />
+            <ThemeToggle className="hidden sm:inline-flex" />
             <button
               ref={toggleRef}
               onClick={() => setOpen((v) => !v)}
               aria-expanded={open}
               aria-label={open ? "Close menu" : "Open menu"}
-              className="btn !py-2 !text-[13px]"
+              className="btn-ghost !py-2 !text-[13px]"
             >
-              <span className="font-mono text-[12px] uppercase tracking-[0.08em]">Index</span>
+              <span className="hidden font-mono text-[12px] uppercase tracking-[0.08em] sm:inline">Index</span>
               <span className="relative block h-3 w-4" aria-hidden>
                 <span className="absolute left-0 top-0.5 block h-[2px] w-4 bg-current" />
                 <span className="absolute left-0 top-[9px] block h-[2px] w-4 bg-current" />
@@ -135,6 +130,10 @@ export function Nav() {
                 </li>
               ))}
             </ul>
+
+            <div className="mt-8 sm:hidden">
+              <ThemeToggle className="!border-paper/30 !text-paper" />
+            </div>
 
             <div className="mt-10 flex flex-wrap items-center gap-x-5 gap-y-3 font-mono text-[12px] uppercase tracking-[0.08em] text-paper/60">
               {SECONDARY.map((s) => (

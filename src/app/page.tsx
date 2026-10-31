@@ -11,6 +11,7 @@ import { ResourceIndex } from "@/components/ResourceIndex";
 import { Footer } from "@/components/Footer";
 import { Jargon } from "@/components/Jargon";
 import { ContactForm } from "@/components/ContactForm";
+import { WorkWithMe } from "@/components/WorkWithMe";
 import { FAQ_ITEMS } from "@/lib/faq";
 
 // FAQPage schema: search engines get the same answers the Help section renders.
@@ -151,6 +152,9 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* ---------- WORK WITH ME (the second lane: strategy clients) ---------- */}
+        <WorkWithMe />
 
         {/* ---------- TRUST ---------- */}
         <section id="reply" className="scroll-mt-28 border-b border-line">

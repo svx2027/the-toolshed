@@ -28,7 +28,7 @@ const IP_SALT = process.env.SUBSCRIBE_SALT || "toolshed-subscribe-v1";
 // Only these event names are ever recorded: a fixed allowlist plus one pattern
 // for the creator shelf (creator_best_<slug>), so adding a creator never needs an
 // edit here. Keeps the table clean and stops the endpoint being an open write sink.
-const ALLOWED = new Set(["copy_starter", "copy_fable", "download_starter", "download_fable", "share_link"]);
+const ALLOWED = new Set(["copy_starter", "copy_fable", "download_starter", "download_fable", "share_link", "work_form", "work_topmate"]);
 const ALLOWED_PATTERN = /^creator_best_[a-z0-9-]{1,32}$/;
 const isAllowed = (name: string) => ALLOWED.has(name) || ALLOWED_PATTERN.test(name);
 

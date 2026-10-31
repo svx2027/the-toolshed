@@ -22,6 +22,7 @@ Visual redesign only. Every section, link, feature and line of copy stayed. What
 - Motion, the whole list: score numbers after a tap (unchanged), the chapter bar fill, the Showdown card tilt toward the mouse (`.tilt`, pointer devices only), confetti on share (unchanged). Framer Motion, the koi pond, the audience ticker, scroll reveals and the glow CTAs are gone. `Reveal.tsx` is now a plain wrapper.
 - Nav: same Index (three doors plus the small row), now a plain ink sheet with no clip animation. Theme toggle reads Light/Dark.
 - Stack otherwise unchanged: Next.js 16, React 19, TypeScript, Tailwind v4, Vercel, Supabase forms, service worker, Vercel Analytics.
+- v13 (same day): the "Work with me" lane. `WorkWithMe.tsx` after About: one line why, three public proof marks, two doors (a three-field form that posts to `/api/lead/` and opens yt.shivamvashisth.com in the same tap; a Topmate button, https://topmate.io/shivamvashisth). Leads land in Supabase table `leads` (create it once with `supabase/leads.sql`; until then the form shows a prefilled "Email me instead"). Events `work_form` and `work_topmate` are allowlisted in `/api/event/`. "Work with me" is the one ink button in the top bar; Files moved into the Index (03) and the footer; on a phone the theme toggle sits inside the Index. Chapter 09 in the rail.
 - Tool pages in `public/t/` still carry the old `assets/brand.css` look (Fraunces, pastels). Restyling them is the next job.
 
 ## Where things live

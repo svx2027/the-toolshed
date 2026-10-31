@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { PAIRS_URL, NICHE_LABEL, shuffle, thumb, fmtViews, fmtX, type Pair, type Video } from "@/lib/showdown";
+import { PAIRS_URL, NICHE_LABEL, shuffle, thumb, titleText, fmtViews, fmtX, type Pair, type Video } from "@/lib/showdown";
 
 type Side = "left" | "right";
 type Picked = { side: Side; win: boolean } | null;
@@ -149,7 +149,7 @@ export function Showdown() {
                   className="font-semibold leading-[1.25] text-ink [overflow-wrap:anywhere]"
                   style={{ fontSize: "clamp(0.72rem,2.4vw,0.86rem)", minHeight: "2.5em" }}
                 >
-                  {it.t}
+                  {titleText(it.t)}
                 </div>
                 <div className="mt-1.5 flex items-end justify-between gap-1.5 text-[12px] text-ink-faint">
                   <span className="truncate">{it.ch}</span>

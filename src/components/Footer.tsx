@@ -1,5 +1,6 @@
 export function Footer() {
   const links = [
+    { label: "Work with me", href: "#work" },
     { label: "Help", href: "#faq" },
     { label: "Free resources", href: "#resources" },
     { label: "Case studies", href: "/case-studies/" },

@@ -11,6 +11,7 @@ const CHAPTERS: [string, string][] = [
   ["start", "Start here"],
   ["cases", "Build notes"],
   ["about", "About"],
+  ["work", "Work with me"],
   ["faq", "Help"],
   ["contact", "Contact"],
 ];
